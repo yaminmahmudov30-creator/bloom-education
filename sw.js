@@ -4,8 +4,7 @@ const urlsToCache = [
   './index.html',
   './manifest.json',
   'https://cdn.jsdelivr.net/npm/chart.js',
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap'
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
 ];
 
 self.addEventListener('install', event => {
@@ -23,9 +22,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // Supabase API so'rovlarini keshlamaslik
   if (event.request.url.includes('supabase.co')) return;
-  
   event.respondWith(
     caches.match(event.request).then(response => {
       return response || fetch(event.request).then(res => {
