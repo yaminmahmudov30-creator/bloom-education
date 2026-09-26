@@ -1,0 +1,31 @@
+﻿# OS Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs
+*.log
+logs/
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment
+.env
+.env.local
+
+# Database
+*.sqlite
+*.db
+
+# Temporary
+tmp/
+temp/
