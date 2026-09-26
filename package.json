@@ -1,18 +1,12 @@
 ﻿{
-  ""name"": ""bloom-education"",
-  ""version"": ""1.0.0"",
-  ""description"": ""O'quv markazlar uchun zamonaviy boshqaruv tizimi"",
-  ""main"": ""index.html"",
-  ""scripts"": {
-    ""start"": ""npx serve ."",
-    ""dev"": ""npx live-server""
+  "name": "bloom-education",
+  "version": "1.0.0",
+  "description": "O'quv markazlar uchun zamonaviy boshqaruv tizimi",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
   },
-  ""keywords"": [""education"", ""management"", ""bloom""],
-  ""author"": ""Yamin Mahmudov <yaminmahmudov30@gmail.com>"",
-  ""license"": ""MIT"",
-  ""repository"": {
-    ""type"": ""git"",
-    ""url"": ""https://github.com/yaminmahmudov30-creator/bloom-education.git""
-  },
-  ""homepage"": ""https://yaminmahmudov30-creator.github.io/bloom-education/""
+  "keywords": ["education", "management", "bloom"],
+  "author": "Yamin Mahmudov",
+  "license": "MIT"
 }
