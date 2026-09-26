@@ -6,6 +6,7 @@
 <title>Bloom Education — O'quv Markaz Boshqaruv Tizimi</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
     --primary: #10b981;
@@ -75,7 +76,6 @@ body {
     66% { transform: translate(-30px, 30px) scale(0.95); }
 }
 
-/* LOGIN */
 .login-screen {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, #064e3b 0%, #047857 40%, #10b981 100%);
@@ -261,7 +261,6 @@ body {
     40%, 80% { transform: translateX(8px); }
 }
 
-/* APP LAYOUT */
 .app { display: none; min-height: 100vh; position: relative; z-index: 1; }
 .app.active { display: flex; animation: appIn 0.5s var(--ease); }
 @keyframes appIn { from { opacity: 0; } to { opacity: 1; } }
@@ -915,7 +914,6 @@ tbody tr:last-child td { border-bottom: none; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .modal .form-group { margin-bottom: 18px; }
 
-/* PHOTO UPLOAD */
 .photo-upload-section {
     display: flex;
     gap: 20px;
@@ -1205,7 +1203,6 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .sidebar-overlay.active { display: block; opacity: 1; }
 
-/* ============ DAY SCHEDULE GRID ============ */
 .days-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1389,7 +1386,7 @@ tbody tr:last-child td { border-bottom: none; }
                 <label>Login</label>
                 <div class="input-wrap">
                     <svg class="input-icon"><use href="#i-user"/></svg>
-                    <input type="text" id="loginUsername" class="with-icon" placeholder="Loginingizni kiriting" required>
+                    <input type="text" id="loginUsername" class="with-icon" placeholder="javohir yoki email" required>
                 </div>
             </div>
             <div class="form-group">
@@ -1717,12 +1714,18 @@ tbody tr:last-child td { border-bottom: none; }
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+/* ==================== ⚙️ SUPABASE CONFIG ==================== */
+const SUPABASE_URL = 'https://temtisgmrrserjphinqc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlbXRpc2dtcnJzZXJqcGhpbnFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NDA5NTAsImV4cCI6MjEwNjAxNjk1MH0.hpnAEmV7aDyCW9IyhU3PkW18eWZiTqiQv8QBBmiCIR8';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 /* ==================== GLOBAL STATE ==================== */
 let charts = {};
 let currentUser = null;
 let _pendingPhoto = null;
 
-/* ==================== DAYS ==================== */
+/* ==================== CONSTANTS ==================== */
 const DAYS = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'];
 const DAYS_SHORT = { 'Dushanba': 'Du', 'Seshanba': 'Se', 'Chorshanba': 'Cho', 'Payshanba': 'Pay', 'Juma': 'Ju', 'Shanba': 'Sha', 'Yakshanba': 'Yak' };
 const EXPENSE_CATEGORIES = ['Ijara', 'Maosh', 'Kommunal', 'Jihoz', 'Reklama', 'Boshqa'];
@@ -1744,47 +1747,44 @@ const EXPENSE_CATEGORIES = ['Ijara', 'Maosh', 'Kommunal', 'Jihoz', 'Reklama', 'B
     }
 })();
 
-/* ==================== DB ==================== */
+/* ==================== DB (SUPABASE) ==================== */
 const DB = {
-    get(key, def = []) {
-        try { const d = localStorage.getItem('bloom_' + key); return d ? JSON.parse(d) : def; }
-        catch { return def; }
+    _cache: {},
+    
+    async loadAll() {
+        const tables = ['subjects', 'teachers', 'groups', 'students', 'payments', 'expenses', 'attendance', 'schedules', 'notifications'];
+        await Promise.all(tables.map(async (table) => {
+            const { data, error } = await supabase.from(table).select('*');
+            if (!error) this._cache[table] = data || [];
+            else console.error('Load error:', table, error);
+        }));
+        console.log('✅ Ma\'lumotlar yuklandi:', Object.keys(this._cache).map(k => `${k}(${this._cache[k].length})`).join(', '));
     },
-    set(key, value) { localStorage.setItem('bloom_' + key, JSON.stringify(value)); },
-    nextId(key) { const i = this.get(key); return i.length ? Math.max(...i.map(x => x.id)) + 1 : 1; }
+    
+    get(key) { return this._cache[key] || []; },
+    
+    async insert(table, data) {
+        const { data: result, error } = await supabase.from(table).insert(data).select().single();
+        if (error) { console.error('Insert error:', table, error); throw error; }
+        this._cache[table] = [...(this._cache[table] || []), result];
+        return result;
+    },
+    
+    async update(table, id, data) {
+        const { data: result, error } = await supabase.from(table).update(data).eq('id', id).select().single();
+        if (error) { console.error('Update error:', table, error); throw error; }
+        const arr = this._cache[table] || [];
+        const i = arr.findIndex(x => x.id === id);
+        if (i >= 0) arr[i] = result;
+        return result;
+    },
+    
+    async remove(table, id) {
+        const { error } = await supabase.from(table).delete().eq('id', id);
+        if (error) { console.error('Delete error:', table, error); throw error; }
+        this._cache[table] = (this._cache[table] || []).filter(x => x.id !== id);
+    }
 };
-
-/* ==================== SEED - FAQAT ADMIN ==================== */
-function seedData() {
-    const STORAGE_VERSION = '3.0';
-    const savedVersion = localStorage.getItem('bloom_version');
-    
-    if (savedVersion !== STORAGE_VERSION) {
-        Object.keys(localStorage).forEach(key => {
-            if (key.startsWith('bloom_')) localStorage.removeItem(key);
-        });
-        localStorage.setItem('bloom_version', STORAGE_VERSION);
-        console.log('🔄 Ma\'lumotlar bazasi yangilandi (v' + STORAGE_VERSION + ')');
-    }
-    
-    if (!DB.get('users').length) {
-        DB.set('users', [
-            { id: 1, username: 'javohir', password: '0031_Ja', role: 'admin', full_name: 'Javohir', photo: null }
-        ]);
-        console.log('✅ Admin: javohir / 0031_Ja');
-    }
-    
-    if (!DB.get('subjects').length) DB.set('subjects', []);
-    if (!DB.get('teachers').length) DB.set('teachers', []);
-    if (!DB.get('groups').length) DB.set('groups', []);
-    if (!DB.get('students').length) DB.set('students', []);
-    if (!DB.get('payments').length) DB.set('payments', []);
-    if (!DB.get('expenses').length) DB.set('expenses', []);
-    if (!DB.get('attendance').length) DB.set('attendance', []);
-    if (!DB.get('schedules').length) DB.set('schedules', []);
-    if (!DB.get('notifications').length) DB.set('notifications', []);
-}
-seedData();
 
 /* ==================== HELPERS ==================== */
 function togglePw() {
@@ -1806,7 +1806,7 @@ function getAttendancePercent(studentId) {
     return Math.round((att.filter(a => a.status === 'Keldi' || a.status === 'Kechikdi').length / att.length) * 100);
 }
 function getStudentDebt(studentId) {
-    return DB.get('payments').filter(p => p.student_id === studentId).reduce((s, p) => s + (p.expected_amount - p.paid_amount), 0);
+    return DB.get('payments').filter(p => p.student_id === studentId).reduce((s, p) => s + (parseFloat(p.expected_amount) - parseFloat(p.paid_amount)), 0);
 }
 function getStudentPaymentStatus(studentId) {
     const ps = DB.get('payments').filter(p => p.student_id === studentId);
@@ -1816,15 +1816,9 @@ function getStudentPaymentStatus(studentId) {
 function getGroupDaysText(group) {
     if (!group || !group.days || !group.days.length) return group?.schedule || '-';
     return group.days.map(d => {
-        const day = d.day;
-        const short = DAYS_SHORT[day] || day.slice(0, 3);
+        const short = DAYS_SHORT[d.day] || d.day.slice(0, 3);
         return `${short} ${d.start}-${d.end}`;
     }).join(' | ');
-}
-
-function getGroupDaysShort(group) {
-    if (!group || !group.days || !group.days.length) return '-';
-    return group.days.map(d => DAYS_SHORT[d.day] || d.day.slice(0, 3)).join(', ');
 }
 
 function animateCounter(el, target, duration = 1200) {
@@ -1870,7 +1864,9 @@ function closeModal() {
     window._modalSave = null;
     _pendingPhoto = null;
 }
-function saveModal() { if (typeof window._modalSave === 'function') window._modalSave(); }
+async function saveModal() {
+    if (typeof window._modalSave === 'function') await window._modalSave();
+}
 document.getElementById('modalOverlay').addEventListener('click', e => {
     if (e.target.id === 'modalOverlay') closeModal();
 });
@@ -1886,10 +1882,7 @@ function buildPhotoUploadHTML(existingPhoto, entityLabel = 'shaxs') {
             <div class="photo-preview-box ${hasPhoto ? 'has-photo' : ''}" id="photoPreviewBox">
                 ${hasPhoto 
                     ? `<img src="${existingPhoto}" alt="Rasm">`
-                    : `<div class="placeholder-icon">
-                        <svg><use href="#i-image"/></svg>
-                        <span>Rasm yo'q</span>
-                       </div>`
+                    : `<div class="placeholder-icon"><svg><use href="#i-image"/></svg><span>Rasm yo'q</span></div>`
                 }
             </div>
             <div class="photo-actions">
@@ -1909,49 +1902,66 @@ function buildPhotoUploadHTML(existingPhoto, entityLabel = 'shaxs') {
     `;
 }
 
+async function uploadPhotoToStorage(blob) {
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`;
+    const { data, error } = await supabase.storage.from('photos').upload(fileName, blob);
+    if (error) { console.error('Storage error:', error); return null; }
+    const { data: { publicUrl } } = supabase.storage.from('photos').getPublicUrl(fileName);
+    return publicUrl;
+}
+
+function cropTo3x4(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 300; canvas.height = 400;
+                const ctx = canvas.getContext('2d');
+                const targetAspect = 300 / 400;
+                const srcAspect = img.width / img.height;
+                let sx = 0, sy = 0, sw = img.width, sh = img.height;
+                if (srcAspect > targetAspect) {
+                    sw = img.height * targetAspect; sx = (img.width - sw) / 2;
+                } else {
+                    sh = img.width / targetAspect; sy = (img.height - sh) / 2;
+                }
+                ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 300, 400);
+                canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.85);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 function attachPhotoListener() {
     const inp = document.getElementById('photoInput');
     if (!inp) return;
-    inp.addEventListener('change', e => {
+    inp.addEventListener('change', async e => {
         const file = e.target.files[0];
         if (!file) return;
         if (file.size > 2 * 1024 * 1024) {
             toast('Xatolik', 'Rasm hajmi 2MB dan kichik bo\'lishi kerak', 'error');
             return;
         }
-        const reader = new FileReader();
-        reader.onload = ev => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const TARGET_W = 300, TARGET_H = 400;
-                canvas.width = TARGET_W;
-                canvas.height = TARGET_H;
-                const ctx = canvas.getContext('2d');
-                const targetAspect = TARGET_W / TARGET_H;
-                const srcAspect = img.width / img.height;
-                let sx = 0, sy = 0, sw = img.width, sh = img.height;
-                if (srcAspect > targetAspect) {
-                    sw = img.height * targetAspect;
-                    sx = (img.width - sw) / 2;
-                } else {
-                    sh = img.width / targetAspect;
-                    sy = (img.height - sh) / 2;
-                }
-                ctx.drawImage(img, sx, sy, sw, sh, 0, 0, TARGET_W, TARGET_H);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-                _pendingPhoto = dataUrl;
-                const box = document.getElementById('photoPreviewBox');
-                box.innerHTML = `<img src="${dataUrl}" alt="Rasm">`;
-                box.classList.add('has-photo');
-                const rm = document.getElementById('removePhotoBtn');
-                if (rm) rm.style.display = 'inline-flex';
-                toast('Muvaffaqiyat', 'Rasm yuklandi (3x4 format)');
-            };
-            img.onerror = () => toast('Xatolik', 'Rasmni o\'qib bo\'lmadi', 'error');
-            img.src = ev.target.result;
-        };
-        reader.readAsDataURL(file);
+        try {
+            const blob = await cropTo3x4(file);
+            toast('Yuklanmoqda...', 'Rasm saqlanmoqda', 'info');
+            const publicUrl = await uploadPhotoToStorage(blob);
+            if (!publicUrl) { toast('Xatolik', 'Rasm yuklanmadi. "photos" bucket yaratilganligini tekshiring.', 'error'); return; }
+            _pendingPhoto = publicUrl;
+            const box = document.getElementById('photoPreviewBox');
+            box.innerHTML = `<img src="${publicUrl}" alt="Rasm">`;
+            box.classList.add('has-photo');
+            const rm = document.getElementById('removePhotoBtn');
+            if (rm) rm.style.display = 'inline-flex';
+            toast('Muvaffaqiyat', 'Rasm yuklandi (3x4 format)');
+        } catch (err) {
+            console.error(err);
+            toast('Xatolik', 'Rasmni yuklab bo\'lmadi', 'error');
+        }
     });
 }
 
@@ -1976,11 +1986,9 @@ function getPhotoHTML(photo, name, size = 40) {
     return `<div class="user-avatar" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.38)}px;">${(name || '?').charAt(0).toUpperCase()}</div>`;
 }
 
-/* ==================== DAYS SCHEDULE BUILDER ==================== */
-function buildDaysScheduleHTML(existingDays, compact = false) {
+/* ==================== DAYS SCHEDULE ==================== */
+function buildDaysScheduleHTML(existingDays) {
     const days = existingDays || [];
-    const today = new Date().toISOString().split('T')[0];
-    
     return `
         <div class="days-grid">
             ${DAYS.map(day => {
@@ -2013,15 +2021,8 @@ function attachDaysListeners() {
             const row = document.querySelector(`.day-row[data-day="${day}"]`);
             const start = row.querySelector('.day-start');
             const end = row.querySelector('.day-end');
-            if (cb.checked) {
-                row.classList.add('active');
-                start.disabled = false;
-                end.disabled = false;
-            } else {
-                row.classList.remove('active');
-                start.disabled = true;
-                end.disabled = true;
-            }
+            if (cb.checked) { row.classList.add('active'); start.disabled = false; end.disabled = false; }
+            else { row.classList.remove('active'); start.disabled = true; end.disabled = true; }
         });
     });
 }
@@ -2034,38 +2035,57 @@ function collectDaysFromForm() {
         if (cb && cb.checked) {
             const start = row.querySelector('.day-start').value || '09:00';
             const end = row.querySelector('.day-end').value || '10:30';
-            if (start < end) {
-                result.push({ day, start, end });
-            }
+            if (start < end) result.push({ day, start, end });
         }
     });
     return result;
 }
 
 /* ==================== AUTH ==================== */
-document.getElementById('loginForm').addEventListener('submit', e => {
+document.getElementById('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('loginBtn');
     const txt = document.getElementById('loginBtnText');
     const u = document.getElementById('loginUsername').value.trim();
     const p = document.getElementById('loginPassword').value;
-    const user = DB.get('users').find(x => x.username === u && x.password === p);
-
+    
     btn.disabled = true;
     txt.innerHTML = '<span class="loader"></span>';
-    setTimeout(() => {
-        if (user) {
-            currentUser = user;
-            localStorage.setItem('bloom_current', JSON.stringify(user));
-            loginSuccess();
-        } else {
+    
+    const email = u.includes('@') ? u : `${u}@bloom.uz`;
+    
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password: p });
+        
+        if (error) {
             btn.disabled = false;
             txt.textContent = 'Kirish';
             document.getElementById('loginBox').classList.add('shake');
             setTimeout(() => document.getElementById('loginBox').classList.remove('shake'), 500);
-            toast('Xatolik', 'Login yoki parol noto\'g\'ri', 'error');
+            toast('Xatolik', 'Login yoki parol noto\'g\'ri: ' + error.message, 'error');
+            return;
         }
-    }, 700);
+        
+        let { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single();
+        
+        if (!profile) {
+            const { data: newProfile } = await supabase.from('profiles').insert({
+                id: data.user.id, username: u, full_name: u, role: 'admin'
+            }).select().single();
+            profile = newProfile;
+        }
+        
+        currentUser = profile || { id: data.user.id, username: u, full_name: u, role: 'admin' };
+        
+        await DB.loadAll();
+        loginSuccess();
+        
+    } catch (err) {
+        console.error(err);
+        btn.disabled = false;
+        txt.textContent = 'Kirish';
+        toast('Xatolik', 'Server xatoligi: ' + err.message, 'error');
+    }
 });
 
 function loginSuccess() {
@@ -2074,7 +2094,6 @@ function loginSuccess() {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('app').classList.add('active');
     }, 400);
-
     updateUserUI();
     renderAll();
 }
@@ -2083,28 +2102,29 @@ function updateUserUI() {
     document.getElementById('userName').textContent = currentUser.full_name;
     document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'Administrator' : 'O\'qituvchi';
     const av = document.getElementById('userAvatar');
-    if (currentUser.photo) {
-        av.innerHTML = `<img src="${currentUser.photo}" alt="">`;
-    } else {
-        av.textContent = currentUser.full_name.charAt(0).toUpperCase();
-    }
+    if (currentUser.photo) av.innerHTML = `<img src="${currentUser.photo}" alt="">`;
+    else av.textContent = currentUser.full_name.charAt(0).toUpperCase();
 }
 
-function logout() {
+async function logout() {
     if (!confirm('Tizimdan chiqishni xohlaysizmi?')) return;
-    currentUser = null;
-    localStorage.removeItem('bloom_current');
+    await supabase.auth.signOut();
     location.reload();
 }
 
-const savedUser = localStorage.getItem('bloom_current');
-if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').classList.add('active');
-    updateUserUI();
-    renderAll();
-}
+/* AUTO LOGIN */
+(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+        const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+        currentUser = profile || { id: session.user.id, username: 'user', full_name: 'Foydalanuvchi', role: 'admin' };
+        await DB.loadAll();
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').classList.add('active');
+        updateUserUI();
+        renderAll();
+    }
+})();
 
 /* ==================== NAVIGATION ==================== */
 const pageTitles = {
@@ -2140,17 +2160,13 @@ function navigate(page) {
 
     if (window.innerWidth <= 768) closeSidebar();
 
-    if (page === 'dashboard') renderDashboard();
-    else if (page === 'students') renderStudents();
-    else if (page === 'teachers') renderTeachers();
-    else if (page === 'groups') renderGroups();
-    else if (page === 'subjects') renderSubjects();
-    else if (page === 'payments') renderPayments();
-    else if (page === 'expenses') renderExpenses();
-    else if (page === 'schedule') renderSchedule();
-    else if (page === 'attendance') renderAttendance();
-    else if (page === 'reports') renderReports();
-    else if (page === 'notifications') renderNotifications();
+    const renderMap = {
+        dashboard: renderDashboard, students: renderStudents, teachers: renderTeachers,
+        groups: renderGroups, subjects: renderSubjects, payments: renderPayments,
+        expenses: renderExpenses, schedule: renderSchedule, attendance: renderAttendance,
+        reports: renderReports, notifications: renderNotifications
+    };
+    if (renderMap[page]) renderMap[page]();
 }
 
 document.querySelectorAll('.nav-item').forEach(item => {
@@ -2181,9 +2197,9 @@ function renderDashboard() {
     const totalDebt = students.reduce((s, st) => s + getStudentDebt(st.id), 0);
     const thisMonth = new Date().toISOString().slice(0, 7);
     const monthPayments = payments.filter(p => p.month === thisMonth);
-    const monthExpected = monthPayments.reduce((s, p) => s + p.expected_amount, 0);
-    const monthReceived = monthPayments.reduce((s, p) => s + p.paid_amount, 0);
-    const monthExpenses = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + e.amount, 0);
+    const monthExpected = monthPayments.reduce((s, p) => s + parseFloat(p.expected_amount || 0), 0);
+    const monthReceived = monthPayments.reduce((s, p) => s + parseFloat(p.paid_amount || 0), 0);
+    const monthExpenses = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const debtors = students.filter(s => getStudentDebt(s.id) > 0);
 
     const days = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
@@ -2191,58 +2207,19 @@ function renderDashboard() {
     const todaySchedules = schedules.filter(s => s.day === today);
 
     document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-card">
-            <div class="stat-icon"><svg><use href="#i-user-grad"/></svg></div>
-            <div class="stat-label">Jami o'quvchilar</div>
-            <div class="stat-value counter" data-target="${students.length}">0</div>
-            <div class="stat-change up"><svg><use href="#i-trending-up"/></svg> Faol: ${activeStudents}</div>
-        </div>
-        <div class="stat-card blue">
-            <div class="stat-icon"><svg><use href="#i-user-teacher"/></svg></div>
-            <div class="stat-label">O'qituvchilar</div>
-            <div class="stat-value counter" data-target="${teachers.length}">0</div>
-            <div class="stat-change up"><svg><use href="#i-trending-up"/></svg> Faol: ${teachers.filter(t => t.status === 'Faol').length}</div>
-        </div>
-        <div class="stat-card purple">
-            <div class="stat-icon"><svg><use href="#i-users"/></svg></div>
-            <div class="stat-label">Guruhlar</div>
-            <div class="stat-value counter" data-target="${groups.length}">0</div>
-            <div class="stat-change up"><svg><use href="#i-trending-up"/></svg> Fanlar: ${subjects.length}</div>
-        </div>
-        <div class="stat-card orange">
-            <div class="stat-icon"><svg><use href="#i-dollar"/></svg></div>
-            <div class="stat-label">Bu oy kutilgan</div>
-            <div class="stat-value counter" data-target="${monthExpected}">0</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><svg><use href="#i-check-circle"/></svg></div>
-            <div class="stat-label">Bu oy tushgan</div>
-            <div class="stat-value counter" data-target="${monthReceived}">0</div>
-        </div>
-        <div class="stat-card red">
-            <div class="stat-icon"><svg><use href="#i-wallet"/></svg></div>
-            <div class="stat-label">Bu oy xarajatlar</div>
-            <div class="stat-value counter" data-target="${monthExpenses}">0</div>
-            <div class="stat-change down"><svg><use href="#i-trending-down"/></svg> Sof: ${formatMoney(monthReceived - monthExpenses)}</div>
-        </div>
-        <div class="stat-card red">
-            <div class="stat-icon"><svg><use href="#i-alert"/></svg></div>
-            <div class="stat-label">Qarzdorlar</div>
-            <div class="stat-value counter" data-target="${debtors.length}">0</div>
-            <div class="stat-change down"><svg><use href="#i-trending-down"/></svg> ${formatMoney(totalDebt)}</div>
-        </div>
-        <div class="stat-card blue">
-            <div class="stat-icon"><svg><use href="#i-calendar"/></svg></div>
-            <div class="stat-label">Bugungi darslar</div>
-            <div class="stat-value counter" data-target="${todaySchedules.length}">0</div>
-        </div>
+        <div class="stat-card"><div class="stat-icon"><svg><use href="#i-user-grad"/></svg></div><div class="stat-label">Jami o'quvchilar</div><div class="stat-value counter" data-target="${students.length}">0</div><div class="stat-change up"><svg><use href="#i-trending-up"/></svg> Faol: ${activeStudents}</div></div>
+        <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-user-teacher"/></svg></div><div class="stat-label">O'qituvchilar</div><div class="stat-value counter" data-target="${teachers.length}">0</div></div>
+        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-users"/></svg></div><div class="stat-label">Guruhlar</div><div class="stat-value counter" data-target="${groups.length}">0</div><div class="stat-change up"><svg><use href="#i-trending-up"/></svg> Fanlar: ${subjects.length}</div></div>
+        <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">Bu oy kutilgan</div><div class="stat-value counter" data-target="${monthExpected}">0</div></div>
+        <div class="stat-card"><div class="stat-icon"><svg><use href="#i-check-circle"/></svg></div><div class="stat-label">Bu oy tushgan</div><div class="stat-value counter" data-target="${monthReceived}">0</div></div>
+        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Bu oy xarajatlar</div><div class="stat-value counter" data-target="${monthExpenses}">0</div><div class="stat-change down"><svg><use href="#i-trending-down"/></svg> Sof: ${formatMoney(monthReceived - monthExpenses)}</div></div>
+        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Qarzdorlar</div><div class="stat-value counter" data-target="${debtors.length}">0</div><div class="stat-change down"><svg><use href="#i-trending-down"/></svg> ${formatMoney(totalDebt)}</div></div>
+        <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-calendar"/></svg></div><div class="stat-label">Bugungi darslar</div><div class="stat-value counter" data-target="${todaySchedules.length}">0</div></div>
     `;
 
-    document.querySelectorAll('.counter').forEach(el => {
-        animateCounter(el, parseInt(el.dataset.target) || 0);
-    });
+    document.querySelectorAll('.counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
 
-    const totalMonthly = students.reduce((s, st) => s + (st.monthly_payment || 0), 0);
+    const totalMonthly = students.reduce((s, st) => s + parseFloat(st.monthly_payment || 0), 0);
     document.getElementById('financialSummary').innerHTML = `
         <div class="financial-item"><label>Jami o'quvchilar</label><div class="value">${students.length} ta</div></div>
         <div class="financial-item"><label>O'rtacha oylik to'lov</label><div class="value">${formatMoney(totalMonthly / (students.length || 1))}</div></div>
@@ -2254,30 +2231,24 @@ function renderDashboard() {
 
     const todayEl = document.getElementById('todaySchedule');
     if (!todaySchedules.length) {
-        todayEl.innerHTML = `<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-calendar"/></svg></div><h3>Bugun dars yo'q</h3><p>Bugun uchun darslar rejalashtirilmagan</p></div>`;
+        todayEl.innerHTML = `<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-calendar"/></svg></div><h3>Bugun dars yo'q</h3></div>`;
     } else {
         todayEl.innerHTML = todaySchedules.map(s => `
             <div class="schedule-item">
                 <div class="schedule-time">${s.start_time}<small>${s.end_time}</small></div>
-                <div class="schedule-info">
-                    <h4>${getSubjectName(s.subject_id)}</h4>
-                    <p><svg><use href="#i-user"/></svg> ${getTeacherName(s.teacher_id)} • <svg><use href="#i-home"/></svg> ${s.room} xona • <svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)}</p>
-                </div>
+                <div class="schedule-info"><h4>${getSubjectName(s.subject_id)}</h4><p><svg><use href="#i-user"/></svg> ${getTeacherName(s.teacher_id)} • ${s.room} xona</p></div>
             </div>
         `).join('');
     }
 
     const debtorsEl = document.getElementById('debtorsList');
     if (!debtors.length) {
-        debtorsEl.innerHTML = `<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-check-circle"/></svg></div><h3>Qarzdorlar yo'q</h3><p>Barcha o'quvchilar to'lov qilgan</p></div>`;
+        debtorsEl.innerHTML = `<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-check-circle"/></svg></div><h3>Qarzdorlar yo'q</h3></div>`;
     } else {
         debtorsEl.innerHTML = debtors.slice(0, 6).map(s => `
             <div class="schedule-item" style="border-left-color: var(--danger);">
                 <div class="schedule-time" style="color: var(--danger); font-size: 11px;">${formatMoney(getStudentDebt(s.id))}</div>
-                <div class="schedule-info">
-                    <h4>${s.full_name}</h4>
-                    <p><svg><use href="#i-phone"/></svg> ${s.phone} • <svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)}</p>
-                </div>
+                <div class="schedule-info"><h4>${s.full_name}</h4><p><svg><use href="#i-phone"/></svg> ${s.phone || '-'}</p></div>
             </div>
         `).join('');
     }
@@ -2287,8 +2258,7 @@ function renderDashboard() {
 function renderCharts(students, payments, groups, expenses) {
     destroyCharts();
     const commonOpts = {
-        responsive: true,
-        maintainAspectRatio: false,
+        responsive: true, maintainAspectRatio: false,
         plugins: { legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11, weight: '600' }, padding: 14, usePointStyle: true, pointStyle: 'circle' } } },
         animation: { duration: 1200, easing: 'easeOutQuart' }
     };
@@ -2302,19 +2272,16 @@ function renderCharts(students, payments, groups, expenses) {
     });
 
     const months = {};
-    payments.forEach(p => { if (!months[p.month]) months[p.month] = 0; months[p.month] += p.paid_amount; });
+    payments.forEach(p => { if (!months[p.month]) months[p.month] = 0; months[p.month] += parseFloat(p.paid_amount || 0); });
     const sortedMonths = Object.keys(months).sort().slice(-6);
     charts.revenue = new Chart(document.getElementById('chartRevenue'), {
         type: 'line',
-        data: {
-            labels: sortedMonths.length ? sortedMonths : ['Ma\'lumot yo\'q'],
-            datasets: [{
-                label: 'Daromad', data: sortedMonths.length ? sortedMonths.map(m => months[m]) : [0],
-                borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.12)',
-                fill: true, tension: 0.4, borderWidth: 3,
-                pointBackgroundColor: '#10b981', pointRadius: 5, pointHoverRadius: 8
-            }]
-        },
+        data: { labels: sortedMonths.length ? sortedMonths : ['Ma\'lumot yo\'q'], datasets: [{
+            label: 'Daromad', data: sortedMonths.length ? sortedMonths.map(m => months[m]) : [0],
+            borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.12)',
+            fill: true, tension: 0.4, borderWidth: 3,
+            pointBackgroundColor: '#10b981', pointRadius: 5, pointHoverRadius: 8
+        }]},
         options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(1) + 'M' }, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
     });
 
@@ -2326,25 +2293,14 @@ function renderCharts(students, payments, groups, expenses) {
         options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
     });
 
-    // EXPENSES chart by category
     const expByCat = {};
     EXPENSE_CATEGORIES.forEach(c => expByCat[c] = 0);
-    expenses.forEach(e => {
-        const cat = e.category || 'Boshqa';
-        expByCat[cat] = (expByCat[cat] || 0) + e.amount;
-    });
+    expenses.forEach(e => { const cat = e.category || 'Boshqa'; expByCat[cat] = (expByCat[cat] || 0) + parseFloat(e.amount || 0); });
     const catLabels = Object.keys(expByCat).filter(k => expByCat[k] > 0);
     const catColors = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4'];
     charts.expenses = new Chart(document.getElementById('chartExpenses'), {
         type: 'doughnut',
-        data: { 
-            labels: catLabels.length ? catLabels : ['Xarajat yo\'q'], 
-            datasets: [{ 
-                data: catLabels.length ? catLabels.map(k => expByCat[k]) : [1], 
-                backgroundColor: catLabels.length ? catLabels.map((_, i) => catColors[i % catColors.length]) : ['#e2e8f0'], 
-                borderWidth: 0, cutout: '65%' 
-            }] 
-        },
+        data: { labels: catLabels.length ? catLabels : ['Xarajat yo\'q'], datasets: [{ data: catLabels.length ? catLabels.map(k => expByCat[k]) : [1], backgroundColor: catLabels.length ? catLabels.map((_, i) => catColors[i % catColors.length]) : ['#e2e8f0'], borderWidth: 0, cutout: '65%' }] },
         options: commonOpts
     });
 
@@ -2374,10 +2330,7 @@ function renderStudents() {
     if (fs) students = students.filter(s => s.status === fs);
 
     const tbody = document.getElementById('studentsTable');
-    if (!students.length) {
-        tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-grad"/></svg></div><h3>O\'quvchilar yo\'q</h3><p>Yangi o\'quvchi qo\'shish uchun tugmani bosing</p></div></td></tr>';
-        return;
-    }
+    if (!students.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-grad"/></svg></div><h3>O\'quvchilar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = students.map(s => {
         const att = getAttendancePercent(s.id);
         const ps = getStudentPaymentStatus(s.id);
@@ -2387,12 +2340,7 @@ function renderStudents() {
             <tr>
                 <td>${getPhotoHTML(s.photo, s.full_name, 44)}</td>
                 <td><strong>#${s.id}</strong></td>
-                <td>
-                    <div>
-                        <strong>${s.full_name}</strong><br>
-                        <small style="color:var(--gray);font-weight:500;">${s.parent_phone || ''}</small>
-                    </div>
-                </td>
+                <td><div><strong>${s.full_name}</strong><br><small style="color:var(--gray);">${s.parent_phone || ''}</small></div></td>
                 <td>${s.phone || '-'}</td>
                 <td>${getGroupName(s.group_id)}</td>
                 <td>${formatMoney(s.monthly_payment)}</td>
@@ -2400,9 +2348,9 @@ function renderStudents() {
                 <td><span class="badge ${aCls}">${att}%</span></td>
                 <td><span class="badge ${s.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${s.status}</span></td>
                 <td>
-                    <button class="btn btn-sm btn-secondary btn-icon" onclick="viewStudent(${s.id})" title="Ko'rish"><svg><use href="#i-eye"/></svg></button>
-                    <button class="btn btn-sm btn-secondary btn-icon" onclick="editStudent(${s.id})" title="Tahrirlash"><svg><use href="#i-edit"/></svg></button>
-                    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteStudent(${s.id})" title="O'chirish"><svg><use href="#i-trash"/></svg></button>
+                    <button class="btn btn-sm btn-secondary btn-icon" onclick="viewStudent(${s.id})"><svg><use href="#i-eye"/></svg></button>
+                    <button class="btn btn-sm btn-secondary btn-icon" onclick="editStudent(${s.id})"><svg><use href="#i-edit"/></svg></button>
+                    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteStudent(${s.id})"><svg><use href="#i-trash"/></svg></button>
                 </td>
             </tr>
         `;
@@ -2417,7 +2365,7 @@ function openStudentModal(id = null) {
         ${buildPhotoUploadHTML(s.photo, 'O\'quvchi')}
         <div class="form-row">
             <div class="form-group"><label>F.I.Sh *</label><input type="text" id="s_full_name" value="${s.full_name || ''}" required></div>
-            <div class="form-group"><label>Telefon</label><input type="text" id="s_phone" value="${s.phone || ''}" placeholder="+998901234567"></div>
+            <div class="form-group"><label>Telefon</label><input type="text" id="s_phone" value="${s.phone || ''}"></div>
         </div>
         <div class="form-row">
             <div class="form-group"><label>Tug'ilgan sana</label><input type="date" id="s_birth_date" value="${s.birth_date || ''}"></div>
@@ -2437,27 +2385,27 @@ function openStudentModal(id = null) {
             <div class="form-group"><label>Status</label><select id="s_status"><option ${s.status === 'Faol' ? 'selected' : ''}>Faol</option><option ${s.status === 'Nofaol' ? 'selected' : ''}>Nofaol</option></select></div>
         </div>
     `;
-    window._modalSave = () => {
+    window._modalSave = async () => {
         const name = document.getElementById('s_full_name').value.trim();
         if (!name) { toast('Xatolik', 'F.I.Sh kiritilishi shart', 'error'); return; }
         const data = {
-            full_name: name, phone: document.getElementById('s_phone').value,
-            birth_date: document.getElementById('s_birth_date').value,
+            full_name: name, phone: document.getElementById('s_phone').value || null,
+            birth_date: document.getElementById('s_birth_date').value || null,
             gender: document.getElementById('s_gender').value,
-            address: document.getElementById('s_address').value,
-            parent_name: document.getElementById('s_parent_name').value,
-            parent_phone: document.getElementById('s_parent_phone').value,
+            address: document.getElementById('s_address').value || null,
+            parent_name: document.getElementById('s_parent_name').value || null,
+            parent_phone: document.getElementById('s_parent_phone').value || null,
             group_id: parseInt(document.getElementById('s_group_id').value) || null,
-            course_start_date: document.getElementById('s_course_start_date').value,
+            course_start_date: document.getElementById('s_course_start_date').value || null,
             monthly_payment: parseFloat(document.getElementById('s_monthly_payment').value) || 0,
             status: document.getElementById('s_status').value,
             photo: _pendingPhoto
         };
-        const students = DB.get('students');
-        if (isEdit) { const i = students.findIndex(x => x.id === id); students[i] = { ...students[i], ...data }; toast('Muvaffaqiyat', 'O\'quvchi yangilandi'); }
-        else { data.id = DB.nextId('students'); students.push(data); toast('Muvaffaqiyat', 'Yangi o\'quvchi qo\'shildi'); }
-        DB.set('students', students);
-        closeModal(); renderStudents(); renderDashboard();
+        try {
+            if (isEdit) { await DB.update('students', id, data); toast('Muvaffaqiyat', 'O\'quvchi yangilandi'); }
+            else { await DB.insert('students', data); toast('Muvaffaqiyat', 'Yangi o\'quvchi qo\'shildi'); }
+            closeModal(); renderStudents(); renderDashboard();
+        } catch (err) { toast('Xatolik', 'Saqlashda xatolik: ' + err.message, 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-user-grad"/></svg> ${isEdit ? 'O\'quvchini tahrirlash' : 'Yangi o\'quvchi'}`, body);
     setTimeout(attachPhotoListener, 30);
@@ -2470,19 +2418,14 @@ function viewStudent(id) {
     const payments = DB.get('payments').filter(p => p.student_id === id).slice(-6).reverse();
     const att = getAttendancePercent(id), debt = getStudentDebt(id);
     const group = DB.get('groups').find(g => g.id === s.group_id);
-    const avatarHTML = s.photo 
-        ? `<div class="profile-avatar"><img src="${s.photo}" alt="${s.full_name}"></div>`
-        : `<div class="profile-avatar">${s.full_name.charAt(0)}</div>`;
+    const avatarHTML = s.photo ? `<div class="profile-avatar"><img src="${s.photo}" alt="${s.full_name}"></div>` : `<div class="profile-avatar">${s.full_name.charAt(0)}</div>`;
     const body = `
         <div class="profile-header">
             ${avatarHTML}
             <div class="profile-info">
                 <h2>${s.full_name}</h2>
                 <p><svg class="icon-sm"><use href="#i-phone"/></svg> ${s.phone || '-'} • <svg class="icon-sm"><use href="#i-cake"/></svg> ${formatDate(s.birth_date)}</p>
-                <div class="profile-meta">
-                    <span class="badge badge-info">${getGroupName(s.group_id)}</span>
-                    <span class="badge badge-success">${s.status}</span>
-                </div>
+                <div class="profile-meta"><span class="badge badge-info">${getGroupName(s.group_id)}</span><span class="badge badge-success">${s.status}</span></div>
             </div>
         </div>
         <div class="profile-grid">
@@ -2493,13 +2436,7 @@ function viewStudent(id) {
             <div class="info-item"><label>Qarz</label><div class="value" style="color:${debt > 0 ? 'var(--danger)' : 'var(--primary)'};">${formatMoney(debt)}</div></div>
             <div class="info-item"><label>Davomat</label><div class="value">${att}%</div></div>
         </div>
-        ${group ? `
-            <h3 class="section-title"><svg><use href="#i-calendar"/></svg> Guruh dars kunlari</h3>
-            <div style="padding:14px;background:var(--light);border-radius:12px;">
-                <strong>${group.name}</strong>
-                <p style="margin-top:6px;font-size:13px;color:var(--gray);">${getGroupDaysText(group)}</p>
-            </div>
-        ` : ''}
+        ${group ? `<h3 class="section-title"><svg><use href="#i-calendar"/></svg> Guruh dars kunlari</h3><div style="padding:14px;background:var(--light);border-radius:12px;"><strong>${group.name}</strong><p style="margin-top:6px;font-size:13px;color:var(--gray);">${getGroupDaysText(group)}</p></div>` : ''}
         <h3 class="section-title"><svg><use href="#i-credit-card"/></svg> To'lovlar tarixi</h3>
         <div class="table-responsive"><table><thead><tr><th>Oy</th><th>Kutilgan</th><th>To'langan</th><th>Holat</th></tr></thead>
         <tbody>${payments.length ? payments.map(p => `<tr><td>${p.month}</td><td>${formatMoney(p.expected_amount)}</td><td>${formatMoney(p.paid_amount)}</td><td><span class="badge ${p.status === 'To\'langan' ? 'badge-success' : p.status === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger'}">${p.status}</span></td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--gray);">To\'lovlar yo\'q</td></tr>'}</tbody></table></div>
@@ -2507,13 +2444,10 @@ function viewStudent(id) {
     openModal(`<svg class="icon"><use href="#i-user"/></svg> O'quvchi profili`, body, '<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>');
 }
 
-function deleteStudent(id) {
+async function deleteStudent(id) {
     if (!confirm('Bu o\'quvchini o\'chirishni xohlaysizmi?')) return;
-    DB.set('students', DB.get('students').filter(s => s.id !== id));
-    DB.set('payments', DB.get('payments').filter(p => p.student_id !== id));
-    DB.set('attendance', DB.get('attendance').filter(a => a.student_id !== id));
-    toast('Muvaffaqiyat', 'O\'quvchi o\'chirildi');
-    renderStudents(); renderDashboard();
+    try { await DB.remove('students', id); toast('Muvaffaqiyat', 'O\'quvchi o\'chirildi'); renderStudents(); renderDashboard(); }
+    catch (err) { toast('Xatolik', 'Xatolik', 'error'); }
 }
 
 /* ==================== TEACHERS ==================== */
@@ -2522,7 +2456,7 @@ function renderTeachers() {
     let teachers = DB.get('teachers');
     if (search) teachers = teachers.filter(t => t.full_name.toLowerCase().includes(search) || getSubjectName(t.subject_id).toLowerCase().includes(search));
     const tbody = document.getElementById('teachersTable');
-    if (!teachers.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-teacher"/></svg></div><h3>O\'qituvchilar yo\'q</h3><p>Yangi o\'qituvchi qo\'shish uchun tugmani bosing</p></div></td></tr>'; return; }
+    if (!teachers.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-teacher"/></svg></div><h3>O\'qituvchilar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = teachers.map(t => {
         const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
         let sal = '';
@@ -2534,12 +2468,7 @@ function renderTeachers() {
             <tr>
                 <td>${getPhotoHTML(t.photo, t.full_name, 44)}</td>
                 <td><strong>#${t.id}</strong></td>
-                <td>
-                    <div>
-                        <strong>${t.full_name}</strong><br>
-                        <small style="color:var(--gray);font-weight:500;">${t.email || ''}</small>
-                    </div>
-                </td>
+                <td><div><strong>${t.full_name}</strong><br><small style="color:var(--gray);">${t.email || ''}</small></div></td>
                 <td>${t.phone || '-'}</td>
                 <td><span class="badge badge-info">${getSubjectName(t.subject_id)}</span></td>
                 <td>${groups.map(g => g.name).join(', ') || '-'}</td>
@@ -2581,24 +2510,25 @@ function openTeacherModal(id = null) {
             <div class="form-group"><label>Status</label><select id="t_status"><option ${t.status === 'Faol' ? 'selected' : ''}>Faol</option><option ${t.status === 'Nofaol' ? 'selected' : ''}>Nofaol</option></select></div>
         </div>
     `;
-    window._modalSave = () => {
+    window._modalSave = async () => {
         const name = document.getElementById('t_full_name').value.trim();
         if (!name) { toast('Xatolik', 'F.I.Sh kiritilishi shart', 'error'); return; }
         const st = document.getElementById('t_salary_type').value;
         const data = {
-            full_name: name, phone: document.getElementById('t_phone').value, email: document.getElementById('t_email').value,
+            full_name: name, phone: document.getElementById('t_phone').value || null, email: document.getElementById('t_email').value || null,
             subject_id: parseInt(document.getElementById('t_subject_id').value) || null,
             salary_type: st,
             salary_amount: st === 'percentage' ? 0 : (parseFloat(document.getElementById('t_salary_amount').value) || 0),
             salary_percentage: st === 'percentage' ? (parseFloat(document.getElementById('t_salary_percentage').value) || 0) : 0,
-            start_date: document.getElementById('t_start_date').value,
-            status: document.getElementById('t_status').value, user_id: null,
+            start_date: document.getElementById('t_start_date').value || null,
+            status: document.getElementById('t_status').value,
             photo: _pendingPhoto
         };
-        const teachers = DB.get('teachers');
-        if (isEdit) { const i = teachers.findIndex(x => x.id === id); teachers[i] = { ...teachers[i], ...data }; toast('Muvaffaqiyat', 'O\'qituvchi yangilandi'); }
-        else { data.id = DB.nextId('teachers'); teachers.push(data); toast('Muvaffaqiyat', 'Yangi o\'qituvchi qo\'shildi'); }
-        DB.set('teachers', teachers); closeModal(); renderTeachers();
+        try {
+            if (isEdit) { await DB.update('teachers', id, data); toast('Muvaffaqiyat', 'O\'qituvchi yangilandi'); }
+            else { await DB.insert('teachers', data); toast('Muvaffaqiyat', 'Yangi o\'qituvchi qo\'shildi'); }
+            closeModal(); renderTeachers();
+        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-user-teacher"/></svg> ${isEdit ? 'O\'qituvchini tahrirlash' : 'Yangi o\'qituvchi'}`, body);
     setTimeout(() => { toggleSalaryFields(); attachPhotoListener(); }, 30);
@@ -2613,7 +2543,7 @@ function toggleSalaryFields() {
     else { a.style.display = 'block'; p.style.display = 'none'; l.textContent = t === 'per_lesson' ? 'Bir dars narxi' : 'Maosh miqdori'; }
 }
 function editTeacher(id) { openTeacherModal(id); }
-function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; DB.set('teachers', DB.get('teachers').filter(t => t.id !== id)); toast('Muvaffaqiyat', 'O\'qituvchi o\'chirildi'); renderTeachers(); }
+async function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('teachers', id); toast('Muvaffaqiyat', 'O\'qituvchi o\'chirildi'); renderTeachers(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
 
 /* ==================== GROUPS ==================== */
 function renderGroups() {
@@ -2622,19 +2552,18 @@ function renderGroups() {
     if (search) groups = groups.filter(g => g.name.toLowerCase().includes(search));
     const students = DB.get('students');
     const tbody = document.getElementById('groupsTable');
-    if (!groups.length) { tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-users"/></svg></div><h3>Guruhlar yo\'q</h3><p>Yangi guruh qo\'shish uchun tugmani bosing</p></div></td></tr>'; return; }
+    if (!groups.length) { tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-users"/></svg></div><h3>Guruhlar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = groups.map(g => {
         const count = students.filter(s => s.group_id === g.id).length;
         const pct = Math.round((count / g.max_students) * 100);
         const cls = pct >= 90 ? 'danger' : pct >= 70 ? 'warning' : '';
-        const daysText = getGroupDaysText(g);
         return `
             <tr>
                 <td><strong>${g.name}</strong></td>
                 <td><span class="badge badge-info">${getSubjectName(g.subject_id)}</span></td>
                 <td>${getTeacherName(g.teacher_id)}</td>
                 <td>${g.room}</td>
-                <td><div style="max-width:340px;white-space:normal;font-size:12px;font-weight:600;">${daysText}</div></td>
+                <td><div style="max-width:340px;white-space:normal;font-size:12px;font-weight:600;">${getGroupDaysText(g)}</div></td>
                 <td><div style="min-width:130px;"><strong>${count} / ${g.max_students}</strong><div class="progress-bar"><div class="progress-fill ${cls}" style="width:${pct}%"></div></div></div></td>
                 <td>${formatMoney(g.monthly_payment)}</td>
                 <td><span class="badge ${g.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${g.status}</span></td>
@@ -2660,18 +2589,11 @@ function openGroupModal(id = null) {
             <div class="form-group"><label>O'qituvchi</label><select id="g_teacher_id">${teachers.length ? teachers.map(t => `<option value="${t.id}" ${g.teacher_id == t.id ? 'selected' : ''}>${t.full_name}</option>`).join('') : '<option value="">Avval o\'qituvchi qo\'shing</option>'}</select></div>
             <div class="form-group"><label>Xona</label><input type="text" id="g_room" value="${g.room || ''}" placeholder="203"></div>
         </div>
-        
         <div class="form-group">
-            <label style="display:flex;align-items:center;gap:8px;">
-                <svg class="icon-sm" style="color:var(--primary)"><use href="#i-calendar"/></svg>
-                Dars kunlari va vaqtlari
-            </label>
-            <p style="font-size:12px;color:var(--gray);margin-bottom:10px;font-weight:500;">
-                Har bir kun uchun boshlanish va tugash vaqtini belgilang. Kun yonidagi katakchani belgilang.
-            </p>
+            <label style="display:flex;align-items:center;gap:8px;"><svg class="icon-sm" style="color:var(--primary)"><use href="#i-calendar"/></svg> Dars kunlari va vaqtlari</label>
+            <p style="font-size:12px;color:var(--gray);margin-bottom:10px;font-weight:500;">Har bir kun uchun boshlanish va tugash vaqtini belgilang.</p>
             ${buildDaysScheduleHTML(g.days)}
         </div>
-        
         <div class="form-row">
             <div class="form-group"><label>Oylik to'lov (so'm)</label><input type="number" id="g_monthly_payment" value="${g.monthly_payment || 0}"></div>
             <div class="form-group"><label>Maks. o'quvchilar</label><input type="number" id="g_max_students" value="${g.max_students || 15}"></div>
@@ -2681,38 +2603,37 @@ function openGroupModal(id = null) {
             <div class="form-group"><label>Status</label><select id="g_status"><option ${g.status === 'Faol' ? 'selected' : ''}>Faol</option><option ${g.status === 'Nofaol' ? 'selected' : ''}>Nofaol</option></select></div>
         </div>
     `;
-    window._modalSave = () => {
+    window._modalSave = async () => {
         const name = document.getElementById('g_name').value.trim();
         if (!name) { toast('Xatolik', 'Guruh nomi kiritilishi shart', 'error'); return; }
         const days = collectDaysFromForm();
         if (!days.length) { toast('Xatolik', 'Kamida bitta dars kuni belgilang', 'error'); return; }
-        
         const data = {
             name, subject_id: parseInt(document.getElementById('g_subject_id').value) || null,
             teacher_id: parseInt(document.getElementById('g_teacher_id').value) || null,
-            room: document.getElementById('g_room').value,
-            days: days,
+            room: document.getElementById('g_room').value || null, days,
             monthly_payment: parseFloat(document.getElementById('g_monthly_payment').value) || 0,
             max_students: parseInt(document.getElementById('g_max_students').value) || 15,
-            start_date: document.getElementById('g_start_date').value,
+            start_date: document.getElementById('g_start_date').value || null,
             status: document.getElementById('g_status').value
         };
-        const groups = DB.get('groups');
-        if (isEdit) { const i = groups.findIndex(x => x.id === id); groups[i] = { ...groups[i], ...data }; toast('Muvaffaqiyat', 'Guruh yangilandi'); }
-        else { data.id = DB.nextId('groups'); groups.push(data); toast('Muvaffaqiyat', 'Yangi guruh qo\'shildi'); }
-        DB.set('groups', groups); closeModal(); renderGroups();
+        try {
+            if (isEdit) { await DB.update('groups', id, data); toast('Muvaffaqiyat', 'Guruh yangilandi'); }
+            else { await DB.insert('groups', data); toast('Muvaffaqiyat', 'Yangi guruh qo\'shildi'); }
+            closeModal(); renderGroups();
+        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-users"/></svg> ${isEdit ? 'Guruhni tahrirlash' : 'Yangi guruh'}`, body);
     setTimeout(attachDaysListeners, 30);
 }
 function editGroup(id) { openGroupModal(id); }
-function deleteGroup(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; DB.set('groups', DB.get('groups').filter(g => g.id !== id)); toast('Muvaffaqiyat', 'Guruh o\'chirildi'); renderGroups(); }
+async function deleteGroup(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('groups', id); toast('Muvaffaqiyat', 'Guruh o\'chirildi'); renderGroups(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
 
 /* ==================== SUBJECTS ==================== */
 function renderSubjects() {
     const subjects = DB.get('subjects'), groups = DB.get('groups'), teachers = DB.get('teachers');
     const tbody = document.getElementById('subjectsTable');
-    if (!subjects.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-book"/></svg></div><h3>Fanlar yo\'q</h3><p>Yangi fan qo\'shish uchun tugmani bosing</p></div></td></tr>'; return; }
+    if (!subjects.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-book"/></svg></div><h3>Fanlar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = subjects.map(s => {
         const gCount = groups.filter(g => g.subject_id === s.id).length;
         const tList = teachers.filter(t => t.subject_id === s.id).map(t => t.full_name).join(', ');
@@ -2739,19 +2660,20 @@ function openSubjectModal(id = null) {
         <div class="form-group"><label>Tavsif</label><textarea id="sub_description" rows="3">${s.description || ''}</textarea></div>
         <div class="form-group"><label>Rang</label><input type="color" id="sub_color" value="${s.color || '#10b981'}" style="height:48px;padding:4px;"></div>
     `;
-    window._modalSave = () => {
+    window._modalSave = async () => {
         const name = document.getElementById('sub_name').value.trim();
         if (!name) { toast('Xatolik', 'Fan nomi kiritilishi shart', 'error'); return; }
-        const data = { name, description: document.getElementById('sub_description').value, color: document.getElementById('sub_color').value };
-        const subjects = DB.get('subjects');
-        if (isEdit) { const i = subjects.findIndex(x => x.id === id); subjects[i] = { ...subjects[i], ...data }; toast('Muvaffaqiyat', 'Fan yangilandi'); }
-        else { data.id = DB.nextId('subjects'); subjects.push(data); toast('Muvaffaqiyat', 'Yangi fan qo\'shildi'); }
-        DB.set('subjects', subjects); closeModal(); renderSubjects();
+        const data = { name, description: document.getElementById('sub_description').value || null, color: document.getElementById('sub_color').value };
+        try {
+            if (isEdit) { await DB.update('subjects', id, data); toast('Muvaffaqiyat', 'Fan yangilandi'); }
+            else { await DB.insert('subjects', data); toast('Muvaffaqiyat', 'Yangi fan qo\'shildi'); }
+            closeModal(); renderSubjects();
+        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-book"/></svg> ${isEdit ? 'Fanni tahrirlash' : 'Yangi fan'}`, body);
 }
 function editSubject(id) { openSubjectModal(id); }
-function deleteSubject(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; DB.set('subjects', DB.get('subjects').filter(s => s.id !== id)); toast('Muvaffaqiyat', 'Fan o\'chirildi'); renderSubjects(); }
+async function deleteSubject(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('subjects', id); toast('Muvaffaqiyat', 'Fan o\'chirildi'); renderSubjects(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
 
 /* ==================== PAYMENTS ==================== */
 function renderPayments() {
@@ -2770,7 +2692,7 @@ function renderPayments() {
     if (fm) payments = payments.filter(p => p.month === fm);
     payments = [...payments].reverse().slice(0, 100);
     const tbody = document.getElementById('paymentsTable');
-    if (!payments.length) { tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-credit-card"/></svg></div><h3>To\'lovlar yo\'q</h3><p>Yangi to\'lov qo\'shish uchun tugmani bosing</p></div></td></tr>'; return; }
+    if (!payments.length) { tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-credit-card"/></svg></div><h3>To\'lovlar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = payments.map(p => {
         const debt = p.expected_amount - p.paid_amount;
         const cls = p.status === 'To\'langan' ? 'badge-success' : p.status === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger';
@@ -2814,7 +2736,7 @@ function openPaymentModal(id = null) {
         </select></div>
         <div class="form-group"><label>Izoh</label><input type="text" id="p_notes" value="${p.notes || ''}"></div>
     `;
-    window._modalSave = () => {
+    window._modalSave = async () => {
         const sid = parseInt(document.getElementById('p_student_id').value);
         const month = document.getElementById('p_month').value;
         const exp = parseFloat(document.getElementById('p_expected').value) || 0;
@@ -2823,16 +2745,17 @@ function openPaymentModal(id = null) {
         let status = 'To\'lanmagan';
         if (paid >= exp) status = 'To\'langan';
         else if (paid > 0) status = 'Qisman to\'langan';
-        const data = { student_id: sid, month, expected_amount: exp, paid_amount: paid, payment_date: document.getElementById('p_date').value, payment_method: document.getElementById('p_method').value, status, notes: document.getElementById('p_notes').value };
-        const payments = DB.get('payments');
-        if (isEdit) { const i = payments.findIndex(x => x.id === id); payments[i] = { ...payments[i], ...data }; toast('Muvaffaqiyat', 'To\'lov yangilandi'); }
-        else { data.id = DB.nextId('payments'); payments.push(data); toast('Muvaffaqiyat', 'Yangi to\'lov qo\'shildi'); }
-        DB.set('payments', payments); closeModal(); renderPayments(); renderDashboard();
+        const data = { student_id: sid, month, expected_amount: exp, paid_amount: paid, payment_date: document.getElementById('p_date').value || null, payment_method: document.getElementById('p_method').value, status, notes: document.getElementById('p_notes').value || null };
+        try {
+            if (isEdit) { await DB.update('payments', id, data); toast('Muvaffaqiyat', 'To\'lov yangilandi'); }
+            else { await DB.insert('payments', data); toast('Muvaffaqiyat', 'Yangi to\'lov qo\'shildi'); }
+            closeModal(); renderPayments(); renderDashboard();
+        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-credit-card"/></svg> ${isEdit ? 'To\'lovni tahrirlash' : 'Yangi to\'lov'}`, body);
 }
 function editPayment(id) { openPaymentModal(id); }
-function deletePayment(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; DB.set('payments', DB.get('payments').filter(p => p.id !== id)); toast('Muvaffaqiyat', 'To\'lov o\'chirildi'); renderPayments(); }
+async function deletePayment(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('payments', id); toast('Muvaffaqiyat', 'To\'lov o\'chirildi'); renderPayments(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
 
 /* ==================== EXPENSES ==================== */
 function renderExpenses() {
@@ -2853,53 +2776,25 @@ function renderExpenses() {
     if (fm) filtered = filtered.filter(e => (e.date || '').slice(0, 7) === fm);
     filtered = [...filtered].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
-    // Stats
-    const total = filtered.reduce((s, e) => s + e.amount, 0);
+    const total = filtered.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const thisMonth = new Date().toISOString().slice(0, 7);
-    const monthTotal = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + e.amount, 0);
+    const monthTotal = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const catTotals = {};
     EXPENSE_CATEGORIES.forEach(c => catTotals[c] = 0);
-    expenses.forEach(e => { catTotals[e.category || 'Boshqa'] = (catTotals[e.category || 'Boshqa'] || 0) + e.amount; });
+    expenses.forEach(e => { catTotals[e.category || 'Boshqa'] = (catTotals[e.category || 'Boshqa'] || 0) + parseFloat(e.amount || 0); });
     const topCat = Object.entries(catTotals).sort((a, b) => b[1] - a[1])[0];
 
     document.getElementById('expenseStats').innerHTML = `
-        <div class="stat-card red">
-            <div class="stat-icon"><svg><use href="#i-wallet"/></svg></div>
-            <div class="stat-label">Jami xarajatlar</div>
-            <div class="stat-value counter" data-target="${total}">0</div>
-            <div class="stat-change down">${filtered.length} ta yozuv</div>
-        </div>
-        <div class="stat-card orange">
-            <div class="stat-icon"><svg><use href="#i-trending-down"/></svg></div>
-            <div class="stat-label">Bu oy</div>
-            <div class="stat-value counter" data-target="${monthTotal}">0</div>
-        </div>
-        <div class="stat-card purple">
-            <div class="stat-icon"><svg><use href="#i-target"/></svg></div>
-            <div class="stat-label">Eng katta kategoriya</div>
-            <div class="stat-value" style="font-size:20px;">${topCat && topCat[1] > 0 ? topCat[0] : '-'}</div>
-            ${topCat && topCat[1] > 0 ? `<div class="stat-change down">${formatMoney(topCat[1])}</div>` : ''}
-        </div>
+        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Jami xarajatlar</div><div class="stat-value counter" data-target="${total}">0</div><div class="stat-change down">${filtered.length} ta yozuv</div></div>
+        <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-trending-down"/></svg></div><div class="stat-label">Bu oy</div><div class="stat-value counter" data-target="${monthTotal}">0</div></div>
+        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-target"/></svg></div><div class="stat-label">Eng katta kategoriya</div><div class="stat-value" style="font-size:20px;">${topCat && topCat[1] > 0 ? topCat[0] : '-'}</div>${topCat && topCat[1] > 0 ? `<div class="stat-change down">${formatMoney(topCat[1])}</div>` : ''}</div>
     `;
-
-    document.querySelectorAll('#expenseStats .counter').forEach(el => {
-        animateCounter(el, parseInt(el.dataset.target) || 0);
-    });
+    document.querySelectorAll('#expenseStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
 
     const tbody = document.getElementById('expensesTable');
-    if (!filtered.length) {
-        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-wallet"/></svg></div><h3>Xarajatlar yo\'q</h3><p>Yangi xarajat qo\'shish uchun tugmani bosing</p></div></td></tr>';
-        return;
-    }
+    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-wallet"/></svg></div><h3>Xarajatlar yo\'q</h3></div></td></tr>'; return; }
     
-    const catColors = {
-        'Ijara': 'badge-info',
-        'Maosh': 'badge-success',
-        'Kommunal': 'badge-warning',
-        'Jihoz': 'badge-purple',
-        'Reklama': 'badge-danger',
-        'Boshqa': 'badge-gray'
-    };
+    const catColors = { 'Ijara': 'badge-info', 'Maosh': 'badge-success', 'Kommunal': 'badge-warning', 'Jihoz': 'badge-purple', 'Reklama': 'badge-danger', 'Boshqa': 'badge-gray' };
     
     tbody.innerHTML = filtered.map(e => `
         <tr>
@@ -2908,7 +2803,7 @@ function renderExpenses() {
             <td><strong style="color:var(--danger);">${formatMoney(e.amount)}</strong></td>
             <td>${formatDate(e.date)}</td>
             <td>${e.payment_method || 'Naqd'}</td>
-            <td>${e.paid_by || currentUser?.full_name || '-'}</td>
+            <td>${e.paid_by || '-'}</td>
             <td>
                 <button class="btn btn-sm btn-secondary btn-icon" onclick="editExpense(${e.id})"><svg><use href="#i-edit"/></svg></button>
                 <button class="btn btn-sm btn-danger btn-icon" onclick="deleteExpense(${e.id})"><svg><use href="#i-trash"/></svg></button>
@@ -2923,15 +2818,10 @@ function openExpenseModal(id = null) {
     const today = new Date().toISOString().split('T')[0];
     const body = `
         <div class="form-row">
-            <div class="form-group">
-                <label>Kategoriya *</label>
-                <select id="e_category" required>
-                    ${EXPENSE_CATEGORIES.map(c => `<option ${e.category === c ? 'selected' : ''}>${c}</option>`).join('')}
-                </select>
-            </div>
+            <div class="form-group"><label>Kategoriya *</label><select id="e_category" required>${EXPENSE_CATEGORIES.map(c => `<option ${e.category === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
             <div class="form-group"><label>Summa (so'm) *</label><input type="number" id="e_amount" value="${e.amount || ''}" placeholder="0" required></div>
         </div>
-        <div class="form-group"><label>Izoh *</label><input type="text" id="e_description" value="${e.description || ''}" placeholder="Masalan: Noyabr oyi ijara to'lovi" required></div>
+        <div class="form-group"><label>Izoh *</label><input type="text" id="e_description" value="${e.description || ''}" required></div>
         <div class="form-row">
             <div class="form-group"><label>Sana *</label><input type="date" id="e_date" value="${e.date || today}" required></div>
             <div class="form-group"><label>To'lov usuli</label><select id="e_payment_method">
@@ -2942,45 +2832,37 @@ function openExpenseModal(id = null) {
         </div>
         <div class="form-group"><label>Kim tomonidan</label><input type="text" id="e_paid_by" value="${e.paid_by || currentUser?.full_name || 'Admin'}"></div>
     `;
-    window._modalSave = () => {
+    window._modalSave = async () => {
         const amount = parseFloat(document.getElementById('e_amount').value);
         const description = document.getElementById('e_description').value.trim();
         const date = document.getElementById('e_date').value;
         if (!amount || amount <= 0) { toast('Xatolik', 'Summani kiriting', 'error'); return; }
         if (!description) { toast('Xatolik', 'Izohni kiriting', 'error'); return; }
         if (!date) { toast('Xatolik', 'Sanani tanlang', 'error'); return; }
-        
         const data = {
-            category: document.getElementById('e_category').value,
-            amount: amount,
-            description: description,
-            date: date,
+            category: document.getElementById('e_category').value, amount, description, date,
             payment_method: document.getElementById('e_payment_method').value,
             paid_by: document.getElementById('e_paid_by').value || 'Admin'
         };
-        const expenses = DB.get('expenses');
-        if (isEdit) { const i = expenses.findIndex(x => x.id === id); expenses[i] = { ...expenses[i], ...data }; toast('Muvaffaqiyat', 'Xarajat yangilandi'); }
-        else { data.id = DB.nextId('expenses'); expenses.push(data); toast('Muvaffaqiyat', 'Yangi xarajat qo\'shildi'); }
-        DB.set('expenses', expenses); closeModal(); renderExpenses(); renderDashboard();
+        try {
+            if (isEdit) { await DB.update('expenses', id, data); toast('Muvaffaqiyat', 'Xarajat yangilandi'); }
+            else { await DB.insert('expenses', data); toast('Muvaffaqiyat', 'Yangi xarajat qo\'shildi'); }
+            closeModal(); renderExpenses(); renderDashboard();
+        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-wallet"/></svg> ${isEdit ? 'Xarajatni tahrirlash' : 'Yangi xarajat'}`, body);
 }
 
 function editExpense(id) { openExpenseModal(id); }
-function deleteExpense(id) { 
-    if (!confirm('Bu xarajatni o\'chirishni xohlaysizmi?')) return; 
-    DB.set('expenses', DB.get('expenses').filter(e => e.id !== id)); 
-    toast('Muvaffaqiyat', 'Xarajat o\'chirildi'); 
-    renderExpenses(); renderDashboard();
-}
+async function deleteExpense(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('expenses', id); toast('Muvaffaqiyat', 'Xarajat o\'chirildi'); renderExpenses(); renderDashboard(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
 
 /* ==================== SCHEDULE ==================== */
 function renderSchedule() {
     const schedules = DB.get('schedules');
     const tbody = document.getElementById('scheduleTable');
     const order = ['Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba','Yakshanba'];
-    const sorted = [...schedules].sort((a, b) => { const d = order.indexOf(a.day) - order.indexOf(b.day); return d !== 0 ? d : a.start_time.localeCompare(b.start_time); });
-    if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-calendar"/></svg></div><h3>Darslar yo\'q</h3><p>Guruh yaratishda dars kunlari avtomatik qo\'shiladi</p></div></td></tr>'; return; }
+    const sorted = [...schedules].sort((a, b) => { const d = order.indexOf(a.day) - order.indexOf(b.day); return d !== 0 ? d : (a.start_time || '').localeCompare(b.start_time || ''); });
+    if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-calendar"/></svg></div><h3>Darslar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = sorted.map(s => `
         <tr>
             <td><span class="badge badge-info">${s.day}</span></td>
@@ -3015,7 +2897,7 @@ function openScheduleModal(id = null) {
             <div class="form-group"><label>Guruh</label><select id="sch_group">${groups.length ? groups.map(g => `<option value="${g.id}" ${s.group_id == g.id ? 'selected' : ''}>${g.name}</option>`).join('') : '<option value="">Avval guruh qo\'shing</option>'}</select></div>
         </div>
     `;
-    window._modalSave = () => {
+    window._modalSave = async () => {
         const data = {
             day: document.getElementById('sch_day').value,
             start_time: document.getElementById('sch_start').value,
@@ -3023,17 +2905,18 @@ function openScheduleModal(id = null) {
             subject_id: parseInt(document.getElementById('sch_subject').value) || null,
             teacher_id: parseInt(document.getElementById('sch_teacher').value) || null,
             group_id: parseInt(document.getElementById('sch_group').value) || null,
-            room: document.getElementById('sch_room').value
+            room: document.getElementById('sch_room').value || null
         };
-        const schedules = DB.get('schedules');
-        if (isEdit) { const i = schedules.findIndex(x => x.id === id); schedules[i] = { ...schedules[i], ...data }; toast('Muvaffaqiyat', 'Dars yangilandi'); }
-        else { data.id = DB.nextId('schedules'); schedules.push(data); toast('Muvaffaqiyat', 'Yangi dars qo\'shildi'); }
-        DB.set('schedules', schedules); closeModal(); renderSchedule(); renderDashboard();
+        try {
+            if (isEdit) { await DB.update('schedules', id, data); toast('Muvaffaqiyat', 'Dars yangilandi'); }
+            else { await DB.insert('schedules', data); toast('Muvaffaqiyat', 'Yangi dars qo\'shildi'); }
+            closeModal(); renderSchedule(); renderDashboard();
+        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-calendar"/></svg> ${isEdit ? 'Darsni tahrirlash' : 'Yangi dars'}`, body);
 }
 function editSchedule(id) { openScheduleModal(id); }
-function deleteSchedule(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; DB.set('schedules', DB.get('schedules').filter(s => s.id !== id)); toast('Muvaffaqiyat', 'Dars o\'chirildi'); renderSchedule(); }
+async function deleteSchedule(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('schedules', id); toast('Muvaffaqiyat', 'Dars o\'chirildi'); renderSchedule(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
 
 /* ==================== ATTENDANCE ==================== */
 function renderAttendance() {
@@ -3067,41 +2950,43 @@ function loadAttendanceStudents() {
         `;
     }).join('');
 }
-function saveAttendance() {
+async function saveAttendance() {
     const gid = document.getElementById('attendanceGroup').value;
     const date = document.getElementById('attendanceDate').value;
     if (!gid || !date) { toast('Xatolik', 'Guruh va sanani tanlang', 'error'); return; }
-    let att = DB.get('attendance').filter(a => !(a.group_id == gid && a.date === date));
+    const records = [];
     document.querySelectorAll('.att-status').forEach(sel => {
         const sid = parseInt(sel.dataset.student);
         const note = document.querySelector(`.att-note[data-student="${sid}"]`).value;
-        att.push({ id: DB.nextId('attendance') + Math.random(), student_id: sid, group_id: parseInt(gid), date, status: sel.value, notes: note });
+        records.push({ student_id: sid, group_id: parseInt(gid), date, status: sel.value, notes: note || null });
     });
-    DB.set('attendance', att);
-    toast('Muvaffaqiyat', 'Davomat saqlandi');
-    renderDashboard();
+    try {
+        await supabase.from('attendance').delete().eq('group_id', parseInt(gid)).eq('date', date);
+        const { data } = await supabase.from('attendance').insert(records).select();
+        DB._cache.attendance = [...DB.get('attendance').filter(a => !(a.group_id == gid && a.date === date)), ...(data || [])];
+        toast('Muvaffaqiyat', 'Davomat saqlandi');
+        renderDashboard();
+    } catch (err) { toast('Xatolik', 'Xatolik: ' + err.message, 'error'); }
 }
 
 /* ==================== REPORTS ==================== */
 function renderReports() {
     const payments = DB.get('payments'), expenses = DB.get('expenses'), teachers = DB.get('teachers'), groups = DB.get('groups'), students = DB.get('students');
-    const totalExp = payments.reduce((s, p) => s + p.expected_amount, 0);
-    const totalRec = payments.reduce((s, p) => s + p.paid_amount, 0);
+    const totalExp = payments.reduce((s, p) => s + parseFloat(p.expected_amount || 0), 0);
+    const totalRec = payments.reduce((s, p) => s + parseFloat(p.paid_amount || 0), 0);
     const totalDebt = totalExp - totalRec;
     
-    // Teacher salaries (for reference)
     let totalSal = 0;
     teachers.forEach(t => {
-        if (t.salary_type === 'fixed') totalSal += t.salary_amount;
+        if (t.salary_type === 'fixed') totalSal += parseFloat(t.salary_amount || 0);
         else if (t.salary_type === 'percentage') {
             const tg = groups.filter(g => g.teacher_id === t.id);
-            const rev = tg.reduce((sm, g) => sm + students.filter(s => s.group_id === g.id).reduce((s2, st) => s2 + (st.monthly_payment || 0), 0), 0);
-            totalSal += (rev * t.salary_percentage) / 100;
-        } else totalSal += t.salary_amount * 20;
+            const rev = tg.reduce((sm, g) => sm + students.filter(s => s.group_id === g.id).reduce((s2, st) => s2 + parseFloat(st.monthly_payment || 0), 0), 0);
+            totalSal += (rev * parseFloat(t.salary_percentage || 0)) / 100;
+        } else totalSal += parseFloat(t.salary_amount || 0) * 20;
     });
     
-    // REAL expenses from DB
-    const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);
+    const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const netProfit = totalRec - totalExpenses;
     
     document.getElementById('reportStats').innerHTML = `
@@ -3116,7 +3001,7 @@ function renderReports() {
     setTimeout(() => {
         destroyCharts();
         const months = {};
-        payments.forEach(p => { if (!months[p.month]) months[p.month] = { expected: 0, received: 0 }; months[p.month].expected += p.expected_amount; months[p.month].received += p.paid_amount; });
+        payments.forEach(p => { if (!months[p.month]) months[p.month] = { expected: 0, received: 0 }; months[p.month].expected += parseFloat(p.expected_amount || 0); months[p.month].received += parseFloat(p.paid_amount || 0); });
         const sm = Object.keys(months).sort().slice(-6);
         charts.repRev = new Chart(document.getElementById('chartReportRevenue'), {
             type: 'bar',
@@ -3127,26 +3012,15 @@ function renderReports() {
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11, weight: '600' }, padding: 14, usePointStyle: true } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(1) + 'M' }, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
         });
         
-        // Expenses by category for report
         const expByCat = {};
         EXPENSE_CATEGORIES.forEach(c => expByCat[c] = 0);
-        expenses.forEach(e => {
-            const cat = e.category || 'Boshqa';
-            expByCat[cat] = (expByCat[cat] || 0) + e.amount;
-        });
+        expenses.forEach(e => { const cat = e.category || 'Boshqa'; expByCat[cat] = (expByCat[cat] || 0) + parseFloat(e.amount || 0); });
         const catLabels = Object.keys(expByCat).filter(k => expByCat[k] > 0);
         const catColors = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4'];
         
         charts.repExp = new Chart(document.getElementById('chartReportExpenses'), {
             type: 'doughnut',
-            data: { 
-                labels: catLabels.length ? catLabels : ['Xarajat yo\'q'], 
-                datasets: [{ 
-                    data: catLabels.length ? catLabels.map(k => expByCat[k]) : [1], 
-                    backgroundColor: catLabels.length ? catLabels.map((_, i) => catColors[i % catColors.length]) : ['#e2e8f0'], 
-                    borderWidth: 0, cutout: '65%' 
-                }] 
-            },
+            data: { labels: catLabels.length ? catLabels : ['Xarajat yo\'q'], datasets: [{ data: catLabels.length ? catLabels.map(k => expByCat[k]) : [1], backgroundColor: catLabels.length ? catLabels.map((_, i) => catColors[i % catColors.length]) : ['#e2e8f0'], borderWidth: 0, cutout: '65%' }] },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11, weight: '600' }, padding: 14, usePointStyle: true } } } }
         });
     }, 50);
@@ -3169,7 +3043,7 @@ function exportReport(type) {
 function renderNotifications() {
     const notif = DB.get('notifications');
     const list = document.getElementById('notifList');
-    if (!notif.length) { list.innerHTML = '<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-bell"/></svg></div><h3>Bildirishnomalar yo\'q</h3><p>Tizim xabarlari bu yerda ko\'rinadi</p></div>'; return; }
+    if (!notif.length) { list.innerHTML = '<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-bell"/></svg></div><h3>Bildirishnomalar yo\'q</h3></div>'; return; }
     const iconMap = { danger: 'i-alert', warning: 'i-clock-warn', info: 'i-info' };
     list.innerHTML = notif.map(n => `
         <div class="notif-item ${n.type}">
@@ -3177,7 +3051,7 @@ function renderNotifications() {
             <div class="notif-content">
                 <h4>${n.title}</h4>
                 <p>${n.message}</p>
-                <time>${new Date(n.date).toLocaleString('uz-UZ')}</time>
+                <time>${new Date(n.created_at || n.date).toLocaleString('uz-UZ')}</time>
             </div>
         </div>
     `).join('');
@@ -3185,10 +3059,13 @@ function renderNotifications() {
     document.getElementById('notifBadge').textContent = unread;
     document.getElementById('notifDot').style.display = unread ? 'block' : 'none';
 }
-function markAllRead() {
-    DB.set('notifications', DB.get('notifications').map(n => ({ ...n, read: true })));
-    renderNotifications();
-    toast('Muvaffaqiyat', 'Barcha bildirishnomalar o\'qilgan deb belgilandi');
+async function markAllRead() {
+    try {
+        await supabase.from('notifications').update({ read: true }).eq('read', false);
+        DB._cache.notifications = DB.get('notifications').map(n => ({ ...n, read: true }));
+        renderNotifications();
+        toast('Muvaffaqiyat', 'Barcha bildirishnomalar o\'qilgan deb belgilandi');
+    } catch (err) { toast('Xatolik', 'Xatolik', 'error'); }
 }
 
 /* ==================== SEARCH ==================== */
@@ -3196,11 +3073,12 @@ document.getElementById('globalSearch').addEventListener('input', e => {
     const q = e.target.value.toLowerCase();
     if (!q) return;
     const cur = document.querySelector('.page.active').id.replace('page-', '');
-    if (cur === 'students') { document.getElementById('studentSearch').value = q; renderStudents(); }
-    else if (cur === 'teachers') { document.getElementById('teacherSearch').value = q; renderTeachers(); }
-    else if (cur === 'groups') { document.getElementById('groupSearch').value = q; renderGroups(); }
-    else if (cur === 'payments') { document.getElementById('paymentSearch').value = q; renderPayments(); }
-    else if (cur === 'expenses') { document.getElementById('expenseSearch').value = q; renderExpenses(); }
+    const map = { students: 'studentSearch', teachers: 'teacherSearch', groups: 'groupSearch', payments: 'paymentSearch', expenses: 'expenseSearch' };
+    if (map[cur]) {
+        document.getElementById(map[cur]).value = q;
+        const renderMap = { students: renderStudents, teachers: renderTeachers, groups: renderGroups, payments: renderPayments, expenses: renderExpenses };
+        renderMap[cur]();
+    }
 });
 
 ['studentSearch','studentFilterGroup','studentFilterStatus'].forEach(id => document.getElementById(id)?.addEventListener('input', renderStudents));
@@ -3211,21 +3089,12 @@ document.getElementById('groupSearch')?.addEventListener('input', renderGroups);
 
 /* ==================== RENDER ALL ==================== */
 function renderAll() {
-    renderDashboard();
-    renderStudents();
-    renderTeachers();
-    renderGroups();
-    renderSubjects();
-    renderPayments();
-    renderExpenses();
-    renderSchedule();
-    renderAttendance();
-    renderReports();
-    renderNotifications();
+    renderDashboard(); renderStudents(); renderTeachers(); renderGroups(); renderSubjects();
+    renderPayments(); renderExpenses(); renderSchedule(); renderAttendance(); renderReports(); renderNotifications();
 }
 
-console.log('%c🌿 Bloom Education', 'color: #10b981; font-size: 20px; font-weight: bold;');
-console.log('%cXarajatlar va Dars kunlari qo\'shildi', 'color: #059669; font-size: 13px;');
+console.log('%c🌿 Bloom Education + Supabase', 'color: #10b981; font-size: 20px; font-weight: bold;');
+console.log('%c✅ Supabase URL: temtisgmrrserjphinqc.supabase.co', 'color: #059669; font-size: 13px;');
 </script>
 
 </body>
