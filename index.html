@@ -2,11 +2,30 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Bloom Education — O'quv Markaz Boshqaruv Tizimi</title>
+
+<!-- PWA Meta Tags -->
+<meta name="theme-color" content="#10b981">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bloom Education">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Bloom Education">
+<meta name="msapplication-TileColor" content="#10b981">
+<meta name="msapplication-TileImage" content="icon-192.png">
+<meta name="description" content="O'quv markaz boshqaruv tizimi">
+
+<!-- Manifest va Icons -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
     --primary: #10b981;
@@ -41,10 +60,8 @@
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--light);
@@ -53,7 +70,6 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
 }
-
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
@@ -69,7 +85,6 @@ body {
 .bg-blob.b1 { width: 500px; height: 500px; background: var(--primary-light); top: -200px; left: -100px; }
 .bg-blob.b2 { width: 400px; height: 400px; background: #dbeafe; bottom: -150px; right: -100px; animation-delay: -7s; }
 .bg-blob.b3 { width: 350px; height: 350px; background: #ede9fe; top: 40%; left: 40%; animation-delay: -14s; }
-
 @keyframes floatBlob {
     0%, 100% { transform: translate(0, 0) scale(1); }
     33% { transform: translate(40px, -30px) scale(1.1); }
@@ -93,7 +108,6 @@ body {
     animation: bgPulse 8s ease-in-out infinite;
 }
 @keyframes bgPulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
-
 .particles { position: absolute; inset: 0; overflow: hidden; }
 .particle { position: absolute; width: 6px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 50%; animation: floatUp linear infinite; }
 @keyframes floatUp {
@@ -101,7 +115,6 @@ body {
     10% { opacity: 1; } 90% { opacity: 1; }
     to { transform: translateY(-100px) scale(1); opacity: 0; }
 }
-
 .login-box {
     background: rgba(255,255,255,0.98);
     -webkit-backdrop-filter: blur(20px);
@@ -117,7 +130,6 @@ body {
     0% { opacity: 0; transform: translateY(40px) scale(0.95); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 .login-logo { text-align: center; margin-bottom: 32px; }
 .login-logo-icon {
     width: 84px; height: 84px;
@@ -143,7 +155,6 @@ body {
     100% { opacity: 0; transform: scale(1.3); }
 }
 .login-logo-icon svg { width: 46px; height: 46px; stroke: white; stroke-width: 1.8; fill: none; }
-
 .login-logo h1 { font-size: 30px; font-weight: 900; color: var(--dark); letter-spacing: -1px; }
 .login-logo h1 span {
     background: linear-gradient(135deg, var(--primary), var(--primary-deep));
@@ -159,7 +170,6 @@ body {
     transition: color 0.2s;
 }
 .form-group:focus-within label { color: var(--primary-dark); }
-
 .input-wrap { position: relative; }
 .input-icon {
     position: absolute; left: 14px; top: 50%;
@@ -170,7 +180,6 @@ body {
     width: 20px; height: 20px;
 }
 .form-group:focus-within .input-icon { color: var(--primary); }
-
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -184,7 +193,6 @@ body {
     outline: none;
 }
 .form-group input:not(.with-icon), .form-group select:not(.with-icon), .form-group textarea:not(.with-icon) { padding-left: 16px; }
-
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -193,7 +201,6 @@ body {
     transform: translateY(-1px);
 }
 .form-group input::placeholder { color: var(--gray-2); font-weight: 400; }
-
 .pw-toggle {
     position: absolute; right: 12px; top: 50%;
     transform: translateY(-50%);
@@ -204,7 +211,6 @@ body {
     transition: all 0.2s;
 }
 .pw-toggle:hover { color: var(--primary); background: var(--primary-50); }
-
 .btn {
     display: inline-flex; align-items: center; justify-content: center;
     gap: 8px; padding: 12px 22px;
@@ -221,7 +227,6 @@ body {
     transition: transform 0.5s, opacity 0.5s;
 }
 .btn:active::before { transform: scale(2.5); opacity: 1; transition: 0s; }
-
 .btn-primary {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white; width: 100%; padding: 15px; font-size: 15px;
@@ -229,23 +234,13 @@ body {
 }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px var(--primary-glow); }
 .btn-primary:active { transform: translateY(0); }
-
-.btn-secondary {
-    background: var(--white); color: var(--dark-2);
-    border: 2px solid var(--border);
-}
-.btn-secondary:hover {
-    background: var(--primary-50); border-color: var(--primary);
-    color: var(--primary-dark); transform: translateY(-1px);
-}
-
+.btn-secondary { background: var(--white); color: var(--dark-2); border: 2px solid var(--border); }
+.btn-secondary:hover { background: var(--primary-50); border-color: var(--primary); color: var(--primary-dark); transform: translateY(-1px); }
 .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
 .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
-
 .btn-sm { padding: 9px 16px; font-size: 13px; }
 .btn-icon { width: 38px; height: 38px; padding: 0; border-radius: 10px; }
 .btn-icon svg { width: 17px; height: 17px; }
-
 .loader {
     width: 18px; height: 18px;
     border: 2.5px solid rgba(255,255,255,0.3);
@@ -253,18 +248,15 @@ body {
     animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
 .shake { animation: shake 0.5s; }
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     20%, 60% { transform: translateX(-8px); }
     40%, 80% { transform: translateX(8px); }
 }
-
 .app { display: none; min-height: 100vh; position: relative; z-index: 1; }
 .app.active { display: flex; animation: appIn 0.5s var(--ease); }
 @keyframes appIn { from { opacity: 0; } to { opacity: 1; } }
-
 .sidebar {
     width: 268px;
     background: linear-gradient(180deg, #ffffff 0%, #fafcfb 100%);
@@ -276,7 +268,6 @@ body {
     z-index: 1000;
     box-shadow: 2px 0 20px rgba(15,23,42,0.03);
 }
-
 .sidebar-header {
     padding: 22px 20px;
     border-bottom: 1px solid var(--border);
@@ -289,7 +280,6 @@ body {
     background: linear-gradient(90deg, transparent, var(--primary), transparent);
     opacity: 0.4;
 }
-
 .sidebar-logo {
     width: 44px; height: 44px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
@@ -309,7 +299,6 @@ body {
 .sidebar-logo:hover::before { transform: translateX(100%); }
 .sidebar-logo:hover { transform: rotate(-8deg) scale(1.08); }
 .sidebar-logo svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 1.8; }
-
 .sidebar-title h2 { font-size: 16.5px; font-weight: 800; color: var(--dark); letter-spacing: -0.4px; }
 .sidebar-title h2 span {
     background: linear-gradient(135deg, var(--primary), var(--primary-deep));
@@ -317,10 +306,8 @@ body {
     -webkit-text-fill-color: transparent; color: transparent;
 }
 .sidebar-title p { font-size: 11px; color: var(--gray-2); font-weight: 600; letter-spacing: 0.3px; }
-
 .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
 .nav-section { margin-bottom: 20px; }
-
 .nav-section-title {
     font-size: 10px; font-weight: 800; color: var(--gray-2);
     text-transform: uppercase; letter-spacing: 1.2px;
@@ -331,7 +318,6 @@ body {
     content: ''; flex: 1; height: 1px;
     background: linear-gradient(90deg, var(--border), transparent);
 }
-
 .nav-item {
     display: flex; align-items: center; gap: 12px;
     padding: 11px 14px; border-radius: 11px;
@@ -355,11 +341,9 @@ body {
     transform: translateX(0);
 }
 .nav-item.active::before { display: none; }
-
 .nav-item .icon { width: 20px; height: 20px; transition: transform 0.3s var(--ease-bounce); }
 .nav-item:hover .icon { transform: scale(1.15) rotate(-5deg); }
 .nav-item.active .icon { transform: scale(1.1); }
-
 .nav-item .badge {
     margin-left: auto; background: var(--danger); color: white;
     font-size: 10px; font-weight: 800;
@@ -372,9 +356,7 @@ body {
     50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
 }
 .nav-item.active .badge { background: rgba(255,255,255,0.3); animation: none; }
-
 .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
-
 .user-card {
     display: flex; align-items: center; gap: 10px;
     padding: 10px;
@@ -383,7 +365,6 @@ body {
     transition: all 0.25s var(--ease);
 }
 .user-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
-
 .user-avatar {
     width: 40px; height: 40px; border-radius: 11px;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -396,7 +377,6 @@ body {
 .user-info { flex: 1; min-width: 0; }
 .user-info h4 { font-size: 13px; font-weight: 700; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .user-info p { font-size: 11px; color: var(--gray); font-weight: 500; }
-
 .logout-btn {
     width: 34px; height: 34px;
     border: none; background: transparent;
@@ -407,9 +387,7 @@ body {
 }
 .logout-btn:hover { background: var(--danger); color: white; transform: rotate(90deg); }
 .logout-btn svg { width: 17px; height: 17px; }
-
 .main { flex: 1; margin-left: 268px; min-height: 100vh; display: flex; flex-direction: column; }
-
 .topbar {
     background: rgba(255,255,255,0.85);
     -webkit-backdrop-filter: blur(16px);
@@ -419,7 +397,6 @@ body {
     display: flex; align-items: center; gap: 20px;
     position: sticky; top: 0; z-index: 100;
 }
-
 .menu-toggle {
     display: none;
     background: none; border: none;
@@ -429,16 +406,13 @@ body {
 }
 .menu-toggle:hover { background: var(--light); }
 .menu-toggle svg { width: 22px; height: 22px; }
-
 .topbar-title h1 {
     font-size: 20px; font-weight: 800;
     color: var(--dark); letter-spacing: -0.5px;
     transition: opacity 0.3s;
 }
 .topbar-title p { font-size: 12px; color: var(--gray); margin-top: 2px; font-weight: 500; }
-
 .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
-
 .search-box { position: relative; }
 .search-box input {
     padding: 10px 16px 10px 42px;
@@ -463,7 +437,6 @@ body {
     pointer-events: none; transition: color 0.2s;
 }
 .search-box input:focus ~ .search-icon { color: var(--primary); }
-
 .icon-btn {
     width: 42px; height: 42px;
     border: none; background: var(--light);
@@ -485,16 +458,13 @@ body {
     0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239,68,68,0.7); }
     50% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(239,68,68,0); }
 }
-
 .content { padding: 28px; flex: 1; }
-
 .page { display: none; }
 .page.active { display: block; animation: pageIn 0.5s var(--ease); }
 @keyframes pageIn {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 .card {
     background: var(--white);
     border-radius: var(--radius);
@@ -505,9 +475,7 @@ body {
     animation: cardIn 0.5s var(--ease) backwards;
 }
 .card:hover { box-shadow: var(--shadow); }
-
 @keyframes cardIn { from { opacity: 0; transform: translateY(20px); } }
-
 .card-header {
     padding: 18px 22px;
     border-bottom: 1px solid var(--border);
@@ -523,13 +491,11 @@ body {
 }
 .card-header h3 .icon { color: var(--primary); }
 .card-body { padding: 22px; }
-
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 18px; margin-bottom: 24px;
 }
-
 .stat-card {
     background: var(--white);
     border-radius: var(--radius);
@@ -549,12 +515,10 @@ body {
 .stat-card:nth-child(6) { animation-delay: 0.3s; }
 .stat-card:nth-child(7) { animation-delay: 0.35s; }
 .stat-card:nth-child(8) { animation-delay: 0.4s; }
-
 @keyframes statIn {
     from { opacity: 0; transform: translateY(24px) scale(0.96); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 .stat-card::before {
     content: ''; position: absolute; top: 0; left: 0;
     width: 100%; height: 3px;
@@ -563,22 +527,11 @@ body {
     transition: transform 0.4s var(--ease);
 }
 .stat-card:hover::before { transform: scaleX(1); }
-
-.stat-card::after {
-    content: ''; position: absolute; top: -60%; right: -60%;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, var(--primary-glow), transparent 70%);
-    opacity: 0; transition: opacity 0.4s;
-    pointer-events: none;
-}
-.stat-card:hover::after { opacity: 0.3; }
-
 .stat-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-md);
     border-color: var(--primary-light);
 }
-
 .stat-card.blue::before { background: linear-gradient(90deg, var(--info), #2563eb); }
 .stat-card.blue .stat-icon { background: var(--info-light); color: #1e40af; }
 .stat-card.orange::before { background: linear-gradient(90deg, var(--warning), #d97706); }
@@ -587,7 +540,6 @@ body {
 .stat-card.red .stat-icon { background: var(--danger-light); color: #b91c1c; }
 .stat-card.purple::before { background: linear-gradient(90deg, var(--purple), #7c3aed); }
 .stat-card.purple .stat-icon { background: var(--purple-light); color: #6d28d9; }
-
 .stat-icon {
     width: 48px; height: 48px;
     border-radius: 13px;
@@ -598,7 +550,6 @@ body {
 }
 .stat-icon svg { width: 24px; height: 24px; }
 .stat-card:hover .stat-icon { transform: scale(1.15) rotate(-8deg); }
-
 .stat-label {
     font-size: 11.5px; color: var(--gray);
     font-weight: 700; text-transform: uppercase;
@@ -610,7 +561,6 @@ body {
     line-height: 1.1;
 }
 .stat-value small { font-size: 13px; font-weight: 600; color: var(--gray); }
-
 .stat-change {
     font-size: 12px; margin-top: 8px;
     font-weight: 600;
@@ -619,15 +569,12 @@ body {
 .stat-change.up { color: var(--primary); }
 .stat-change.down { color: var(--danger); }
 .stat-change svg { width: 13px; height: 13px; }
-
 .counter { display: inline-block; }
-
 .quick-actions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 14px; margin-bottom: 24px;
 }
-
 .quick-action {
     display: flex; align-items: center; gap: 13px;
     padding: 16px 18px;
@@ -645,25 +592,15 @@ body {
 .quick-action:nth-child(4) { animation-delay: 0.2s; }
 .quick-action:nth-child(5) { animation-delay: 0.25s; }
 .quick-action:nth-child(6) { animation-delay: 0.3s; }
-
 @keyframes qaIn {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
-.quick-action::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, var(--primary-50), transparent);
-    opacity: 0; transition: opacity 0.3s;
-}
-.quick-action:hover::before { opacity: 1; }
 .quick-action:hover {
     border-color: var(--primary);
     transform: translateY(-4px);
     box-shadow: 0 12px 24px -8px var(--primary-glow);
 }
-.quick-action:active { transform: translateY(-1px); }
-
 .qa-icon {
     width: 42px; height: 42px;
     border-radius: 11px;
@@ -677,14 +614,12 @@ body {
 .qa-icon svg { width: 20px; height: 20px; }
 .quick-action:hover .qa-icon { transform: scale(1.12) rotate(-8deg); }
 .quick-action > span { position: relative; z-index: 1; }
-
 .charts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
     gap: 20px; margin-bottom: 24px;
 }
 .chart-container { height: 290px; position: relative; }
-
 .financial-box {
     background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%);
     color: white; padding: 28px;
@@ -695,29 +630,13 @@ body {
     animation: finIn 0.7s var(--ease-bounce) backwards;
 }
 @keyframes finIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } }
-
-.financial-box::before {
-    content: ''; position: absolute; top: -50%; right: -10%;
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
-    border-radius: 50%; animation: floatBlob 12s ease-in-out infinite;
-}
-.financial-box::after {
-    content: ''; position: absolute; bottom: -50%; left: -10%;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
-    border-radius: 50%; animation: floatBlob 15s ease-in-out infinite reverse;
-}
-
 .financial-box h3 {
     font-size: 14px; font-weight: 700;
     opacity: 0.95; margin-bottom: 20px;
     position: relative;
     display: flex; align-items: center; gap: 8px;
-    letter-spacing: 0.2px;
 }
 .financial-box h3 svg { width: 18px; height: 18px; }
-
 .financial-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -731,16 +650,12 @@ body {
 .financial-item .value {
     font-size: 24px; font-weight: 800;
     margin-top: 8px; letter-spacing: -0.8px;
-    animation: valueIn 0.8s var(--ease-bounce) backwards;
 }
-@keyframes valueIn { from { opacity: 0; transform: scale(0.8); } }
 .financial-item.total .value {
     font-size: 30px; color: #fef3c7;
     text-shadow: 0 2px 10px rgba(254,243,199,0.4);
 }
-
 .schedule-list { display: flex; flex-direction: column; gap: 10px; }
-
 .schedule-item {
     display: flex; align-items: center; gap: 14px;
     padding: 14px 16px;
@@ -751,20 +666,11 @@ body {
     animation: itemIn 0.4s var(--ease) backwards;
     cursor: pointer;
 }
-.schedule-item:nth-child(1) { animation-delay: 0.05s; }
-.schedule-item:nth-child(2) { animation-delay: 0.1s; }
-.schedule-item:nth-child(3) { animation-delay: 0.15s; }
-.schedule-item:nth-child(4) { animation-delay: 0.2s; }
-.schedule-item:nth-child(5) { animation-delay: 0.25s; }
-
-@keyframes itemIn { from { opacity: 0; transform: translateX(-15px); } }
-
 .schedule-item:hover {
     background: var(--primary-50);
     transform: translateX(6px);
     box-shadow: var(--shadow-sm);
 }
-
 .schedule-time {
     display: flex; flex-direction: column; align-items: center;
     min-width: 74px; padding: 8px 12px;
@@ -774,12 +680,10 @@ body {
     box-shadow: var(--shadow-sm);
 }
 .schedule-time small { font-size: 10px; color: var(--gray); font-weight: 600; margin-top: 2px; }
-
 .schedule-info { flex: 1; min-width: 0; }
 .schedule-info h4 { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
 .schedule-info p { font-size: 12px; color: var(--gray); font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .schedule-info p svg { width: 13px; height: 13px; }
-
 .table-responsive { overflow-x: auto; border-radius: var(--radius); }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 thead { background: linear-gradient(180deg, var(--light), #f1f5f9); }
@@ -796,24 +700,15 @@ td {
     color: var(--dark); white-space: nowrap;
     font-weight: 500;
 }
-tbody tr { transition: all 0.2s var(--ease); animation: rowIn 0.35s var(--ease) backwards; }
-tbody tr:nth-child(1) { animation-delay: 0.02s; }
-tbody tr:nth-child(2) { animation-delay: 0.04s; }
-tbody tr:nth-child(3) { animation-delay: 0.06s; }
-tbody tr:nth-child(4) { animation-delay: 0.08s; }
-tbody tr:nth-child(5) { animation-delay: 0.1s; }
-@keyframes rowIn { from { opacity: 0; transform: translateY(8px); } }
+tbody tr { transition: all 0.2s var(--ease); }
 tbody tr:hover { background: var(--primary-50); }
 tbody tr:last-child td { border-bottom: none; }
-
 .badge {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 5px 11px; border-radius: 20px;
     font-size: 11px; font-weight: 700;
     white-space: nowrap;
-    transition: transform 0.2s;
 }
-.badge:hover { transform: scale(1.05); }
 .badge-success { background: var(--primary-light); color: var(--primary-deep); }
 .badge-danger { background: var(--danger-light); color: #991b1b; }
 .badge-warning { background: var(--warning-light); color: #92400e; }
@@ -823,9 +718,7 @@ tbody tr:last-child td { border-bottom: none; }
 .badge .dot-ind {
     width: 6px; height: 6px; border-radius: 50%;
     background: currentColor;
-    animation: dotPulse 2s ease-in-out infinite;
 }
-
 .toolbar {
     display: flex; align-items: center; gap: 12px;
     margin-bottom: 20px; flex-wrap: wrap;
@@ -834,7 +727,6 @@ tbody tr:last-child td { border-bottom: none; }
     border-radius: var(--radius);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
-    animation: pageIn 0.5s var(--ease);
 }
 .toolbar input, .toolbar select {
     padding: 10px 14px;
@@ -852,7 +744,6 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .toolbar input { min-width: 240px; }
 .toolbar .spacer { flex: 1; }
-
 .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(15,23,42,0.55);
@@ -863,7 +754,6 @@ tbody tr:last-child td { border-bottom: none; }
     opacity: 0; transition: opacity 0.3s var(--ease);
 }
 .modal-overlay.active { display: flex; opacity: 1; }
-
 .modal {
     background: var(--white);
     border-radius: 20px;
@@ -875,7 +765,6 @@ tbody tr:last-child td { border-bottom: none; }
     transition: all 0.4s var(--ease-bounce);
 }
 .modal-overlay.active .modal { transform: scale(1) translateY(0); opacity: 1; }
-
 .modal-header {
     padding: 22px 26px;
     border-bottom: 1px solid var(--border);
@@ -887,10 +776,8 @@ tbody tr:last-child td { border-bottom: none; }
     font-size: 18px; font-weight: 800;
     color: var(--dark);
     display: flex; align-items: center; gap: 10px;
-    letter-spacing: -0.3px;
 }
 .modal-header h3 svg { color: var(--primary); }
-
 .modal-close {
     width: 36px; height: 36px;
     border: none; background: var(--light);
@@ -901,7 +788,6 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .modal-close:hover { background: var(--danger); color: white; transform: rotate(90deg); }
 .modal-close svg { width: 18px; height: 18px; }
-
 .modal-body { padding: 26px; }
 .modal-footer {
     padding: 18px 26px;
@@ -910,41 +796,24 @@ tbody tr:last-child td { border-bottom: none; }
     position: sticky; bottom: 0; background: var(--white);
     border-radius: 0 0 20px 20px;
 }
-
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .modal .form-group { margin-bottom: 18px; }
-
 .photo-upload-section {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
+    display: flex; gap: 20px; align-items: flex-start;
     padding: 18px;
     background: linear-gradient(135deg, var(--primary-50), white);
     border: 2px dashed var(--primary-light);
     border-radius: 14px;
     margin-bottom: 22px;
-    transition: all 0.3s var(--ease);
-}
-.photo-upload-section:hover {
-    border-color: var(--primary);
-    background: linear-gradient(135deg, var(--primary-light), var(--primary-50));
 }
 .photo-preview-box {
-    width: 110px;
-    height: 145px;
-    border-radius: 12px;
-    overflow: hidden;
+    width: 110px; height: 145px;
+    border-radius: 12px; overflow: hidden;
     background: white;
     border: 2px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s var(--ease);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative;
 }
-.photo-preview-box:hover { transform: scale(1.03); box-shadow: var(--shadow-md); }
 .photo-preview-box img { width: 100%; height: 100%; object-fit: cover; }
 .photo-preview-box .placeholder-icon {
     color: var(--gray-2);
@@ -958,19 +827,7 @@ tbody tr:last-child td { border-bottom: none; }
 .photo-preview-box .placeholder-icon span {
     font-size: 10px; color: var(--gray);
     font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
-.photo-preview-box::before {
-    content: '3x4';
-    position: absolute; top: 6px; left: 6px;
-    background: var(--primary); color: white;
-    font-size: 9px; font-weight: 800;
-    padding: 2px 6px; border-radius: 5px;
-    letter-spacing: 0.5px;
-    z-index: 1; display: none;
-}
-.photo-preview-box.has-photo::before { display: block; }
-
 .photo-actions {
     flex: 1;
     display: flex; flex-direction: column;
@@ -982,14 +839,8 @@ tbody tr:last-child td { border-bottom: none; }
     display: flex; align-items: center; gap: 8px;
 }
 .photo-actions h4 svg { width: 18px; height: 18px; color: var(--primary); }
-.photo-actions p {
-    font-size: 12px; color: var(--gray);
-    line-height: 1.5; font-weight: 500;
-}
-.photo-buttons {
-    display: flex; gap: 8px;
-    flex-wrap: wrap; margin-top: 4px;
-}
+.photo-actions p { font-size: 12px; color: var(--gray); line-height: 1.5; font-weight: 500; }
+.photo-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 .photo-btn {
     display: inline-flex; align-items: center;
     gap: 6px; padding: 9px 14px;
@@ -1003,20 +854,15 @@ tbody tr:last-child td { border-bottom: none; }
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white; box-shadow: 0 4px 12px var(--primary-glow);
 }
-.photo-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px var(--primary-glow); }
+.photo-btn.primary:hover { transform: translateY(-2px); }
 .photo-btn.danger {
     background: white; color: var(--danger);
     border-color: var(--danger-light);
 }
-.photo-btn.danger:hover {
-    background: var(--danger); color: white;
-    border-color: var(--danger);
-}
+.photo-btn.danger:hover { background: var(--danger); color: white; }
 #photoInput { display: none; }
-
 .profile-avatar { overflow: hidden; padding: 0; }
 .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
 .notif-list { max-height: 500px; overflow-y: auto; }
 .notif-item {
     display: flex; gap: 14px;
@@ -1025,17 +871,12 @@ tbody tr:last-child td { border-bottom: none; }
     background: var(--light);
     border-left: 4px solid var(--primary);
     transition: all 0.3s var(--ease);
-    animation: itemIn 0.4s var(--ease) backwards;
     cursor: pointer;
 }
-.notif-item:hover { background: var(--primary-50); transform: translateX(6px); box-shadow: var(--shadow-sm); }
+.notif-item:hover { background: var(--primary-50); transform: translateX(6px); }
 .notif-item.warning { border-left-color: var(--warning); }
-.notif-item.warning .notif-icon { background: var(--warning-light); color: #b45309; }
 .notif-item.danger { border-left-color: var(--danger); }
-.notif-item.danger .notif-icon { background: var(--danger-light); color: #b91c1c; }
 .notif-item.info { border-left-color: var(--info); }
-.notif-item.info .notif-icon { background: var(--info-light); color: #1e40af; }
-
 .notif-icon {
     width: 40px; height: 40px; border-radius: 11px;
     display: flex; align-items: center; justify-content: center;
@@ -1047,7 +888,6 @@ tbody tr:last-child td { border-bottom: none; }
 .notif-content h4 { font-size: 13.5px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
 .notif-content p { font-size: 12.5px; color: var(--gray); line-height: 1.5; font-weight: 500; }
 .notif-content time { font-size: 11px; color: var(--gray-2); margin-top: 5px; display: block; font-weight: 600; }
-
 .progress-bar {
     height: 8px; background: var(--border);
     border-radius: 10px; overflow: hidden;
@@ -1058,21 +898,12 @@ tbody tr:last-child td { border-bottom: none; }
     background: linear-gradient(90deg, var(--primary), var(--primary-dark));
     border-radius: 10px;
     transition: width 1s var(--ease);
-    position: relative; overflow: hidden;
 }
-.progress-fill::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: shimmer 2s linear infinite;
-}
-@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 .progress-fill.warning { background: linear-gradient(90deg, var(--warning), #d97706); }
 .progress-fill.danger { background: linear-gradient(90deg, var(--danger), #b91c1c); }
-
 .empty-state {
     text-align: center; padding: 60px 20px;
     color: var(--gray);
-    animation: pageIn 0.5s var(--ease);
 }
 .empty-state .icon-wrap {
     width: 80px; height: 80px;
@@ -1081,16 +912,10 @@ tbody tr:last-child td { border-bottom: none; }
     background: var(--primary-50);
     display: flex; align-items: center; justify-content: center;
     color: var(--primary);
-    animation: emptyFloat 3s ease-in-out infinite;
-}
-@keyframes emptyFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
 }
 .empty-state .icon-wrap svg { width: 38px; height: 38px; }
 .empty-state h3 { font-size: 17px; color: var(--dark); margin-bottom: 6px; font-weight: 700; }
 .empty-state p { font-size: 14px; }
-
 .toast-container {
     position: fixed; top: 20px; right: 20px;
     z-index: 3000;
@@ -1110,24 +935,14 @@ tbody tr:last-child td { border-bottom: none; }
 @keyframes toastIn { from { opacity: 0; transform: translateX(120%) scale(0.8); } }
 @keyframes toastOut { to { opacity: 0; transform: translateX(120%) scale(0.8); } }
 .toast.removing { animation: toastOut 0.3s var(--ease) forwards; }
-
-.toast::before {
-    content: ''; position: absolute; bottom: 0; left: 0;
-    height: 3px; width: 100%;
-    background: currentColor; opacity: 0.3;
-    animation: toastProgress 3s linear forwards;
-}
-@keyframes toastProgress { from { width: 100%; } to { width: 0; } }
-
-.toast.success { border-left-color: var(--primary); color: var(--primary); }
+.toast.success { border-left-color: var(--primary); }
 .toast.success .toast-icon { background: var(--primary-light); color: var(--primary-dark); }
-.toast.error { border-left-color: var(--danger); color: var(--danger); }
+.toast.error { border-left-color: var(--danger); }
 .toast.error .toast-icon { background: var(--danger-light); color: #b91c1c; }
-.toast.warning { border-left-color: var(--warning); color: var(--warning); }
+.toast.warning { border-left-color: var(--warning); }
 .toast.warning .toast-icon { background: var(--warning-light); color: #b45309; }
-.toast.info { border-left-color: var(--info); color: var(--info); }
+.toast.info { border-left-color: var(--info); }
 .toast.info .toast-icon { background: var(--info-light); color: #1e40af; }
-
 .toast-icon {
     width: 36px; height: 36px;
     border-radius: 10px;
@@ -1138,7 +953,6 @@ tbody tr:last-child td { border-bottom: none; }
 .toast-content { flex: 1; }
 .toast-content h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; color: var(--dark); }
 .toast-content p { font-size: 12px; color: var(--gray); font-weight: 500; }
-
 .profile-header {
     display: flex; gap: 22px; align-items: center;
     padding: 24px;
@@ -1146,7 +960,6 @@ tbody tr:last-child td { border-bottom: none; }
     border-radius: var(--radius);
     margin-bottom: 20px;
     border: 1px solid var(--primary-light);
-    animation: pageIn 0.5s var(--ease);
 }
 .profile-avatar {
     width: 88px; height: 88px;
@@ -1156,13 +969,8 @@ tbody tr:last-child td { border-bottom: none; }
     color: white; font-size: 34px; font-weight: 800;
     flex-shrink: 0;
     box-shadow: 0 12px 28px var(--primary-glow);
-    animation: avatarPulse 4s ease-in-out infinite;
 }
-@keyframes avatarPulse {
-    0%, 100% { box-shadow: 0 12px 28px var(--primary-glow); }
-    50% { box-shadow: 0 16px 36px var(--primary-glow); }
-}
-.profile-info h2 { font-size: 23px; font-weight: 800; color: var(--dark); margin-bottom: 6px; letter-spacing: -0.5px; }
+.profile-info h2 { font-size: 23px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
 .profile-info p { font-size: 13px; color: var(--gray); margin-bottom: 10px; font-weight: 500; }
 .profile-meta { display: flex; gap: 8px; flex-wrap: wrap; }
 .profile-grid {
@@ -1175,34 +983,27 @@ tbody tr:last-child td { border-bottom: none; }
     background: var(--white);
     border-radius: 12px;
     border: 1px solid var(--border);
-    transition: all 0.25s var(--ease);
 }
-.info-item:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .info-item label {
     font-size: 11px; color: var(--gray);
     text-transform: uppercase; letter-spacing: 0.6px;
     font-weight: 700; display: block; margin-bottom: 5px;
 }
 .info-item .value { font-size: 14.5px; font-weight: 700; color: var(--dark); }
-
 .section-title {
     font-size: 15px; font-weight: 700;
     color: var(--dark); margin: 24px 0 12px;
     display: flex; align-items: center; gap: 8px;
 }
 .section-title svg { color: var(--primary); }
-
 .sidebar-overlay {
     display: none;
     position: fixed; inset: 0;
     background: rgba(15,23,42,0.5);
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
     z-index: 999; opacity: 0;
     transition: opacity 0.3s;
 }
 .sidebar-overlay.active { display: block; opacity: 1; }
-
 .days-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1210,19 +1011,15 @@ tbody tr:last-child td { border-bottom: none; }
     margin-top: 8px;
 }
 .day-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: flex; align-items: center; gap: 10px;
     padding: 12px 14px;
     background: var(--light);
     border-radius: 11px;
     border: 2px solid var(--border);
-    transition: all 0.25s var(--ease);
 }
 .day-row.active {
     background: linear-gradient(135deg, var(--primary-50), white);
     border-color: var(--primary);
-    box-shadow: 0 4px 12px var(--primary-glow);
 }
 .day-row label.day-check {
     display: flex; align-items: center; gap: 8px;
@@ -1233,8 +1030,7 @@ tbody tr:last-child td { border-bottom: none; }
 .day-row input[type="checkbox"] {
     width: 18px; height: 18px;
     accent-color: var(--primary);
-    cursor: pointer;
-    flex-shrink: 0;
+    cursor: pointer; flex-shrink: 0;
 }
 .day-times {
     display: flex; align-items: center; gap: 6px;
@@ -1250,9 +1046,7 @@ tbody tr:last-child td { border-bottom: none; }
     background: var(--white);
     color: var(--dark);
     outline: none;
-    flex: 1;
-    min-width: 0;
-    transition: all 0.2s;
+    flex: 1; min-width: 0;
 }
 .day-times input[type="time"]:focus {
     border-color: var(--primary);
@@ -1269,11 +1063,56 @@ tbody tr:last-child td { border-bottom: none; }
     font-size: 12px;
 }
 
+/* PWA Install Button */
+#pwaInstallBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 14px 22px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 12px 32px var(--primary-glow);
+    display: none;
+    align-items: center;
+    gap: 10px;
+    z-index: 5000;
+    animation: pwaPop 0.5s var(--ease-bounce);
+    font-family: inherit;
+}
+#pwaInstallBtn.show { display: flex; }
+#pwaInstallBtn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px var(--primary-glow); }
+#pwaInstallBtn svg { width: 20px; height: 20px; }
+@keyframes pwaPop {
+    from { opacity: 0; transform: scale(0.5) translateY(50px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Offline indicator */
+#offlineIndicator {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--warning);
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 9999;
+    display: none;
+    animation: slideDown 0.3s var(--ease);
+}
+#offlineIndicator.show { display: block; }
+@keyframes slideDown { from { transform: translateY(-100%); } }
+
 @media (max-width: 1024px) {
     .search-box input { width: 200px; }
     .search-box input:focus { width: 240px; }
 }
-
 @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
@@ -1300,7 +1139,6 @@ tbody tr:last-child td { border-bottom: none; }
     .photo-buttons { justify-content: center; }
     .days-grid { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 480px) {
     .stats-grid { grid-template-columns: 1fr; }
     .quick-actions { grid-template-columns: 1fr; }
@@ -1309,7 +1147,6 @@ tbody tr:last-child td { border-bottom: none; }
     .login-box { padding: 32px 24px; }
     .toolbar input { min-width: 100%; }
 }
-
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1319,6 +1156,8 @@ tbody tr:last-child td { border-bottom: none; }
 </style>
 </head>
 <body>
+
+<div id="offlineIndicator">📡 Internetga ulanmagan — ma'lumotlar yangilanmaydi</div>
 
 <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
     <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
@@ -1362,8 +1201,7 @@ tbody tr:last-child td { border-bottom: none; }
     <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
     <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></symbol>
     <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h16v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7"/><path d="M16 12h.01"/></symbol>
-    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M8 7h8M8 11h8M8 15h5"/></symbol>
-    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="i-download-app" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
 </svg>
 
 <div class="bg-decoration">
@@ -1371,6 +1209,12 @@ tbody tr:last-child td { border-bottom: none; }
     <div class="bg-blob b2"></div>
     <div class="bg-blob b3"></div>
 </div>
+
+<!-- PWA Install Button -->
+<button id="pwaInstallBtn" onclick="installPWA()">
+    <svg><use href="#i-download-app"/></svg>
+    <span>Dasturni o'rnatish</span>
+</button>
 
 <!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
@@ -1714,16 +1558,18 @@ tbody tr:last-child td { border-bottom: none; }
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-/* ==================== ⚙️ SUPABASE CONFIG ==================== */
+/* ==================== SUPABASE CONFIG ==================== */
 const SUPABASE_URL = 'https://temtisgmrrserjphinqc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlbXRpc2dtcnJzZXJqcGhpbnFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NDA5NTAsImV4cCI6MjEwNjAxNjk1MH0.hpnAEmV7aDyCW9IyhU3PkW18eWZiTqiQv8QBBmiCIR8';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Supabase client - faqat bir marta
+window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ==================== GLOBAL STATE ==================== */
 let charts = {};
 let currentUser = null;
 let _pendingPhoto = null;
+let deferredPrompt = null;
 
 /* ==================== CONSTANTS ==================== */
 const DAYS = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'];
@@ -1750,38 +1596,32 @@ const EXPENSE_CATEGORIES = ['Ijara', 'Maosh', 'Kommunal', 'Jihoz', 'Reklama', 'B
 /* ==================== DB (SUPABASE) ==================== */
 const DB = {
     _cache: {},
-    
     async loadAll() {
         const tables = ['subjects', 'teachers', 'groups', 'students', 'payments', 'expenses', 'attendance', 'schedules', 'notifications'];
         await Promise.all(tables.map(async (table) => {
-            const { data, error } = await supabase.from(table).select('*');
+            const { data, error } = await window.supabaseClient.from(table).select('*');
             if (!error) this._cache[table] = data || [];
-            else console.error('Load error:', table, error);
         }));
-        console.log('✅ Ma\'lumotlar yuklandi:', Object.keys(this._cache).map(k => `${k}(${this._cache[k].length})`).join(', '));
+        console.log('✅ Yuklandi:', Object.keys(this._cache).map(k => `${k}(${this._cache[k].length})`).join(', '));
     },
-    
     get(key) { return this._cache[key] || []; },
-    
     async insert(table, data) {
-        const { data: result, error } = await supabase.from(table).insert(data).select().single();
-        if (error) { console.error('Insert error:', table, error); throw error; }
+        const { data: result, error } = await window.supabaseClient.from(table).insert(data).select().single();
+        if (error) throw error;
         this._cache[table] = [...(this._cache[table] || []), result];
         return result;
     },
-    
     async update(table, id, data) {
-        const { data: result, error } = await supabase.from(table).update(data).eq('id', id).select().single();
-        if (error) { console.error('Update error:', table, error); throw error; }
+        const { data: result, error } = await window.supabaseClient.from(table).update(data).eq('id', id).select().single();
+        if (error) throw error;
         const arr = this._cache[table] || [];
         const i = arr.findIndex(x => x.id === id);
         if (i >= 0) arr[i] = result;
         return result;
     },
-    
     async remove(table, id) {
-        const { error } = await supabase.from(table).delete().eq('id', id);
-        if (error) { console.error('Delete error:', table, error); throw error; }
+        const { error } = await window.supabaseClient.from(table).delete().eq('id', id);
+        if (error) throw error;
         this._cache[table] = (this._cache[table] || []).filter(x => x.id !== id);
     }
 };
@@ -1791,15 +1631,12 @@ function togglePw() {
     const inp = document.getElementById('loginPassword');
     inp.type = inp.type === 'password' ? 'text' : 'password';
 }
-
 function formatMoney(n) { return new Intl.NumberFormat('uz-UZ').format(Math.round(n || 0)) + ' so\'m'; }
 function formatDate(d) { if (!d) return '-'; return new Date(d).toLocaleDateString('uz-UZ'); }
 function getStudentName(id) { const s = DB.get('students').find(s => s.id === id); return s ? s.full_name : 'Noma\'lum'; }
 function getGroupName(id) { const g = DB.get('groups').find(g => g.id === id); return g ? g.name : '-'; }
 function getSubjectName(id) { const s = DB.get('subjects').find(s => s.id === id); return s ? s.name : '-'; }
 function getTeacherName(id) { const t = DB.get('teachers').find(t => t.id === id); return t ? t.full_name : '-'; }
-function getExpenseCategoryName(c) { return c || 'Boshqa'; }
-
 function getAttendancePercent(studentId) {
     const att = DB.get('attendance').filter(a => a.student_id === studentId);
     if (!att.length) return 100;
@@ -1812,15 +1649,13 @@ function getStudentPaymentStatus(studentId) {
     const ps = DB.get('payments').filter(p => p.student_id === studentId);
     return ps.length ? ps[ps.length - 1].status : 'To\'lanmagan';
 }
-
 function getGroupDaysText(group) {
-    if (!group || !group.days || !group.days.length) return group?.schedule || '-';
+    if (!group || !group.days || !group.days.length) return '-';
     return group.days.map(d => {
         const short = DAYS_SHORT[d.day] || d.day.slice(0, 3);
         return `${short} ${d.start}-${d.end}`;
     }).join(' | ');
 }
-
 function animateCounter(el, target, duration = 1200) {
     const startTime = performance.now();
     const isMoney = target >= 100000;
@@ -1834,29 +1669,18 @@ function animateCounter(el, target, duration = 1200) {
     }
     requestAnimationFrame(tick);
 }
-
 function toast(title, message, type = 'success') {
     const iconMap = { success: 'i-check-circle', error: 'i-x-circle', warning: 'i-alert', info: 'i-info' };
     const el = document.createElement('div');
     el.className = 'toast ' + type;
-    el.innerHTML = `
-        <div class="toast-icon"><svg><use href="#${iconMap[type]}"/></svg></div>
-        <div class="toast-content"><h4>${title}</h4><p>${message}</p></div>
-    `;
+    el.innerHTML = `<div class="toast-icon"><svg><use href="#${iconMap[type]}"/></svg></div><div class="toast-content"><h4>${title}</h4><p>${message}</p></div>`;
     document.getElementById('toastContainer').appendChild(el);
-    setTimeout(() => {
-        el.classList.add('removing');
-        setTimeout(() => el.remove(), 300);
-    }, 3000);
+    setTimeout(() => { el.classList.add('removing'); setTimeout(() => el.remove(), 300); }, 3000);
 }
-
 function openModal(title, body, footer = '') {
     document.getElementById('modalTitle').innerHTML = title;
     document.getElementById('modalBody').innerHTML = body;
-    document.getElementById('modalFooter').innerHTML = footer || `
-        <button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button>
-        <button class="btn btn-primary" onclick="saveModal()"><svg class="icon-sm"><use href="#i-save"/></svg> Saqlash</button>
-    `;
+    document.getElementById('modalFooter').innerHTML = footer || `<button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button><button class="btn btn-primary" onclick="saveModal()"><svg class="icon-sm"><use href="#i-save"/></svg> Saqlash</button>`;
     document.getElementById('modalOverlay').classList.add('active');
 }
 function closeModal() {
@@ -1864,13 +1688,8 @@ function closeModal() {
     window._modalSave = null;
     _pendingPhoto = null;
 }
-async function saveModal() {
-    if (typeof window._modalSave === 'function') await window._modalSave();
-}
-document.getElementById('modalOverlay').addEventListener('click', e => {
-    if (e.target.id === 'modalOverlay') closeModal();
-});
-
+async function saveModal() { if (typeof window._modalSave === 'function') await window._modalSave(); }
+document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target.id === 'modalOverlay') closeModal(); });
 function destroyCharts() { Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
 
 /* ==================== PHOTO UPLOAD ==================== */
@@ -1880,36 +1699,27 @@ function buildPhotoUploadHTML(existingPhoto, entityLabel = 'shaxs') {
     return `
         <div class="photo-upload-section">
             <div class="photo-preview-box ${hasPhoto ? 'has-photo' : ''}" id="photoPreviewBox">
-                ${hasPhoto 
-                    ? `<img src="${existingPhoto}" alt="Rasm">`
-                    : `<div class="placeholder-icon"><svg><use href="#i-image"/></svg><span>Rasm yo'q</span></div>`
-                }
+                ${hasPhoto ? `<img src="${existingPhoto}" alt="Rasm">` : `<div class="placeholder-icon"><svg><use href="#i-image"/></svg><span>Rasm yo'q</span></div>`}
             </div>
             <div class="photo-actions">
                 <h4><svg><use href="#i-camera"/></svg> 3x4 rasm yuklash</h4>
                 <p>${entityLabel} uchun 3x4 o'lchamdagi rasm yuklang. JPG, PNG (maks. 2MB).</p>
                 <input type="file" id="photoInput" accept="image/*">
                 <div class="photo-buttons">
-                    <button type="button" class="photo-btn primary" onclick="document.getElementById('photoInput').click()">
-                        <svg><use href="#i-upload"/></svg> Rasm tanlash
-                    </button>
-                    <button type="button" class="photo-btn danger" onclick="removePhoto()" id="removePhotoBtn" style="${hasPhoto ? '' : 'display:none;'}">
-                        <svg><use href="#i-trash"/></svg> O'chirish
-                    </button>
+                    <button type="button" class="photo-btn primary" onclick="document.getElementById('photoInput').click()"><svg><use href="#i-upload"/></svg> Rasm tanlash</button>
+                    <button type="button" class="photo-btn danger" onclick="removePhoto()" id="removePhotoBtn" style="${hasPhoto ? '' : 'display:none;'}"><svg><use href="#i-trash"/></svg> O'chirish</button>
                 </div>
             </div>
         </div>
     `;
 }
-
 async function uploadPhotoToStorage(blob) {
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`;
-    const { data, error } = await supabase.storage.from('photos').upload(fileName, blob);
+    const { data, error } = await window.supabaseClient.storage.from('photos').upload(fileName, blob);
     if (error) { console.error('Storage error:', error); return null; }
-    const { data: { publicUrl } } = supabase.storage.from('photos').getPublicUrl(fileName);
+    const { data: { publicUrl } } = window.supabaseClient.storage.from('photos').getPublicUrl(fileName);
     return publicUrl;
 }
-
 function cropTo3x4(file) {
     return new Promise((resolve) => {
         const reader = new FileReader();
@@ -1922,11 +1732,8 @@ function cropTo3x4(file) {
                 const targetAspect = 300 / 400;
                 const srcAspect = img.width / img.height;
                 let sx = 0, sy = 0, sw = img.width, sh = img.height;
-                if (srcAspect > targetAspect) {
-                    sw = img.height * targetAspect; sx = (img.width - sw) / 2;
-                } else {
-                    sh = img.width / targetAspect; sy = (img.height - sh) / 2;
-                }
+                if (srcAspect > targetAspect) { sw = img.height * targetAspect; sx = (img.width - sw) / 2; }
+                else { sh = img.width / targetAspect; sy = (img.height - sh) / 2; }
                 ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 300, 400);
                 canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.85);
             };
@@ -1935,85 +1742,59 @@ function cropTo3x4(file) {
         reader.readAsDataURL(file);
     });
 }
-
 function attachPhotoListener() {
     const inp = document.getElementById('photoInput');
     if (!inp) return;
     inp.addEventListener('change', async e => {
         const file = e.target.files[0];
         if (!file) return;
-        if (file.size > 2 * 1024 * 1024) {
-            toast('Xatolik', 'Rasm hajmi 2MB dan kichik bo\'lishi kerak', 'error');
-            return;
-        }
+        if (file.size > 2 * 1024 * 1024) { toast('Xatolik', 'Rasm hajmi 2MB dan kichik bo\'lishi kerak', 'error'); return; }
         try {
             const blob = await cropTo3x4(file);
             toast('Yuklanmoqda...', 'Rasm saqlanmoqda', 'info');
             const publicUrl = await uploadPhotoToStorage(blob);
-            if (!publicUrl) { toast('Xatolik', 'Rasm yuklanmadi. "photos" bucket yaratilganligini tekshiring.', 'error'); return; }
+            if (!publicUrl) { toast('Xatolik', 'Rasm yuklanmadi', 'error'); return; }
             _pendingPhoto = publicUrl;
             const box = document.getElementById('photoPreviewBox');
             box.innerHTML = `<img src="${publicUrl}" alt="Rasm">`;
             box.classList.add('has-photo');
             const rm = document.getElementById('removePhotoBtn');
             if (rm) rm.style.display = 'inline-flex';
-            toast('Muvaffaqiyat', 'Rasm yuklandi (3x4 format)');
-        } catch (err) {
-            console.error(err);
-            toast('Xatolik', 'Rasmni yuklab bo\'lmadi', 'error');
-        }
+            toast('Muvaffaqiyat', 'Rasm yuklandi (3x4)');
+        } catch (err) { toast('Xatolik', 'Rasmni yuklab bo\'lmadi', 'error'); }
     });
 }
-
 function removePhoto() {
     _pendingPhoto = null;
     const box = document.getElementById('photoPreviewBox');
-    if (box) {
-        box.innerHTML = `<div class="placeholder-icon"><svg><use href="#i-image"/></svg><span>Rasm yo'q</span></div>`;
-        box.classList.remove('has-photo');
-    }
-    const inp = document.getElementById('photoInput');
-    if (inp) inp.value = '';
-    const rm = document.getElementById('removePhotoBtn');
-    if (rm) rm.style.display = 'none';
+    if (box) { box.innerHTML = `<div class="placeholder-icon"><svg><use href="#i-image"/></svg><span>Rasm yo'q</span></div>`; box.classList.remove('has-photo'); }
+    const inp = document.getElementById('photoInput'); if (inp) inp.value = '';
+    const rm = document.getElementById('removePhotoBtn'); if (rm) rm.style.display = 'none';
     toast('Muvaffaqiyat', 'Rasm o\'chirildi', 'info');
 }
-
 function getPhotoHTML(photo, name, size = 40) {
-    if (photo) {
-        return `<div class="user-avatar" style="width:${size}px;height:${size}px;padding:0;overflow:hidden;"><img src="${photo}" alt="${name}" style="width:100%;height:100%;object-fit:cover;"></div>`;
-    }
+    if (photo) return `<div class="user-avatar" style="width:${size}px;height:${size}px;padding:0;overflow:hidden;"><img src="${photo}" alt="${name}" style="width:100%;height:100%;object-fit:cover;"></div>`;
     return `<div class="user-avatar" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.38)}px;">${(name || '?').charAt(0).toUpperCase()}</div>`;
 }
 
 /* ==================== DAYS SCHEDULE ==================== */
 function buildDaysScheduleHTML(existingDays) {
     const days = existingDays || [];
-    return `
-        <div class="days-grid">
-            ${DAYS.map(day => {
-                const existing = days.find(d => d.day === day);
-                const isActive = !!existing;
-                const start = existing?.start || '09:00';
-                const end = existing?.end || '10:30';
-                return `
-                    <div class="day-row ${isActive ? 'active' : ''}" data-day="${day}">
-                        <label class="day-check">
-                            <input type="checkbox" class="day-checkbox" data-day="${day}" ${isActive ? 'checked' : ''}>
-                            <span>${day}</span>
-                        </label>
-                        <div class="day-times">
-                            <input type="time" class="day-start" data-day="${day}" value="${start}" ${isActive ? '' : 'disabled'}>
-                            <span class="dash">—</span>
-                            <input type="time" class="day-end" data-day="${day}" value="${end}" ${isActive ? '' : 'disabled'}>
-                        </div>
-                    </div>
-                `;
-            }).join('')}
-        </div>
-    `;
+    return `<div class="days-grid">${DAYS.map(day => {
+        const existing = days.find(d => d.day === day);
+        const isActive = !!existing;
+        const start = existing?.start || '09:00';
+        const end = existing?.end || '10:30';
+        return `<div class="day-row ${isActive ? 'active' : ''}" data-day="${day}">
+            <label class="day-check"><input type="checkbox" class="day-checkbox" data-day="${day}" ${isActive ? 'checked' : ''}><span>${day}</span></label>
+            <div class="day-times">
+                <input type="time" class="day-start" data-day="${day}" value="${start}" ${isActive ? '' : 'disabled'}>
+                <span class="dash">—</span>
+                <input type="time" class="day-end" data-day="${day}" value="${end}" ${isActive ? '' : 'disabled'}>
+            </div>
+        </div>`;
+    }).join('')}</div>`;
 }
-
 function attachDaysListeners() {
     document.querySelectorAll('.day-checkbox').forEach(cb => {
         cb.addEventListener('change', () => {
@@ -2026,7 +1807,6 @@ function attachDaysListeners() {
         });
     });
 }
-
 function collectDaysFromForm() {
     const result = [];
     document.querySelectorAll('.day-row').forEach(row => {
@@ -2048,15 +1828,11 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
     const txt = document.getElementById('loginBtnText');
     const u = document.getElementById('loginUsername').value.trim();
     const p = document.getElementById('loginPassword').value;
-    
     btn.disabled = true;
     txt.innerHTML = '<span class="loader"></span>';
-    
     const email = u.includes('@') ? u : `${u}@bloom.uz`;
-    
     try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password: p });
-        
+        const { data, error } = await window.supabaseClient.auth.signInWithPassword({ email, password: p });
         if (error) {
             btn.disabled = false;
             txt.textContent = 'Kirish';
@@ -2065,29 +1841,20 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
             toast('Xatolik', 'Login yoki parol noto\'g\'ri: ' + error.message, 'error');
             return;
         }
-        
-        let { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single();
-        
+        let { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
         if (!profile) {
-            const { data: newProfile } = await supabase.from('profiles').insert({
-                id: data.user.id, username: u, full_name: u, role: 'admin'
-            }).select().single();
+            const { data: newProfile } = await window.supabaseClient.from('profiles').insert({ id: data.user.id, username: u, full_name: u, role: 'admin' }).select().single();
             profile = newProfile;
         }
-        
         currentUser = profile || { id: data.user.id, username: u, full_name: u, role: 'admin' };
-        
         await DB.loadAll();
         loginSuccess();
-        
     } catch (err) {
-        console.error(err);
         btn.disabled = false;
         txt.textContent = 'Kirish';
         toast('Xatolik', 'Server xatoligi: ' + err.message, 'error');
     }
 });
-
 function loginSuccess() {
     document.getElementById('loginScreen').classList.add('hidden');
     setTimeout(() => {
@@ -2097,7 +1864,6 @@ function loginSuccess() {
     updateUserUI();
     renderAll();
 }
-
 function updateUserUI() {
     document.getElementById('userName').textContent = currentUser.full_name;
     document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'Administrator' : 'O\'qituvchi';
@@ -2105,25 +1871,24 @@ function updateUserUI() {
     if (currentUser.photo) av.innerHTML = `<img src="${currentUser.photo}" alt="">`;
     else av.textContent = currentUser.full_name.charAt(0).toUpperCase();
 }
-
 async function logout() {
     if (!confirm('Tizimdan chiqishni xohlaysizmi?')) return;
-    await supabase.auth.signOut();
+    await window.supabaseClient.auth.signOut();
     location.reload();
 }
-
-/* AUTO LOGIN */
 (async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-        currentUser = profile || { id: session.user.id, username: 'user', full_name: 'Foydalanuvchi', role: 'admin' };
-        await DB.loadAll();
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('app').classList.add('active');
-        updateUserUI();
-        renderAll();
-    }
+    try {
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        if (session) {
+            const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
+            currentUser = profile || { id: session.user.id, username: 'user', full_name: 'Foydalanuvchi', role: 'admin' };
+            await DB.loadAll();
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('app').classList.add('active');
+            updateUserUI();
+            renderAll();
+        }
+    } catch (err) { console.log('Auto-login:', err); }
 })();
 
 /* ==================== NAVIGATION ==================== */
@@ -2140,7 +1905,6 @@ const pageTitles = {
     reports: ['Hisobotlar', 'Moliyaviy hisobotlar'],
     notifications: ['Bildirishnomalar', 'Tizim xabarlari']
 };
-
 function navigate(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -2148,7 +1912,6 @@ function navigate(page) {
     if (pageEl) pageEl.classList.add('active');
     const navEl = document.querySelector(`.nav-item[data-page="${page}"]`);
     if (navEl) navEl.classList.add('active');
-
     const [title, subtitle] = pageTitles[page] || ['Sahifa', ''];
     const titleEl = document.getElementById('pageTitle');
     titleEl.style.opacity = '0';
@@ -2157,9 +1920,7 @@ function navigate(page) {
         document.getElementById('pageSubtitle').textContent = subtitle;
         titleEl.style.opacity = '1';
     }, 150);
-
     if (window.innerWidth <= 768) closeSidebar();
-
     const renderMap = {
         dashboard: renderDashboard, students: renderStudents, teachers: renderTeachers,
         groups: renderGroups, subjects: renderSubjects, payments: renderPayments,
@@ -2168,11 +1929,9 @@ function navigate(page) {
     };
     if (renderMap[page]) renderMap[page]();
 }
-
 document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => navigate(item.dataset.page));
 });
-
 function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('sidebarOverlay').classList.toggle('active');
@@ -2192,7 +1951,6 @@ function renderDashboard() {
     const payments = DB.get('payments');
     const expenses = DB.get('expenses');
     const schedules = DB.get('schedules');
-
     const activeStudents = students.filter(s => s.status === 'Faol').length;
     const totalDebt = students.reduce((s, st) => s + getStudentDebt(st.id), 0);
     const thisMonth = new Date().toISOString().slice(0, 7);
@@ -2201,24 +1959,20 @@ function renderDashboard() {
     const monthReceived = monthPayments.reduce((s, p) => s + parseFloat(p.paid_amount || 0), 0);
     const monthExpenses = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const debtors = students.filter(s => getStudentDebt(s.id) > 0);
-
     const days = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
     const today = days[new Date().getDay()];
     const todaySchedules = schedules.filter(s => s.day === today);
-
     document.getElementById('statsGrid').innerHTML = `
         <div class="stat-card"><div class="stat-icon"><svg><use href="#i-user-grad"/></svg></div><div class="stat-label">Jami o'quvchilar</div><div class="stat-value counter" data-target="${students.length}">0</div><div class="stat-change up"><svg><use href="#i-trending-up"/></svg> Faol: ${activeStudents}</div></div>
         <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-user-teacher"/></svg></div><div class="stat-label">O'qituvchilar</div><div class="stat-value counter" data-target="${teachers.length}">0</div></div>
         <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-users"/></svg></div><div class="stat-label">Guruhlar</div><div class="stat-value counter" data-target="${groups.length}">0</div><div class="stat-change up"><svg><use href="#i-trending-up"/></svg> Fanlar: ${subjects.length}</div></div>
         <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">Bu oy kutilgan</div><div class="stat-value counter" data-target="${monthExpected}">0</div></div>
         <div class="stat-card"><div class="stat-icon"><svg><use href="#i-check-circle"/></svg></div><div class="stat-label">Bu oy tushgan</div><div class="stat-value counter" data-target="${monthReceived}">0</div></div>
-        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Bu oy xarajatlar</div><div class="stat-value counter" data-target="${monthExpenses}">0</div><div class="stat-change down"><svg><use href="#i-trending-down"/></svg> Sof: ${formatMoney(monthReceived - monthExpenses)}</div></div>
+        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Bu oy xarajatlar</div><div class="stat-value counter" data-target="${monthExpenses}">0</div></div>
         <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Qarzdorlar</div><div class="stat-value counter" data-target="${debtors.length}">0</div><div class="stat-change down"><svg><use href="#i-trending-down"/></svg> ${formatMoney(totalDebt)}</div></div>
         <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-calendar"/></svg></div><div class="stat-label">Bugungi darslar</div><div class="stat-value counter" data-target="${todaySchedules.length}">0</div></div>
     `;
-
     document.querySelectorAll('.counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
-
     const totalMonthly = students.reduce((s, st) => s + parseFloat(st.monthly_payment || 0), 0);
     document.getElementById('financialSummary').innerHTML = `
         <div class="financial-item"><label>Jami o'quvchilar</label><div class="value">${students.length} ta</div></div>
@@ -2228,7 +1982,6 @@ function renderDashboard() {
         <div class="financial-item"><label>Bu oy xarajatlar</label><div class="value">${formatMoney(monthExpenses)}</div></div>
         <div class="financial-item total"><label>Sof foyda</label><div class="value">${formatMoney(monthReceived - monthExpenses)}</div></div>
     `;
-
     const todayEl = document.getElementById('todaySchedule');
     if (!todaySchedules.length) {
         todayEl.innerHTML = `<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-calendar"/></svg></div><h3>Bugun dars yo'q</h3></div>`;
@@ -2236,11 +1989,10 @@ function renderDashboard() {
         todayEl.innerHTML = todaySchedules.map(s => `
             <div class="schedule-item">
                 <div class="schedule-time">${s.start_time}<small>${s.end_time}</small></div>
-                <div class="schedule-info"><h4>${getSubjectName(s.subject_id)}</h4><p><svg><use href="#i-user"/></svg> ${getTeacherName(s.teacher_id)} • ${s.room} xona</p></div>
+                <div class="schedule-info"><h4>${getSubjectName(s.subject_id)}</h4><p>${getTeacherName(s.teacher_id)} • ${s.room} xona</p></div>
             </div>
         `).join('');
     }
-
     const debtorsEl = document.getElementById('debtorsList');
     if (!debtors.length) {
         debtorsEl.innerHTML = `<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-check-circle"/></svg></div><h3>Qarzdorlar yo'q</h3></div>`;
@@ -2248,13 +2000,12 @@ function renderDashboard() {
         debtorsEl.innerHTML = debtors.slice(0, 6).map(s => `
             <div class="schedule-item" style="border-left-color: var(--danger);">
                 <div class="schedule-time" style="color: var(--danger); font-size: 11px;">${formatMoney(getStudentDebt(s.id))}</div>
-                <div class="schedule-info"><h4>${s.full_name}</h4><p><svg><use href="#i-phone"/></svg> ${s.phone || '-'}</p></div>
+                <div class="schedule-info"><h4>${s.full_name}</h4><p>${s.phone || '-'}</p></div>
             </div>
         `).join('');
     }
     renderCharts(students, payments, groups, expenses);
 }
-
 function renderCharts(students, payments, groups, expenses) {
     destroyCharts();
     const commonOpts = {
@@ -2262,7 +2013,6 @@ function renderCharts(students, payments, groups, expenses) {
         plugins: { legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11, weight: '600' }, padding: 14, usePointStyle: true, pointStyle: 'circle' } } },
         animation: { duration: 1200, easing: 'easeOutQuart' }
     };
-
     const activeCount = students.filter(s => s.status === 'Faol').length;
     const inactiveCount = students.length - activeCount;
     charts.students = new Chart(document.getElementById('chartStudents'), {
@@ -2270,7 +2020,6 @@ function renderCharts(students, payments, groups, expenses) {
         data: { labels: ['Faol', 'Nofaol'], datasets: [{ data: [activeCount, inactiveCount], backgroundColor: ['#10b981', '#e2e8f0'], borderWidth: 0, cutout: '72%' }] },
         options: commonOpts
     });
-
     const months = {};
     payments.forEach(p => { if (!months[p.month]) months[p.month] = 0; months[p.month] += parseFloat(p.paid_amount || 0); });
     const sortedMonths = Object.keys(months).sort().slice(-6);
@@ -2284,7 +2033,6 @@ function renderCharts(students, payments, groups, expenses) {
         }]},
         options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(1) + 'M' }, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
     });
-
     const statusCounts = { 'To\'langan': 0, 'Qisman to\'langan': 0, 'To\'lanmagan': 0 };
     payments.forEach(p => { if (statusCounts[p.status] !== undefined) statusCounts[p.status]++; });
     charts.payments = new Chart(document.getElementById('chartPayments'), {
@@ -2292,7 +2040,6 @@ function renderCharts(students, payments, groups, expenses) {
         data: { labels: ['To\'langan', 'Qisman', 'To\'lanmagan'], datasets: [{ data: [statusCounts['To\'langan'], statusCounts['Qisman to\'langan'], statusCounts['To\'lanmagan']], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderRadius: 10, borderWidth: 0, barThickness: 50 }] },
         options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
     });
-
     const expByCat = {};
     EXPENSE_CATEGORIES.forEach(c => expByCat[c] = 0);
     expenses.forEach(e => { const cat = e.category || 'Boshqa'; expByCat[cat] = (expByCat[cat] || 0) + parseFloat(e.amount || 0); });
@@ -2303,7 +2050,6 @@ function renderCharts(students, payments, groups, expenses) {
         data: { labels: catLabels.length ? catLabels : ['Xarajat yo\'q'], datasets: [{ data: catLabels.length ? catLabels.map(k => expByCat[k]) : [1], backgroundColor: catLabels.length ? catLabels.map((_, i) => catColors[i % catColors.length]) : ['#e2e8f0'], borderWidth: 0, cutout: '65%' }] },
         options: commonOpts
     });
-
     const groupCounts = groups.map(g => ({ name: g.name, count: students.filter(s => s.group_id === g.id).length }));
     charts.groups = new Chart(document.getElementById('chartGroups'), {
         type: 'bar',
@@ -2319,16 +2065,13 @@ function renderStudents() {
     const cv = gf.value;
     gf.innerHTML = '<option value="">Barcha guruhlar</option>' + groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
     gf.value = cv;
-
     const search = (document.getElementById('studentSearch').value || '').toLowerCase();
     const fg = document.getElementById('studentFilterGroup').value;
     const fs = document.getElementById('studentFilterStatus').value;
-
     let students = DB.get('students');
     if (search) students = students.filter(s => s.full_name.toLowerCase().includes(search) || (s.phone || '').includes(search) || String(s.id).includes(search));
     if (fg) students = students.filter(s => s.group_id == fg);
     if (fs) students = students.filter(s => s.status === fs);
-
     const tbody = document.getElementById('studentsTable');
     if (!students.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-grad"/></svg></div><h3>O\'quvchilar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = students.map(s => {
@@ -2336,27 +2079,24 @@ function renderStudents() {
         const ps = getStudentPaymentStatus(s.id);
         const bCls = ps === 'To\'langan' ? 'badge-success' : ps === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger';
         const aCls = att >= 80 ? 'badge-success' : att >= 60 ? 'badge-warning' : 'badge-danger';
-        return `
-            <tr>
-                <td>${getPhotoHTML(s.photo, s.full_name, 44)}</td>
-                <td><strong>#${s.id}</strong></td>
-                <td><div><strong>${s.full_name}</strong><br><small style="color:var(--gray);">${s.parent_phone || ''}</small></div></td>
-                <td>${s.phone || '-'}</td>
-                <td>${getGroupName(s.group_id)}</td>
-                <td>${formatMoney(s.monthly_payment)}</td>
-                <td><span class="badge ${bCls}"><span class="dot-ind"></span>${ps}</span></td>
-                <td><span class="badge ${aCls}">${att}%</span></td>
-                <td><span class="badge ${s.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${s.status}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-secondary btn-icon" onclick="viewStudent(${s.id})"><svg><use href="#i-eye"/></svg></button>
-                    <button class="btn btn-sm btn-secondary btn-icon" onclick="editStudent(${s.id})"><svg><use href="#i-edit"/></svg></button>
-                    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteStudent(${s.id})"><svg><use href="#i-trash"/></svg></button>
-                </td>
-            </tr>
-        `;
+        return `<tr>
+            <td>${getPhotoHTML(s.photo, s.full_name, 44)}</td>
+            <td><strong>#${s.id}</strong></td>
+            <td><div><strong>${s.full_name}</strong><br><small style="color:var(--gray);">${s.parent_phone || ''}</small></div></td>
+            <td>${s.phone || '-'}</td>
+            <td>${getGroupName(s.group_id)}</td>
+            <td>${formatMoney(s.monthly_payment)}</td>
+            <td><span class="badge ${bCls}"><span class="dot-ind"></span>${ps}</span></td>
+            <td><span class="badge ${aCls}">${att}%</span></td>
+            <td><span class="badge ${s.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${s.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-secondary btn-icon" onclick="viewStudent(${s.id})"><svg><use href="#i-eye"/></svg></button>
+                <button class="btn btn-sm btn-secondary btn-icon" onclick="editStudent(${s.id})"><svg><use href="#i-edit"/></svg></button>
+                <button class="btn btn-sm btn-danger btn-icon" onclick="deleteStudent(${s.id})"><svg><use href="#i-trash"/></svg></button>
+            </td>
+        </tr>`;
     }).join('');
 }
-
 function openStudentModal(id = null) {
     const groups = DB.get('groups');
     const s = id ? DB.get('students').find(x => x.id === id) : {};
@@ -2402,29 +2142,26 @@ function openStudentModal(id = null) {
             photo: _pendingPhoto
         };
         try {
-            if (isEdit) { await DB.update('students', id, data); toast('Muvaffaqiyat', 'O\'quvchi yangilandi'); }
-            else { await DB.insert('students', data); toast('Muvaffaqiyat', 'Yangi o\'quvchi qo\'shildi'); }
+            if (isEdit) { await DB.update('students', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
+            else { await DB.insert('students', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
             closeModal(); renderStudents(); renderDashboard();
-        } catch (err) { toast('Xatolik', 'Saqlashda xatolik: ' + err.message, 'error'); }
+        } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
-    openModal(`<svg class="icon"><use href="#i-user-grad"/></svg> ${isEdit ? 'O\'quvchini tahrirlash' : 'Yangi o\'quvchi'}`, body);
+    openModal(`<svg class="icon"><use href="#i-user-grad"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi o\'quvchi'}`, body);
     setTimeout(attachPhotoListener, 30);
 }
-
 function editStudent(id) { openStudentModal(id); }
-
 function viewStudent(id) {
     const s = DB.get('students').find(x => x.id === id); if (!s) return;
     const payments = DB.get('payments').filter(p => p.student_id === id).slice(-6).reverse();
     const att = getAttendancePercent(id), debt = getStudentDebt(id);
-    const group = DB.get('groups').find(g => g.id === s.group_id);
-    const avatarHTML = s.photo ? `<div class="profile-avatar"><img src="${s.photo}" alt="${s.full_name}"></div>` : `<div class="profile-avatar">${s.full_name.charAt(0)}</div>`;
+    const avatarHTML = s.photo ? `<div class="profile-avatar"><img src="${s.photo}"></div>` : `<div class="profile-avatar">${s.full_name.charAt(0)}</div>`;
     const body = `
         <div class="profile-header">
             ${avatarHTML}
             <div class="profile-info">
                 <h2>${s.full_name}</h2>
-                <p><svg class="icon-sm"><use href="#i-phone"/></svg> ${s.phone || '-'} • <svg class="icon-sm"><use href="#i-cake"/></svg> ${formatDate(s.birth_date)}</p>
+                <p>${s.phone || '-'} • ${formatDate(s.birth_date)}</p>
                 <div class="profile-meta"><span class="badge badge-info">${getGroupName(s.group_id)}</span><span class="badge badge-success">${s.status}</span></div>
             </div>
         </div>
@@ -2436,18 +2173,16 @@ function viewStudent(id) {
             <div class="info-item"><label>Qarz</label><div class="value" style="color:${debt > 0 ? 'var(--danger)' : 'var(--primary)'};">${formatMoney(debt)}</div></div>
             <div class="info-item"><label>Davomat</label><div class="value">${att}%</div></div>
         </div>
-        ${group ? `<h3 class="section-title"><svg><use href="#i-calendar"/></svg> Guruh dars kunlari</h3><div style="padding:14px;background:var(--light);border-radius:12px;"><strong>${group.name}</strong><p style="margin-top:6px;font-size:13px;color:var(--gray);">${getGroupDaysText(group)}</p></div>` : ''}
-        <h3 class="section-title"><svg><use href="#i-credit-card"/></svg> To'lovlar tarixi</h3>
+        <h3 class="section-title">To'lovlar tarixi</h3>
         <div class="table-responsive"><table><thead><tr><th>Oy</th><th>Kutilgan</th><th>To'langan</th><th>Holat</th></tr></thead>
-        <tbody>${payments.length ? payments.map(p => `<tr><td>${p.month}</td><td>${formatMoney(p.expected_amount)}</td><td>${formatMoney(p.paid_amount)}</td><td><span class="badge ${p.status === 'To\'langan' ? 'badge-success' : p.status === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger'}">${p.status}</span></td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--gray);">To\'lovlar yo\'q</td></tr>'}</tbody></table></div>
+        <tbody>${payments.length ? payments.map(p => `<tr><td>${p.month}</td><td>${formatMoney(p.expected_amount)}</td><td>${formatMoney(p.paid_amount)}</td><td><span class="badge ${p.status === 'To\'langan' ? 'badge-success' : p.status === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger'}">${p.status}</span></td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center;">To\'lovlar yo\'q</td></tr>'}</tbody></table></div>
     `;
-    openModal(`<svg class="icon"><use href="#i-user"/></svg> O'quvchi profili`, body, '<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>');
+    openModal('O\'quvchi profili', body, '<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>');
 }
-
 async function deleteStudent(id) {
-    if (!confirm('Bu o\'quvchini o\'chirishni xohlaysizmi?')) return;
-    try { await DB.remove('students', id); toast('Muvaffaqiyat', 'O\'quvchi o\'chirildi'); renderStudents(); renderDashboard(); }
-    catch (err) { toast('Xatolik', 'Xatolik', 'error'); }
+    if (!confirm('O\'chirishni xohlaysizmi?')) return;
+    try { await DB.remove('students', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderStudents(); renderDashboard(); }
+    catch (err) { toast('Xatolik', err.message, 'error'); }
 }
 
 /* ==================== TEACHERS ==================== */
@@ -2459,31 +2194,25 @@ function renderTeachers() {
     if (!teachers.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-teacher"/></svg></div><h3>O\'qituvchilar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = teachers.map(t => {
         const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
-        let sal = '';
-        if (t.salary_type === 'fixed') sal = formatMoney(t.salary_amount);
-        else if (t.salary_type === 'percentage') sal = t.salary_percentage + '%';
-        else sal = formatMoney(t.salary_amount) + '/dars';
-        const stLabel = { fixed: 'Belgilangan', percentage: 'Foizli', per_lesson: 'Dars uchun' }[t.salary_type];
-        return `
-            <tr>
-                <td>${getPhotoHTML(t.photo, t.full_name, 44)}</td>
-                <td><strong>#${t.id}</strong></td>
-                <td><div><strong>${t.full_name}</strong><br><small style="color:var(--gray);">${t.email || ''}</small></div></td>
-                <td>${t.phone || '-'}</td>
-                <td><span class="badge badge-info">${getSubjectName(t.subject_id)}</span></td>
-                <td>${groups.map(g => g.name).join(', ') || '-'}</td>
-                <td>${stLabel}</td>
-                <td><strong>${sal}</strong></td>
-                <td><span class="badge ${t.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${t.status}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-secondary btn-icon" onclick="editTeacher(${t.id})"><svg><use href="#i-edit"/></svg></button>
-                    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteTeacher(${t.id})"><svg><use href="#i-trash"/></svg></button>
-                </td>
-            </tr>
-        `;
+        let sal = t.salary_type === 'fixed' ? formatMoney(t.salary_amount) : t.salary_type === 'percentage' ? t.salary_percentage + '%' : formatMoney(t.salary_amount) + '/dars';
+        const stLabel = { fixed: 'Belgilangan', percentage: 'Foizli', per_lesson: 'Dars uchun' }[t.salary_type] || '';
+        return `<tr>
+            <td>${getPhotoHTML(t.photo, t.full_name, 44)}</td>
+            <td><strong>#${t.id}</strong></td>
+            <td><div><strong>${t.full_name}</strong><br><small style="color:var(--gray);">${t.email || ''}</small></div></td>
+            <td>${t.phone || '-'}</td>
+            <td><span class="badge badge-info">${getSubjectName(t.subject_id)}</span></td>
+            <td>${groups.map(g => g.name).join(', ') || '-'}</td>
+            <td>${stLabel}</td>
+            <td><strong>${sal}</strong></td>
+            <td><span class="badge ${t.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${t.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-secondary btn-icon" onclick="editTeacher(${t.id})"><svg><use href="#i-edit"/></svg></button>
+                <button class="btn btn-sm btn-danger btn-icon" onclick="deleteTeacher(${t.id})"><svg><use href="#i-trash"/></svg></button>
+            </td>
+        </tr>`;
     }).join('');
 }
-
 function openTeacherModal(id = null) {
     const subjects = DB.get('subjects');
     const t = id ? DB.get('teachers').find(x => x.id === id) : {};
@@ -2525,15 +2254,14 @@ function openTeacherModal(id = null) {
             photo: _pendingPhoto
         };
         try {
-            if (isEdit) { await DB.update('teachers', id, data); toast('Muvaffaqiyat', 'O\'qituvchi yangilandi'); }
-            else { await DB.insert('teachers', data); toast('Muvaffaqiyat', 'Yangi o\'qituvchi qo\'shildi'); }
+            if (isEdit) { await DB.update('teachers', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
+            else { await DB.insert('teachers', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
             closeModal(); renderTeachers();
-        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
+        } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
-    openModal(`<svg class="icon"><use href="#i-user-teacher"/></svg> ${isEdit ? 'O\'qituvchini tahrirlash' : 'Yangi o\'qituvchi'}`, body);
+    openModal(`<svg class="icon"><use href="#i-user-teacher"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi o\'qituvchi'}`, body);
     setTimeout(() => { toggleSalaryFields(); attachPhotoListener(); }, 30);
 }
-
 function toggleSalaryFields() {
     const t = document.getElementById('t_salary_type').value;
     const a = document.getElementById('salaryAmountGroup');
@@ -2543,7 +2271,7 @@ function toggleSalaryFields() {
     else { a.style.display = 'block'; p.style.display = 'none'; l.textContent = t === 'per_lesson' ? 'Bir dars narxi' : 'Maosh miqdori'; }
 }
 function editTeacher(id) { openTeacherModal(id); }
-async function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('teachers', id); toast('Muvaffaqiyat', 'O\'qituvchi o\'chirildi'); renderTeachers(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
+async function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('teachers', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderTeachers(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
 /* ==================== GROUPS ==================== */
 function renderGroups() {
@@ -2557,25 +2285,22 @@ function renderGroups() {
         const count = students.filter(s => s.group_id === g.id).length;
         const pct = Math.round((count / g.max_students) * 100);
         const cls = pct >= 90 ? 'danger' : pct >= 70 ? 'warning' : '';
-        return `
-            <tr>
-                <td><strong>${g.name}</strong></td>
-                <td><span class="badge badge-info">${getSubjectName(g.subject_id)}</span></td>
-                <td>${getTeacherName(g.teacher_id)}</td>
-                <td>${g.room}</td>
-                <td><div style="max-width:340px;white-space:normal;font-size:12px;font-weight:600;">${getGroupDaysText(g)}</div></td>
-                <td><div style="min-width:130px;"><strong>${count} / ${g.max_students}</strong><div class="progress-bar"><div class="progress-fill ${cls}" style="width:${pct}%"></div></div></div></td>
-                <td>${formatMoney(g.monthly_payment)}</td>
-                <td><span class="badge ${g.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${g.status}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-secondary btn-icon" onclick="editGroup(${g.id})"><svg><use href="#i-edit"/></svg></button>
-                    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteGroup(${g.id})"><svg><use href="#i-trash"/></svg></button>
-                </td>
-            </tr>
-        `;
+        return `<tr>
+            <td><strong>${g.name}</strong></td>
+            <td><span class="badge badge-info">${getSubjectName(g.subject_id)}</span></td>
+            <td>${getTeacherName(g.teacher_id)}</td>
+            <td>${g.room || '-'}</td>
+            <td><div style="max-width:340px;white-space:normal;font-size:12px;font-weight:600;">${getGroupDaysText(g)}</div></td>
+            <td><div style="min-width:130px;"><strong>${count} / ${g.max_students}</strong><div class="progress-bar"><div class="progress-fill ${cls}" style="width:${pct}%"></div></div></div></td>
+            <td>${formatMoney(g.monthly_payment)}</td>
+            <td><span class="badge ${g.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${g.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-secondary btn-icon" onclick="editGroup(${g.id})"><svg><use href="#i-edit"/></svg></button>
+                <button class="btn btn-sm btn-danger btn-icon" onclick="deleteGroup(${g.id})"><svg><use href="#i-trash"/></svg></button>
+            </td>
+        </tr>`;
     }).join('');
 }
-
 function openGroupModal(id = null) {
     const subjects = DB.get('subjects'), teachers = DB.get('teachers');
     const g = id ? DB.get('groups').find(x => x.id === id) : {};
@@ -2618,16 +2343,16 @@ function openGroupModal(id = null) {
             status: document.getElementById('g_status').value
         };
         try {
-            if (isEdit) { await DB.update('groups', id, data); toast('Muvaffaqiyat', 'Guruh yangilandi'); }
-            else { await DB.insert('groups', data); toast('Muvaffaqiyat', 'Yangi guruh qo\'shildi'); }
+            if (isEdit) { await DB.update('groups', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
+            else { await DB.insert('groups', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
             closeModal(); renderGroups();
-        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
+        } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
-    openModal(`<svg class="icon"><use href="#i-users"/></svg> ${isEdit ? 'Guruhni tahrirlash' : 'Yangi guruh'}`, body);
+    openModal(`<svg class="icon"><use href="#i-users"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi guruh'}`, body);
     setTimeout(attachDaysListeners, 30);
 }
 function editGroup(id) { openGroupModal(id); }
-async function deleteGroup(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('groups', id); toast('Muvaffaqiyat', 'Guruh o\'chirildi'); renderGroups(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
+async function deleteGroup(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('groups', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderGroups(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
 /* ==================== SUBJECTS ==================== */
 function renderSubjects() {
@@ -2637,19 +2362,17 @@ function renderSubjects() {
     tbody.innerHTML = subjects.map(s => {
         const gCount = groups.filter(g => g.subject_id === s.id).length;
         const tList = teachers.filter(t => t.subject_id === s.id).map(t => t.full_name).join(', ');
-        return `
-            <tr>
-                <td><strong>#${s.id}</strong></td>
-                <td><div style="display:flex;align-items:center;gap:9px;"><div style="width:12px;height:12px;border-radius:50%;background:${s.color};box-shadow:0 0 0 3px ${s.color}22;"></div><strong>${s.name}</strong></div></td>
-                <td>${s.description || '-'}</td>
-                <td><span class="badge badge-info">${gCount} guruh</span></td>
-                <td>${tList || '-'}</td>
-                <td>
-                    <button class="btn btn-sm btn-secondary btn-icon" onclick="editSubject(${s.id})"><svg><use href="#i-edit"/></svg></button>
-                    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteSubject(${s.id})"><svg><use href="#i-trash"/></svg></button>
-                </td>
-            </tr>
-        `;
+        return `<tr>
+            <td><strong>#${s.id}</strong></td>
+            <td><div style="display:flex;align-items:center;gap:9px;"><div style="width:12px;height:12px;border-radius:50%;background:${s.color};"></div><strong>${s.name}</strong></div></td>
+            <td>${s.description || '-'}</td>
+            <td><span class="badge badge-info">${gCount} guruh</span></td>
+            <td>${tList || '-'}</td>
+            <td>
+                <button class="btn btn-sm btn-secondary btn-icon" onclick="editSubject(${s.id})"><svg><use href="#i-edit"/></svg></button>
+                <button class="btn btn-sm btn-danger btn-icon" onclick="deleteSubject(${s.id})"><svg><use href="#i-trash"/></svg></button>
+            </td>
+        </tr>`;
     }).join('');
 }
 function openSubjectModal(id = null) {
@@ -2665,15 +2388,15 @@ function openSubjectModal(id = null) {
         if (!name) { toast('Xatolik', 'Fan nomi kiritilishi shart', 'error'); return; }
         const data = { name, description: document.getElementById('sub_description').value || null, color: document.getElementById('sub_color').value };
         try {
-            if (isEdit) { await DB.update('subjects', id, data); toast('Muvaffaqiyat', 'Fan yangilandi'); }
-            else { await DB.insert('subjects', data); toast('Muvaffaqiyat', 'Yangi fan qo\'shildi'); }
+            if (isEdit) { await DB.update('subjects', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
+            else { await DB.insert('subjects', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
             closeModal(); renderSubjects();
-        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
+        } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
-    openModal(`<svg class="icon"><use href="#i-book"/></svg> ${isEdit ? 'Fanni tahrirlash' : 'Yangi fan'}`, body);
+    openModal(`<svg class="icon"><use href="#i-book"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi fan'}`, body);
 }
 function editSubject(id) { openSubjectModal(id); }
-async function deleteSubject(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('subjects', id); toast('Muvaffaqiyat', 'Fan o\'chirildi'); renderSubjects(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
+async function deleteSubject(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('subjects', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderSubjects(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
 /* ==================== PAYMENTS ==================== */
 function renderPayments() {
@@ -2682,7 +2405,6 @@ function renderPayments() {
     const cv = mf.value;
     mf.innerHTML = '<option value="">Barcha oylar</option>' + months.map(m => `<option value="${m}">${m}</option>`).join('');
     mf.value = cv;
-
     const search = (document.getElementById('paymentSearch').value || '').toLowerCase();
     const fs = document.getElementById('paymentFilterStatus').value;
     const fm = document.getElementById('paymentFilterMonth').value;
@@ -2694,24 +2416,22 @@ function renderPayments() {
     const tbody = document.getElementById('paymentsTable');
     if (!payments.length) { tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-credit-card"/></svg></div><h3>To\'lovlar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = payments.map(p => {
-        const debt = p.expected_amount - p.paid_amount;
+        const debt = parseFloat(p.expected_amount) - parseFloat(p.paid_amount);
         const cls = p.status === 'To\'langan' ? 'badge-success' : p.status === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger';
-        return `
-            <tr>
-                <td><strong>${getStudentName(p.student_id)}</strong></td>
-                <td>${p.month}</td>
-                <td>${formatMoney(p.expected_amount)}</td>
-                <td>${formatMoney(p.paid_amount)}</td>
-                <td style="color:${debt > 0 ? 'var(--danger)' : 'var(--primary)'};font-weight:700;">${formatMoney(debt)}</td>
-                <td>${p.payment_date || '-'}</td>
-                <td>${p.payment_method || '-'}</td>
-                <td><span class="badge ${cls}">${p.status}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-secondary btn-icon" onclick="editPayment(${p.id})"><svg><use href="#i-edit"/></svg></button>
-                    <button class="btn btn-sm btn-danger btn-icon" onclick="deletePayment(${p.id})"><svg><use href="#i-trash"/></svg></button>
-                </td>
-            </tr>
-        `;
+        return `<tr>
+            <td><strong>${getStudentName(p.student_id)}</strong></td>
+            <td>${p.month}</td>
+            <td>${formatMoney(p.expected_amount)}</td>
+            <td>${formatMoney(p.paid_amount)}</td>
+            <td style="color:${debt > 0 ? 'var(--danger)' : 'var(--primary)'};font-weight:700;">${formatMoney(debt)}</td>
+            <td>${p.payment_date || '-'}</td>
+            <td>${p.payment_method || '-'}</td>
+            <td><span class="badge ${cls}">${p.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-secondary btn-icon" onclick="editPayment(${p.id})"><svg><use href="#i-edit"/></svg></button>
+                <button class="btn btn-sm btn-danger btn-icon" onclick="deletePayment(${p.id})"><svg><use href="#i-trash"/></svg></button>
+            </td>
+        </tr>`;
     }).join('');
 }
 function openPaymentModal(id = null) {
@@ -2747,15 +2467,15 @@ function openPaymentModal(id = null) {
         else if (paid > 0) status = 'Qisman to\'langan';
         const data = { student_id: sid, month, expected_amount: exp, paid_amount: paid, payment_date: document.getElementById('p_date').value || null, payment_method: document.getElementById('p_method').value, status, notes: document.getElementById('p_notes').value || null };
         try {
-            if (isEdit) { await DB.update('payments', id, data); toast('Muvaffaqiyat', 'To\'lov yangilandi'); }
-            else { await DB.insert('payments', data); toast('Muvaffaqiyat', 'Yangi to\'lov qo\'shildi'); }
+            if (isEdit) { await DB.update('payments', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
+            else { await DB.insert('payments', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
             closeModal(); renderPayments(); renderDashboard();
-        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
+        } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
-    openModal(`<svg class="icon"><use href="#i-credit-card"/></svg> ${isEdit ? 'To\'lovni tahrirlash' : 'Yangi to\'lov'}`, body);
+    openModal(`<svg class="icon"><use href="#i-credit-card"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi to\'lov'}`, body);
 }
 function editPayment(id) { openPaymentModal(id); }
-async function deletePayment(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('payments', id); toast('Muvaffaqiyat', 'To\'lov o\'chirildi'); renderPayments(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
+async function deletePayment(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('payments', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderPayments(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
 /* ==================== EXPENSES ==================== */
 function renderExpenses() {
@@ -2765,53 +2485,38 @@ function renderExpenses() {
     const cv = mf.value;
     mf.innerHTML = '<option value="">Barcha oylar</option>' + months.map(m => `<option value="${m}">${m}</option>`).join('');
     mf.value = cv;
-
     const search = (document.getElementById('expenseSearch').value || '').toLowerCase();
     const fc = document.getElementById('expenseFilterCategory').value;
     const fm = document.getElementById('expenseFilterMonth').value;
-    
     let filtered = expenses;
-    if (search) filtered = filtered.filter(e => (e.notes || '').toLowerCase().includes(search) || (e.description || '').toLowerCase().includes(search));
+    if (search) filtered = filtered.filter(e => (e.description || '').toLowerCase().includes(search));
     if (fc) filtered = filtered.filter(e => e.category === fc);
     if (fm) filtered = filtered.filter(e => (e.date || '').slice(0, 7) === fm);
     filtered = [...filtered].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-
     const total = filtered.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const thisMonth = new Date().toISOString().slice(0, 7);
     const monthTotal = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + parseFloat(e.amount || 0), 0);
-    const catTotals = {};
-    EXPENSE_CATEGORIES.forEach(c => catTotals[c] = 0);
-    expenses.forEach(e => { catTotals[e.category || 'Boshqa'] = (catTotals[e.category || 'Boshqa'] || 0) + parseFloat(e.amount || 0); });
-    const topCat = Object.entries(catTotals).sort((a, b) => b[1] - a[1])[0];
-
     document.getElementById('expenseStats').innerHTML = `
         <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Jami xarajatlar</div><div class="stat-value counter" data-target="${total}">0</div><div class="stat-change down">${filtered.length} ta yozuv</div></div>
         <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-trending-down"/></svg></div><div class="stat-label">Bu oy</div><div class="stat-value counter" data-target="${monthTotal}">0</div></div>
-        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-target"/></svg></div><div class="stat-label">Eng katta kategoriya</div><div class="stat-value" style="font-size:20px;">${topCat && topCat[1] > 0 ? topCat[0] : '-'}</div>${topCat && topCat[1] > 0 ? `<div class="stat-change down">${formatMoney(topCat[1])}</div>` : ''}</div>
     `;
     document.querySelectorAll('#expenseStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
-
     const tbody = document.getElementById('expensesTable');
     if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-wallet"/></svg></div><h3>Xarajatlar yo\'q</h3></div></td></tr>'; return; }
-    
     const catColors = { 'Ijara': 'badge-info', 'Maosh': 'badge-success', 'Kommunal': 'badge-warning', 'Jihoz': 'badge-purple', 'Reklama': 'badge-danger', 'Boshqa': 'badge-gray' };
-    
-    tbody.innerHTML = filtered.map(e => `
-        <tr>
-            <td><span class="badge ${catColors[e.category] || 'badge-gray'}">${getExpenseCategoryName(e.category)}</span></td>
-            <td><div style="max-width:300px;white-space:normal;">${e.description || e.notes || '-'}</div></td>
-            <td><strong style="color:var(--danger);">${formatMoney(e.amount)}</strong></td>
-            <td>${formatDate(e.date)}</td>
-            <td>${e.payment_method || 'Naqd'}</td>
-            <td>${e.paid_by || '-'}</td>
-            <td>
-                <button class="btn btn-sm btn-secondary btn-icon" onclick="editExpense(${e.id})"><svg><use href="#i-edit"/></svg></button>
-                <button class="btn btn-sm btn-danger btn-icon" onclick="deleteExpense(${e.id})"><svg><use href="#i-trash"/></svg></button>
-            </td>
-        </tr>
-    `).join('');
+    tbody.innerHTML = filtered.map(e => `<tr>
+        <td><span class="badge ${catColors[e.category] || 'badge-gray'}">${e.category}</span></td>
+        <td><div style="max-width:300px;white-space:normal;">${e.description || '-'}</div></td>
+        <td><strong style="color:var(--danger);">${formatMoney(e.amount)}</strong></td>
+        <td>${formatDate(e.date)}</td>
+        <td>${e.payment_method || 'Naqd'}</td>
+        <td>${e.paid_by || '-'}</td>
+        <td>
+            <button class="btn btn-sm btn-secondary btn-icon" onclick="editExpense(${e.id})"><svg><use href="#i-edit"/></svg></button>
+            <button class="btn btn-sm btn-danger btn-icon" onclick="deleteExpense(${e.id})"><svg><use href="#i-trash"/></svg></button>
+        </td>
+    </tr>`).join('');
 }
-
 function openExpenseModal(id = null) {
     const e = id ? DB.get('expenses').find(x => x.id === id) : {};
     const isEdit = !!id;
@@ -2819,7 +2524,7 @@ function openExpenseModal(id = null) {
     const body = `
         <div class="form-row">
             <div class="form-group"><label>Kategoriya *</label><select id="e_category" required>${EXPENSE_CATEGORIES.map(c => `<option ${e.category === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
-            <div class="form-group"><label>Summa (so'm) *</label><input type="number" id="e_amount" value="${e.amount || ''}" placeholder="0" required></div>
+            <div class="form-group"><label>Summa (so'm) *</label><input type="number" id="e_amount" value="${e.amount || ''}" required></div>
         </div>
         <div class="form-group"><label>Izoh *</label><input type="text" id="e_description" value="${e.description || ''}" required></div>
         <div class="form-row">
@@ -2845,16 +2550,15 @@ function openExpenseModal(id = null) {
             paid_by: document.getElementById('e_paid_by').value || 'Admin'
         };
         try {
-            if (isEdit) { await DB.update('expenses', id, data); toast('Muvaffaqiyat', 'Xarajat yangilandi'); }
-            else { await DB.insert('expenses', data); toast('Muvaffaqiyat', 'Yangi xarajat qo\'shildi'); }
+            if (isEdit) { await DB.update('expenses', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
+            else { await DB.insert('expenses', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
             closeModal(); renderExpenses(); renderDashboard();
-        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
+        } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
-    openModal(`<svg class="icon"><use href="#i-wallet"/></svg> ${isEdit ? 'Xarajatni tahrirlash' : 'Yangi xarajat'}`, body);
+    openModal(`<svg class="icon"><use href="#i-wallet"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi xarajat'}`, body);
 }
-
 function editExpense(id) { openExpenseModal(id); }
-async function deleteExpense(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('expenses', id); toast('Muvaffaqiyat', 'Xarajat o\'chirildi'); renderExpenses(); renderDashboard(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
+async function deleteExpense(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('expenses', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderExpenses(); renderDashboard(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
 /* ==================== SCHEDULE ==================== */
 function renderSchedule() {
@@ -2863,20 +2567,18 @@ function renderSchedule() {
     const order = ['Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba','Yakshanba'];
     const sorted = [...schedules].sort((a, b) => { const d = order.indexOf(a.day) - order.indexOf(b.day); return d !== 0 ? d : (a.start_time || '').localeCompare(b.start_time || ''); });
     if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-calendar"/></svg></div><h3>Darslar yo\'q</h3></div></td></tr>'; return; }
-    tbody.innerHTML = sorted.map(s => `
-        <tr>
-            <td><span class="badge badge-info">${s.day}</span></td>
-            <td><strong>${s.start_time} - ${s.end_time}</strong></td>
-            <td>${getSubjectName(s.subject_id)}</td>
-            <td>${getTeacherName(s.teacher_id)}</td>
-            <td>${getGroupName(s.group_id)}</td>
-            <td>${s.room}</td>
-            <td>
-                <button class="btn btn-sm btn-secondary btn-icon" onclick="editSchedule(${s.id})"><svg><use href="#i-edit"/></svg></button>
-                <button class="btn btn-sm btn-danger btn-icon" onclick="deleteSchedule(${s.id})"><svg><use href="#i-trash"/></svg></button>
-            </td>
-        </tr>
-    `).join('');
+    tbody.innerHTML = sorted.map(s => `<tr>
+        <td><span class="badge badge-info">${s.day}</span></td>
+        <td><strong>${s.start_time} - ${s.end_time}</strong></td>
+        <td>${getSubjectName(s.subject_id)}</td>
+        <td>${getTeacherName(s.teacher_id)}</td>
+        <td>${getGroupName(s.group_id)}</td>
+        <td>${s.room || '-'}</td>
+        <td>
+            <button class="btn btn-sm btn-secondary btn-icon" onclick="editSchedule(${s.id})"><svg><use href="#i-edit"/></svg></button>
+            <button class="btn btn-sm btn-danger btn-icon" onclick="deleteSchedule(${s.id})"><svg><use href="#i-trash"/></svg></button>
+        </td>
+    </tr>`).join('');
 }
 function openScheduleModal(id = null) {
     const subjects = DB.get('subjects'), teachers = DB.get('teachers'), groups = DB.get('groups');
@@ -2908,15 +2610,15 @@ function openScheduleModal(id = null) {
             room: document.getElementById('sch_room').value || null
         };
         try {
-            if (isEdit) { await DB.update('schedules', id, data); toast('Muvaffaqiyat', 'Dars yangilandi'); }
-            else { await DB.insert('schedules', data); toast('Muvaffaqiyat', 'Yangi dars qo\'shildi'); }
+            if (isEdit) { await DB.update('schedules', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
+            else { await DB.insert('schedules', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
             closeModal(); renderSchedule(); renderDashboard();
-        } catch (err) { toast('Xatolik', 'Saqlashda xatolik', 'error'); }
+        } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
-    openModal(`<svg class="icon"><use href="#i-calendar"/></svg> ${isEdit ? 'Darsni tahrirlash' : 'Yangi dars'}`, body);
+    openModal(`<svg class="icon"><use href="#i-calendar"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi dars'}`, body);
 }
 function editSchedule(id) { openScheduleModal(id); }
-async function deleteSchedule(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('schedules', id); toast('Muvaffaqiyat', 'Dars o\'chirildi'); renderSchedule(); } catch (err) { toast('Xatolik', 'Xatolik', 'error'); } }
+async function deleteSchedule(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('schedules', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderSchedule(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
 /* ==================== ATTENDANCE ==================== */
 function renderAttendance() {
@@ -2940,14 +2642,12 @@ function loadAttendanceStudents() {
     tbody.innerHTML = students.map(s => {
         const ex = DB.get('attendance').find(a => a.student_id === s.id && a.date === date);
         const st = ex ? ex.status : 'Keldi';
-        return `
-            <tr>
-                <td><strong>${s.full_name}</strong></td>
-                <td>${s.phone || '-'}</td>
-                <td><select data-student="${s.id}" class="att-status" style="padding:8px 12px;border:2px solid var(--border);border-radius:8px;font-weight:600;">${['Keldi','Kelmagan','Kechikdi','Sababli'].map(x => `<option ${st === x ? 'selected' : ''}>${x}</option>`).join('')}</select></td>
-                <td><input type="text" class="att-note" data-student="${s.id}" value="${ex ? ex.notes || '' : ''}" placeholder="Izoh..." style="padding:8px 12px;border:2px solid var(--border);border-radius:8px;width:100%;"></td>
-            </tr>
-        `;
+        return `<tr>
+            <td><strong>${s.full_name}</strong></td>
+            <td>${s.phone || '-'}</td>
+            <td><select data-student="${s.id}" class="att-status" style="padding:8px 12px;border:2px solid var(--border);border-radius:8px;font-weight:600;">${['Keldi','Kelmagan','Kechikdi','Sababli'].map(x => `<option ${st === x ? 'selected' : ''}>${x}</option>`).join('')}</select></td>
+            <td><input type="text" class="att-note" data-student="${s.id}" value="${ex ? ex.notes || '' : ''}" placeholder="Izoh..." style="padding:8px 12px;border:2px solid var(--border);border-radius:8px;width:100%;"></td>
+        </tr>`;
     }).join('');
 }
 async function saveAttendance() {
@@ -2961,12 +2661,12 @@ async function saveAttendance() {
         records.push({ student_id: sid, group_id: parseInt(gid), date, status: sel.value, notes: note || null });
     });
     try {
-        await supabase.from('attendance').delete().eq('group_id', parseInt(gid)).eq('date', date);
-        const { data } = await supabase.from('attendance').insert(records).select();
+        await window.supabaseClient.from('attendance').delete().eq('group_id', parseInt(gid)).eq('date', date);
+        const { data } = await window.supabaseClient.from('attendance').insert(records).select();
         DB._cache.attendance = [...DB.get('attendance').filter(a => !(a.group_id == gid && a.date === date)), ...(data || [])];
         toast('Muvaffaqiyat', 'Davomat saqlandi');
         renderDashboard();
-    } catch (err) { toast('Xatolik', 'Xatolik: ' + err.message, 'error'); }
+    } catch (err) { toast('Xatolik', err.message, 'error'); }
 }
 
 /* ==================== REPORTS ==================== */
@@ -2975,26 +2675,13 @@ function renderReports() {
     const totalExp = payments.reduce((s, p) => s + parseFloat(p.expected_amount || 0), 0);
     const totalRec = payments.reduce((s, p) => s + parseFloat(p.paid_amount || 0), 0);
     const totalDebt = totalExp - totalRec;
-    
-    let totalSal = 0;
-    teachers.forEach(t => {
-        if (t.salary_type === 'fixed') totalSal += parseFloat(t.salary_amount || 0);
-        else if (t.salary_type === 'percentage') {
-            const tg = groups.filter(g => g.teacher_id === t.id);
-            const rev = tg.reduce((sm, g) => sm + students.filter(s => s.group_id === g.id).reduce((s2, st) => s2 + parseFloat(st.monthly_payment || 0), 0), 0);
-            totalSal += (rev * parseFloat(t.salary_percentage || 0)) / 100;
-        } else totalSal += parseFloat(t.salary_amount || 0) * 20;
-    });
-    
     const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const netProfit = totalRec - totalExpenses;
-    
     document.getElementById('reportStats').innerHTML = `
         <div class="stat-card"><div class="stat-icon"><svg><use href="#i-target"/></svg></div><div class="stat-label">Kutilgan daromad</div><div class="stat-value counter" data-target="${totalExp}">0</div></div>
         <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">Haqiqiy daromad</div><div class="stat-value counter" data-target="${totalRec}">0</div></div>
         <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Qarzdorlik</div><div class="stat-value counter" data-target="${totalDebt}">0</div></div>
-        <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-user-teacher"/></svg></div><div class="stat-label">Maoshlar (hisob)</div><div class="stat-value counter" data-target="${totalSal}">0</div></div>
-        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Haqiqiy xarajatlar</div><div class="stat-value counter" data-target="${totalExpenses}">0</div></div>
+        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Xarajatlar</div><div class="stat-value counter" data-target="${totalExpenses}">0</div></div>
         <div class="stat-card ${netProfit >= 0 ? '' : 'red'}"><div class="stat-icon"><svg><use href="#i-award"/></svg></div><div class="stat-label">Sof foyda</div><div class="stat-value counter" data-target="${netProfit}">0</div></div>
     `;
     document.querySelectorAll('#reportStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
@@ -3009,19 +2696,17 @@ function renderReports() {
                 { label: 'Kutilgan', data: sm.length ? sm.map(m => months[m].expected) : [0], backgroundColor: 'rgba(16,185,129,0.2)', borderRadius: 8, barThickness: 28 },
                 { label: 'Tushgan', data: sm.length ? sm.map(m => months[m].received) : [0], backgroundColor: 'rgba(16,185,129,1)', borderRadius: 8, barThickness: 28 }
             ]},
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11, weight: '600' }, padding: 14, usePointStyle: true } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(1) + 'M' }, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
         });
-        
         const expByCat = {};
         EXPENSE_CATEGORIES.forEach(c => expByCat[c] = 0);
         expenses.forEach(e => { const cat = e.category || 'Boshqa'; expByCat[cat] = (expByCat[cat] || 0) + parseFloat(e.amount || 0); });
         const catLabels = Object.keys(expByCat).filter(k => expByCat[k] > 0);
         const catColors = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4'];
-        
         charts.repExp = new Chart(document.getElementById('chartReportExpenses'), {
             type: 'doughnut',
             data: { labels: catLabels.length ? catLabels : ['Xarajat yo\'q'], datasets: [{ data: catLabels.length ? catLabels.map(k => expByCat[k]) : [1], backgroundColor: catLabels.length ? catLabels.map((_, i) => catColors[i % catColors.length]) : ['#e2e8f0'], borderWidth: 0, cutout: '65%' }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11, weight: '600' }, padding: 14, usePointStyle: true } } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
         });
     }, 50);
 }
@@ -3035,7 +2720,7 @@ function exportReport(type) {
         link.href = URL.createObjectURL(blob);
         link.download = `bloom_hisobot_${new Date().toISOString().split('T')[0]}.csv`;
         link.click();
-        toast('Muvaffaqiyat', 'Excel fayl yuklab olindi');
+        toast('Muvaffaqiyat', 'Excel yuklab olindi');
     } else window.print();
 }
 
@@ -3061,11 +2746,11 @@ function renderNotifications() {
 }
 async function markAllRead() {
     try {
-        await supabase.from('notifications').update({ read: true }).eq('read', false);
+        await window.supabaseClient.from('notifications').update({ read: true }).eq('read', false);
         DB._cache.notifications = DB.get('notifications').map(n => ({ ...n, read: true }));
         renderNotifications();
-        toast('Muvaffaqiyat', 'Barcha bildirishnomalar o\'qilgan deb belgilandi');
-    } catch (err) { toast('Xatolik', 'Xatolik', 'error'); }
+        toast('Muvaffaqiyat', 'Barcha bildirishnomalar o\'qilgan');
+    } catch (err) { toast('Xatolik', err.message, 'error'); }
 }
 
 /* ==================== SEARCH ==================== */
@@ -3080,7 +2765,6 @@ document.getElementById('globalSearch').addEventListener('input', e => {
         renderMap[cur]();
     }
 });
-
 ['studentSearch','studentFilterGroup','studentFilterStatus'].forEach(id => document.getElementById(id)?.addEventListener('input', renderStudents));
 document.getElementById('teacherSearch')?.addEventListener('input', renderTeachers);
 document.getElementById('groupSearch')?.addEventListener('input', renderGroups);
@@ -3089,12 +2773,57 @@ document.getElementById('groupSearch')?.addEventListener('input', renderGroups);
 
 /* ==================== RENDER ALL ==================== */
 function renderAll() {
-    renderDashboard(); renderStudents(); renderTeachers(); renderGroups(); renderSubjects();
-    renderPayments(); renderExpenses(); renderSchedule(); renderAttendance(); renderReports(); renderNotifications();
+    renderDashboard();
+    renderStudents();
+    renderTeachers();
+    renderGroups();
+    renderSubjects();
+    renderPayments();
+    renderExpenses();
+    renderSchedule();
+    renderAttendance();
+    renderReports();
+    renderNotifications();
 }
 
-console.log('%c🌿 Bloom Education + Supabase', 'color: #10b981; font-size: 20px; font-weight: bold;');
-console.log('%c✅ Supabase URL: temtisgmrrserjphinqc.supabase.co', 'color: #059669; font-size: 13px;');
+/* ==================== PWA INSTALL ==================== */
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(() => {
+        document.getElementById('pwaInstallBtn').classList.add('show');
+    }, 3000);
+});
+
+async function installPWA() {
+    if (!deferredPrompt) {
+        toast('Ma\'lumot', 'Brauzer menyusidan "Install" ni tanlang', 'info');
+        return;
+    }
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+        toast('Muvaffaqiyat', 'Bloom Education o\'rnatildi! 🎉');
+        document.getElementById('pwaInstallBtn').classList.remove('show');
+    }
+    deferredPrompt = null;
+}
+
+window.addEventListener('appinstalled', () => {
+    toast('Muvaffaqiyat', 'Dastur ish stoliga o\'rnatildi! 🚀');
+    document.getElementById('pwaInstallBtn').classList.remove('show');
+});
+
+/* ==================== OFFLINE/ONLINE ==================== */
+window.addEventListener('online', () => {
+    document.getElementById('offlineIndicator').classList.remove('show');
+});
+window.addEventListener('offline', () => {
+    document.getElementById('offlineIndicator').classList.add('show');
+});
+
+console.log('%c🌿 Bloom Education PWA', 'color: #10b981; font-size: 20px; font-weight: bold;');
+console.log('%c✅ Supabase: temtisgmrrserjphinqc.supabase.co', 'color: #059669; font-size: 13px;');
 </script>
 
 </body>
