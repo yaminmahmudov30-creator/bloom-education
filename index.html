@@ -90,6 +90,8 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .btn-secondary:hover { background: var(--primary-50); border-color: var(--primary); color: var(--primary-dark); transform: translateY(-1px); }
 .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
 .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
+.btn-warning { background: linear-gradient(135deg, var(--warning), #d97706); color: white; box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+.btn-warning:hover { transform: translateY(-1px); }
 .btn-sm { padding: 9px 16px; font-size: 13px; }
 .btn-icon { width: 38px; height: 38px; padding: 0; border-radius: 10px; }
 .btn-icon svg { width: 17px; height: 17px; }
@@ -132,6 +134,10 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .user-info { flex: 1; min-width: 0; }
 .user-info h4 { font-size: 13px; font-weight: 700; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .user-info p { font-size: 11px; color: var(--gray); font-weight: 500; }
+.user-actions { display: flex; gap: 4px; }
+.account-btn { width: 30px; height: 30px; border: none; background: transparent; color: var(--gray); cursor: pointer; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: all 0.2s var(--ease); }
+.account-btn:hover { background: var(--primary); color: white; transform: scale(1.05); }
+.account-btn svg { width: 15px; height: 15px; }
 .logout-btn { width: 34px; height: 34px; border: none; background: transparent; color: var(--gray); cursor: pointer; border-radius: 9px; display: flex; align-items: center; justify-content: center; transition: all 0.2s var(--ease); }
 .logout-btn:hover { background: var(--danger); color: white; transform: rotate(90deg); }
 .logout-btn svg { width: 17px; height: 17px; }
@@ -339,12 +345,30 @@ tbody tr:last-child td { border-bottom: none; }
 .teacher-hero .hero-stat .num { font-size: 28px; font-weight: 900; }
 .teacher-hero .hero-stat .lbl { font-size: 11px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; margin-top: 2px; }
 
-/* QUICK PAYMENT */
-.qp-month-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: white; border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; margin-bottom: 8px; }
-.qp-month-item.checked { border-color: var(--primary); background: var(--primary-50); }
-.qp-month-item:hover { border-color: var(--primary); background: var(--primary-50); }
+/* QO'LDA TO'LOV MODAL */
+.pay-month-card { background: white; border: 2px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; transition: all 0.2s; }
+.pay-month-card.checked { border-color: var(--primary); background: var(--primary-50); }
+.pay-month-card.partial { border-color: var(--warning); background: var(--warning-light); }
+.pay-month-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0; cursor: pointer; }
+.pay-month-header input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+.pay-month-info { flex: 1; min-width: 0; }
+.pay-month-info h4 { font-size: 14px; font-weight: 800; color: var(--dark); margin-bottom: 3px; }
+.pay-month-info .sub { font-size: 11.5px; color: var(--gray); font-weight: 600; }
+.pay-month-info .sub strong { color: var(--danger); }
+.pay-month-info .sub.paid { color: var(--primary-dark); }
+.pay-month-info .sub.paid strong { color: var(--primary-dark); }
+.pay-month-amount { font-weight: 800; font-size: 14px; color: var(--primary-dark); white-space: nowrap; }
+.pay-month-amount.danger { color: var(--danger); }
+.pay-month-input { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); display: none; }
+.pay-month-card.checked .pay-month-input { display: block; }
+.pay-month-input label { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 6px; }
+.pay-month-input-row { display: flex; gap: 8px; align-items: center; }
+.pay-month-input input { flex: 1; padding: 10px 12px; border: 2px solid var(--border); border-radius: 9px; font-size: 14px; font-family: inherit; font-weight: 700; outline: none; color: var(--dark); background: white; transition: all 0.2s; }
+.pay-month-input input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+.quick-fill-btns { display: flex; gap: 5px; }
+.quick-fill-btns button { padding: 8px 10px; border: 2px solid var(--border); background: white; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit; color: var(--dark); transition: all 0.2s; }
+.quick-fill-btns button:hover { border-color: var(--primary); color: var(--primary-dark); background: var(--primary-50); }
 
-/* SALARY BOX */
 .salary-info-box { background: linear-gradient(135deg, var(--info-light), white); border: 2px dashed var(--info); border-radius: 14px; padding: 18px; margin: 18px 0; }
 .salary-info-box h4 { font-size: 14px; font-weight: 800; color: var(--dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .salary-info-box h4 svg { width: 18px; height: 18px; color: var(--info); }
@@ -374,13 +398,9 @@ tbody tr:last-child td { border-bottom: none; }
     .profile-grid { grid-template-columns: 1fr 1fr; }
     .modal { max-width: 100%; border-radius: 20px 20px 0 0; }
     .modal-overlay { align-items: flex-end; padding: 0; }
-    .photo-upload-section { flex-direction: column; align-items: center; text-align: center; }
-    .photo-buttons { justify-content: center; }
     .days-grid { grid-template-columns: 1fr; }
     .teacher-hero { padding: 22px; }
     .teacher-hero h2 { font-size: 20px; }
-    .teacher-hero .hero-stats { gap: 16px; }
-    .teacher-hero .hero-stat .num { font-size: 22px; }
 }
 @media (max-width: 480px) {
     .stats-grid { grid-template-columns: 1fr; }
@@ -439,6 +459,8 @@ tbody tr:last-child td { border-bottom: none; }
     <symbol id="i-download-app" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
     <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
     <symbol id="i-percent" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></symbol>
 </svg>
 
 <div class="bg-decoration">
@@ -466,14 +488,14 @@ tbody tr:last-child td { border-bottom: none; }
                 <label>Login</label>
                 <div class="input-wrap">
                     <svg class="input-icon"><use href="#i-user"/></svg>
-                    <input type="text" id="loginUsername" class="with-icon" placeholder="Login yoki email" required>
+                    <input type="text" id="loginUsername" class="with-icon" placeholder="Login yoki email" required autocomplete="off">
                 </div>
             </div>
             <div class="form-group">
                 <label>Parol</label>
                 <div class="input-wrap">
                     <svg class="input-icon"><use href="#i-lock"/></svg>
-                    <input type="password" id="loginPassword" class="with-icon" placeholder="Parolingizni kiriting" required style="padding-right:44px;">
+                    <input type="password" id="loginPassword" class="with-icon" placeholder="Parolingizni kiriting" required style="padding-right:44px;" autocomplete="new-password">
                     <button type="button" class="pw-toggle" onclick="togglePw()"><svg style="width:18px;height:18px;"><use href="#i-eye"/></svg></button>
                 </div>
             </div>
@@ -503,7 +525,10 @@ tbody tr:last-child td { border-bottom: none; }
                     <h4 id="userName">Foydalanuvchi</h4>
                     <p id="userRole">Administrator</p>
                 </div>
-                <button class="logout-btn" onclick="logout()" title="Chiqish"><svg><use href="#i-logout"/></svg></button>
+                <div class="user-actions">
+                    <button class="account-btn" onclick="openAccountSettings()" title="Profilni boshqarish"><svg><use href="#i-settings"/></svg></button>
+                    <button class="logout-btn" onclick="logout()" title="Chiqish"><svg><use href="#i-logout"/></svg></button>
+                </div>
             </div>
         </div>
     </aside>
@@ -620,6 +645,7 @@ function togglePw() {
     inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 function formatMoney(n) { return new Intl.NumberFormat('uz-UZ').format(Math.round(n || 0)) + ' so\'m'; }
+function formatMoneyPlain(n) { return new Intl.NumberFormat('uz-UZ').format(Math.round(n || 0)); }
 function formatDate(d) { if (!d) return '-'; return new Date(d).toLocaleDateString('uz-UZ'); }
 function formatMonth(monthStr) {
     if (!monthStr) return '-';
@@ -638,7 +664,6 @@ function getAttendancePercent(studentId) {
     return Math.round((att.filter(a => a.status === 'Keldi' || a.status === 'Kechikdi').length / att.length) * 100);
 }
 
-/* Oylik to'lov oldindan */
 function getMonthsBetween(startMonth, endMonth) {
     const months = [];
     let [y, m] = startMonth.split('-').map(Number);
@@ -694,7 +719,7 @@ function getDebtMonths(studentId) {
     return result;
 }
 
-function getUnpaidMonths(studentId) {
+function getMonthsDetails(studentId) {
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) return [];
     const monthlyPayment = parseFloat(student.monthly_payment) || 0;
@@ -711,7 +736,15 @@ function getUnpaidMonths(studentId) {
         const payment = payments.find(p => p.month === month);
         const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
         const debt = monthlyPayment - paid;
-        if (debt > 0) result.push({ month, amount: debt, paid, expected: monthlyPayment });
+        result.push({
+            month,
+            monthLabel: formatMonth(month),
+            expected: monthlyPayment,
+            paid,
+            debt: debt > 0 ? debt : 0,
+            status: debt <= 0 ? 'paid' : paid > 0 ? 'partial' : 'unpaid',
+            paymentId: payment ? payment.id : null
+        });
     });
     return result;
 }
@@ -771,51 +804,35 @@ async function saveModal() { if (typeof window._modalSave === 'function') await 
 document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target.id === 'modalOverlay') closeModal(); });
 function destroyCharts() { Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
 
-/* ==================== TEACHER SALARY (FOIZLI) ==================== */
-/* Guruhga tegishli o'quvchilar to'lovlaridan o'qituvchi ulushini hisoblash */
+/* ==================== TEACHER SALARY ==================== */
 function calculateTeacherSalary(teacherId, month = null) {
     const teacher = DB.get('teachers').find(t => t.id === teacherId);
     if (!teacher) return { total: 0, details: [] };
-    
-    // O'qituvchining guruhlari
     const teacherGroups = DB.get('groups').filter(g => g.teacher_id === teacherId);
     if (!teacherGroups.length) return { total: 0, details: [] };
-    
     const groupIds = teacherGroups.map(g => g.id);
-    
-    // Bu guruhlardagi o'quvchilar
     const students = DB.get('students').filter(s => groupIds.includes(s.group_id));
     const studentIds = students.map(s => s.id);
-    
-    // Bu o'quvchilarning to'lovlari
     let payments = DB.get('payments').filter(p => studentIds.includes(p.student_id));
     if (month) payments = payments.filter(p => p.month === month);
-    
     if (teacher.salary_type === 'percentage') {
-        // FOIZLI: har bir to'lovdan foiz
         const percentage = parseFloat(teacher.salary_percentage) || 0;
         const details = [];
         let total = 0;
-        
         payments.forEach(p => {
             const paidAmount = parseFloat(p.paid_amount) || 0;
             if (paidAmount <= 0) return;
             const share = paidAmount * (percentage / 100);
             total += share;
             details.push({
-                student_id: p.student_id,
-                student_name: getStudentName(p.student_id),
-                month: p.month,
-                paid: paidAmount,
-                share: share
+                student_id: p.student_id, student_name: getStudentName(p.student_id),
+                month: p.month, paid: paidAmount, share: share
             });
         });
-        
         return { total, details, type: 'percentage', percentage };
     } else if (teacher.salary_type === 'fixed') {
         return { total: parseFloat(teacher.salary_amount) || 0, details: [], type: 'fixed' };
     } else if (teacher.salary_type === 'per_lesson') {
-        // Har bir dars uchun
         const schedules = DB.get('schedules').filter(s => s.teacher_id === teacherId);
         const perLesson = parseFloat(teacher.salary_amount) || 0;
         return { total: schedules.length * perLesson, details: schedules, type: 'per_lesson', perLesson };
@@ -823,7 +840,6 @@ function calculateTeacherSalary(teacherId, month = null) {
     return { total: 0, details: [] };
 }
 
-/* Bu oy uchun o'qituvchi maoshi */
 function calculateTeacherMonthlySalary(teacherId) {
     const currentMonth = new Date().toISOString().slice(0, 7);
     return calculateTeacherSalary(teacherId, currentMonth);
@@ -956,7 +972,7 @@ function collectDaysFromForm() {
     return result;
 }
 
-/* ==================== LOGIN ==================== */
+/* ==================== LOGIN (AUTO-LOGIN OLIB TASHLANDI) ==================== */
 document.getElementById('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('loginBtn');
@@ -966,6 +982,7 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
     btn.disabled = true;
     txt.innerHTML = '<span class="loader"></span>';
 
+    // 1) ADMIN — Supabase Auth
     const email = u.includes('@') ? u : `${u}@bloom.uz`;
     try {
         const { data, error } = await window.supabaseClient.auth.signInWithPassword({ email, password: p });
@@ -982,6 +999,7 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
         }
     } catch (err) { }
 
+    // 2) O'QITUVCHI — teachers jadvalidan
     try {
         const { data: teacher, error: tErr } = await window.supabaseClient
             .from('teachers').select('*').eq('login', u).eq('password', p).single();
@@ -993,7 +1011,7 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
             toast('Xatolik', 'Login yoki parol noto\'g\'ri', 'error');
             return;
         }
-        currentUser = { id: teacher.id, full_name: teacher.full_name, role: 'teacher', teacher_id: teacher.id, photo: teacher.photo };
+        currentUser = { id: teacher.id, full_name: teacher.full_name, role: 'teacher', teacher_id: teacher.id, photo: teacher.photo, login: teacher.login };
         await DB.loadAll();
         loginSuccess();
     } catch (err) {
@@ -1026,23 +1044,217 @@ function updateUserUI() {
 async function logout() {
     if (!confirm('Tizimdan chiqishni xohlaysizmi?')) return;
     try { await window.supabaseClient.auth.signOut(); } catch(e) {}
-    location.reload();
+    // Sahifani to'liq yangilash — sessiya tozalanadi, login qayta so'raladi
+    window.location.href = window.location.pathname;
+    window.location.reload(true);
 }
 
+/* AUTO-LOGIN OLIB TASHLANDI — har safar login/parol so'raladi */
+/* Session xotiradan tozalanadi */
 (async () => {
     try {
-        const { data: { session } } = await window.supabaseClient.auth.getSession();
-        if (session) {
-            const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-            currentUser = { ...(profile || { id: session.user.id, full_name: 'Admin', role: 'admin' }), role: 'admin' };
-            await DB.loadAll();
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('app').classList.add('active');
-            updateUserUI();
-            setupAdminPanel();
-        }
-    } catch (err) { console.log('Auto-login:', err.message); }
+        // Faqat sessiyani tozalash (auto-login qilmaslik)
+        await window.supabaseClient.auth.signOut();
+    } catch(e) {}
+    // Login ekrani ko'rinadi
 })();
+
+/* ==================== HISOB SOZLAMALARI ==================== */
+function openAccountSettings() {
+    if (currentUser.role === 'admin') {
+        openAdminAccountSettings();
+    } else {
+        openTeacherAccountSettings();
+    }
+}
+
+function openAdminAccountSettings() {
+    const body = `
+        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:14px; margin-bottom:20px; border:1px solid var(--primary-light);">
+            <div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${currentUser.full_name.charAt(0).toUpperCase()}</div>
+            <div style="flex:1;">
+                <h3 style="font-size:18px; font-weight:800; color:var(--dark); margin-bottom:4px;">${currentUser.full_name}</h3>
+                <p style="font-size:13px; color:var(--gray);">Administrator</p>
+                <span class="badge badge-info" style="margin-top:6px;">Login: ${currentUser.username || currentUser.full_name}</span>
+            </div>
+        </div>
+        
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">🔑 Loginni o'zgartirish</h4>
+        <div class="form-group">
+            <label>Yangi login</label>
+            <input type="text" id="acc_new_login" value="${currentUser.username || ''}" placeholder="Yangi login">
+        </div>
+        
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin: 20px 0 12px; text-transform:uppercase; letter-spacing:0.5px;">🔒 Parolni o'zgartirish</h4>
+        <div class="form-group">
+            <label>Hozirgi parol *</label>
+            <input type="password" id="acc_current_pw" placeholder="Hozirgi parolingiz">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Yangi parol *</label>
+                <input type="password" id="acc_new_pw" placeholder="Kamida 6 belgi">
+            </div>
+            <div class="form-group">
+                <label>Yangi parol (takror) *</label>
+                <input type="password" id="acc_confirm_pw" placeholder="Yana kiriting">
+            </div>
+        </div>
+        
+        <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 12px 14px; margin-top: 14px;">
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:12px; color:#92400e; font-weight:600;">
+                <svg style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"><use href="#i-alert"/></svg>
+                <span>Parolni o'zgartirsangiz, keyingi kirishda yangi parolni ishlatasiz. Login/parolni yodda saqlang!</span>
+            </div>
+        </div>
+    `;
+    
+    window._modalSave = async () => {
+        const newLogin = document.getElementById('acc_new_login').value.trim();
+        const currentPw = document.getElementById('acc_current_pw').value;
+        const newPw = document.getElementById('acc_new_pw').value;
+        const confirmPw = document.getElementById('acc_confirm_pw').value;
+        
+        // Login o'zgartirish
+        if (newLogin && newLogin !== currentUser.username) {
+            try {
+                await window.supabaseClient.from('profiles').update({ username: newLogin }).eq('id', currentUser.id);
+                currentUser.username = newLogin;
+                toast('Muvaffaqiyat', 'Login yangilandi');
+            } catch (err) {
+                toast('Xatolik', 'Login yangilanmadi: ' + err.message, 'error');
+                return;
+            }
+        }
+        
+        // Parol o'zgartirish
+        if (currentPw || newPw || confirmPw) {
+            if (!currentPw) { toast('Xatolik', 'Hozirgi parolni kiriting', 'error'); return; }
+            if (!newPw) { toast('Xatolik', 'Yangi parolni kiriting', 'error'); return; }
+            if (newPw.length < 6) { toast('Xatolik', 'Parol kamida 6 belgi', 'error'); return; }
+            if (newPw !== confirmPw) { toast('Xatolik', 'Parollar mos kelmadi', 'error'); return; }
+            
+            try {
+                // Hozirgi parolni tekshirish
+                const email = currentUser.username?.includes('@') ? currentUser.username : `${currentUser.username}@bloom.uz`;
+                const { error: signInErr } = await window.supabaseClient.auth.signInWithPassword({ email, password: currentPw });
+                if (signInErr) { toast('Xatolik', 'Hozirgi parol noto\'g\'ri', 'error'); return; }
+                
+                // Parolni yangilash
+                const { error: updErr } = await window.supabaseClient.auth.updateUser({ password: newPw });
+                if (updErr) { toast('Xatolik', updErr.message, 'error'); return; }
+                
+                toast('Muvaffaqiyat', 'Parol o\'zgartirildi! Keyingi kirishda yangi paroldan foydalaning.');
+            } catch (err) {
+                toast('Xatolik', 'Parolni o\'zgartirib bo\'lmadi', 'error');
+                return;
+            }
+        }
+        
+        closeModal();
+    };
+    
+    openModal(
+        `<svg class="icon"><use href="#i-settings"/></svg> Profilni boshqarish`,
+        body,
+        `<button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button>
+         <button class="btn btn-primary" onclick="saveModal()"><svg class="icon-sm"><use href="#i-save"/></svg> Saqlash</button>`
+    );
+}
+
+function openTeacherAccountSettings() {
+    const teacher = DB.get('teachers').find(t => t.id === currentUser.teacher_id);
+    if (!teacher) { toast('Xatolik', 'O\'qituvchi topilmadi', 'error'); return; }
+    
+    const body = `
+        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:14px; margin-bottom:20px; border:1px solid var(--primary-light);">
+            ${teacher.photo ? `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;"><img src="${teacher.photo}"></div>` : `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${teacher.full_name.charAt(0)}</div>`}
+            <div style="flex:1;">
+                <h3 style="font-size:18px; font-weight:800; color:var(--dark); margin-bottom:4px;">${teacher.full_name}</h3>
+                <p style="font-size:13px; color:var(--gray);">${getSubjectName(teacher.subject_id)} • O'qituvchi</p>
+                <span class="badge badge-info" style="margin-top:6px;">Login: ${teacher.login}</span>
+            </div>
+        </div>
+        
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">🔑 Loginni o'zgartirish</h4>
+        <div class="form-group">
+            <label>Yangi login</label>
+            <input type="text" id="tacc_new_login" value="${teacher.login || ''}" placeholder="Yangi login">
+        </div>
+        
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin: 20px 0 12px; text-transform:uppercase; letter-spacing:0.5px;">🔒 Parolni o'zgartirish</h4>
+        <div class="form-group">
+            <label>Hozirgi parol *</label>
+            <input type="password" id="tacc_current_pw" placeholder="Hozirgi parolingiz">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Yangi parol *</label>
+                <input type="password" id="tacc_new_pw" placeholder="Kamida 6 belgi">
+            </div>
+            <div class="form-group">
+                <label>Yangi parol (takror) *</label>
+                <input type="password" id="tacc_confirm_pw" placeholder="Yana kiriting">
+            </div>
+        </div>
+        
+        <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 12px 14px; margin-top: 14px;">
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:12px; color:#92400e; font-weight:600;">
+                <svg style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"><use href="#i-alert"/></svg>
+                <span>Parolni o'zgartirsangiz, keyingi kirishda yangi parolni ishlatasiz. Yodda saqlang!</span>
+            </div>
+        </div>
+    `;
+    
+    window._modalSave = async () => {
+        const newLogin = document.getElementById('tacc_new_login').value.trim();
+        const currentPw = document.getElementById('tacc_current_pw').value;
+        const newPw = document.getElementById('tacc_new_pw').value;
+        const confirmPw = document.getElementById('tacc_confirm_pw').value;
+        
+        const updates = {};
+        
+        // Login o'zgartirish
+        if (newLogin && newLogin !== teacher.login) {
+            // Boshqa o'qituvchida shu login borligini tekshirish
+            const existing = DB.get('teachers').find(t => t.login === newLogin && t.id !== teacher.id);
+            if (existing) { toast('Xatolik', 'Bu login band', 'error'); return; }
+            updates.login = newLogin;
+        }
+        
+        // Parol o'zgartirish
+        if (currentPw || newPw || confirmPw) {
+            if (!currentPw) { toast('Xatolik', 'Hozirgi parolni kiriting', 'error'); return; }
+            if (currentPw !== teacher.password) { toast('Xatolik', 'Hozirgi parol noto\'g\'ri', 'error'); return; }
+            if (!newPw) { toast('Xatolik', 'Yangi parolni kiriting', 'error'); return; }
+            if (newPw.length < 6) { toast('Xatolik', 'Parol kamida 6 belgi', 'error'); return; }
+            if (newPw !== confirmPw) { toast('Xatolik', 'Parollar mos kelmadi', 'error'); return; }
+            updates.password = newPw;
+        }
+        
+        if (Object.keys(updates).length === 0) {
+            toast('Ma\'lumot', 'O\'zgarish yo\'q', 'info');
+            closeModal();
+            return;
+        }
+        
+        try {
+            await DB.update('teachers', teacher.id, updates);
+            if (updates.login) currentUser.login = updates.login;
+            toast('Muvaffaqiyat', 'Saqlandi! Keyingi kirishda yangi login/paroldan foydalaning.');
+            closeModal();
+        } catch (err) {
+            toast('Xatolik', err.message, 'error');
+        }
+    };
+    
+    openModal(
+        `<svg class="icon"><use href="#i-settings"/></svg> Profilni boshqarish`,
+        body,
+        `<button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button>
+         <button class="btn btn-primary" onclick="saveModal()"><svg class="icon-sm"><use href="#i-save"/></svg> Saqlash</button>`
+    );
+}
 
 /* ==================== ADMIN PANEL ==================== */
 function setupAdminPanel() {
@@ -1089,7 +1301,7 @@ function createAdminPages() {
                 <a class="quick-action" onclick="openTeacherModal()"><div class="qa-icon"><svg><use href="#i-user-teacher"/></svg></div> <span>O'qituvchi qo'shish</span></a>
                 <a class="quick-action" onclick="openGroupModal()"><div class="qa-icon"><svg><use href="#i-users"/></svg></div> <span>Guruh qo'shish</span></a>
                 <a class="quick-action" onclick="openSubjectModal()"><div class="qa-icon"><svg><use href="#i-book"/></svg></div> <span>Fan qo'shish</span></a>
-                <a class="quick-action" onclick="openPaymentModal()"><div class="qa-icon"><svg><use href="#i-credit-card"/></svg></div> <span>To'lov qo'shish</span></a>
+                <a class="quick-action" onclick="openManualPaymentModal()"><div class="qa-icon"><svg><use href="#i-credit-card"/></svg></div> <span>Qo'lda to'lov</span></a>
                 <a class="quick-action" onclick="openExpenseModal()"><div class="qa-icon"><svg><use href="#i-wallet"/></svg></div> <span>Xarajat qo'shish</span></a>
             </div>
             <div class="stats-grid" id="statsGrid"></div>
@@ -1122,6 +1334,7 @@ function createAdminPages() {
                 <select id="studentFilterGroup"><option value="">Barcha guruhlar</option></select>
                 <select id="studentFilterStatus"><option value="">Barcha holatlar</option><option value="Faol">Faol</option><option value="Nofaol">Nofaol</option></select>
                 <div class="spacer"></div>
+                <button class="btn btn-warning btn-sm" onclick="openManualPaymentModal()"><svg class="icon-sm"><use href="#i-credit-card"/></svg> Qo'lda to'lov</button>
                 <button class="btn btn-primary btn-sm" onclick="openStudentModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> Yangi o'quvchi</button>
             </div>
             <div class="card"><div class="table-responsive"><table>
@@ -1168,10 +1381,11 @@ function createAdminPages() {
                 <select id="paymentFilterStatus"><option value="">Barcha holatlar</option><option value="To'langan">To'langan</option><option value="Qisman to'langan">Qisman</option><option value="To'lanmagan">To'lanmagan</option></select>
                 <select id="paymentFilterMonth"><option value="">Barcha oylar</option></select>
                 <div class="spacer"></div>
-                <button class="btn btn-primary btn-sm" onclick="openPaymentModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> To'lov</button>
+                <button class="btn btn-warning btn-sm" onclick="openManualPaymentModal()"><svg class="icon-sm"><use href="#i-credit-card"/></svg> Qo'lda to'lov</button>
+                <button class="btn btn-primary btn-sm" onclick="openPaymentModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> Yangi to'lov</button>
             </div>
             <div class="card"><div class="table-responsive"><table>
-                <thead><tr><th>O'quvchi</th><th>Oy</th><th>Kutilgan</th><th>To'langan</th><th>Qarz</th><th>Sana</th><th>Usul</th><th>Holat</th><th>Amallar</th></tr></thead>
+                <thead><tr><th>O'quvchi</th><th>Oy</th><th>Kutilgan</th><th>To'langan</th><th>Qarz</th><th>Progress</th><th>Sana</th><th>Usul</th><th>Holat</th><th>Amallar</th></tr></thead>
                 <tbody id="paymentsTable"></tbody>
             </table></div></div>
         </div>
@@ -1193,7 +1407,6 @@ function createAdminPages() {
 
         <div class="page" id="page-salaries">
             <div class="toolbar">
-                <select id="salaryMonthFilter"><option value="">Bu oy</option></select>
                 <div class="spacer"></div>
                 <button class="btn btn-secondary btn-sm" onclick="exportSalaries()"><svg class="icon-sm"><use href="#i-download"/></svg> Excel</button>
             </div>
@@ -1255,7 +1468,7 @@ const pageTitles = {
     subjects: ['Fanlar', 'O\'quv fanlari'],
     payments: ['To\'lovlar', 'To\'lovlar boshqaruvi'],
     expenses: ['Xarajatlar', 'Xarajatlar boshqaruvi'],
-    salaries: ['Maoshlar', 'O\'qituvchilar maoshi (foizli hisoblash)'],
+    salaries: ['Maoshlar', 'O\'qituvchilar maoshi'],
     schedule: ['Dars jadvali', 'Haftalik dars jadvali'],
     attendance: ['Davomat', 'O\'quvchilar davomati'],
     reports: ['Hisobotlar', 'Moliyaviy hisobotlar'],
@@ -1311,7 +1524,6 @@ function renderDashboard() {
     const monthExpenses = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const debtors = students.filter(s => getStudentDebt(s.id) > 0);
     
-    // Foizli maoshli o'qituvchilar uchun umumiy maosh
     let totalTeacherSalaries = 0;
     teachers.forEach(t => {
         if (t.status === 'Faol') {
@@ -1372,7 +1584,7 @@ function renderDashboard() {
             const months = getDebtMonths(s.id);
             return `
                 <div class="schedule-item" style="border-left-color: var(--danger); cursor: pointer; position: relative; transition: all 0.25s var(--ease);" 
-                     onclick="openQuickPayment(${s.id})"
+                     onclick="openManualPaymentModal(${s.id})"
                      onmouseover="this.style.background='#fef2f2'; this.style.transform='translateX(6px)'; this.style.boxShadow='0 8px 20px -8px rgba(239,68,68,0.4)'"
                      onmouseout="this.style.background=''; this.style.transform=''; this.style.boxShadow=''">
                     <div class="schedule-time" style="color: var(--danger); font-size: 11px; background: #fef2f2; min-width: 90px;">
@@ -1442,54 +1654,112 @@ function renderCharts(students, payments, groups, expenses) {
     });
 }
 
-/* ==================== QUICK PAYMENT ==================== */
-function openQuickPayment(studentId) {
+/* ==================== QO'LDA TO'LOV ==================== */
+function openManualPaymentModal(studentId = null) {
+    if (!studentId) {
+        const debtors = DB.get('students').filter(s => getStudentDebt(s.id) > 0 && s.status === 'Faol');
+        if (!debtors.length) {
+            toast('Ma\'lumot', 'Qarzdor o\'quvchilar yo\'q', 'info');
+            return;
+        }
+        const listHTML = debtors.map(s => {
+            const debt = getStudentDebt(s.id);
+            const months = getDebtMonths(s.id).length;
+            return `
+                <div class="schedule-item" style="border-left-color: var(--danger); cursor: pointer; margin-bottom:8px;" 
+                     onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);">
+                    ${getPhotoHTML(s.photo, s.full_name, 44)}
+                    <div class="schedule-info" style="margin-left:10px;">
+                        <h4>${s.full_name}</h4>
+                        <p><svg><use href="#i-phone"/></svg> ${s.phone || '-'} • <svg><use href="#i-calendar"/></svg> ${months} oy qarzdor</p>
+                    </div>
+                    <span class="badge badge-danger">${formatMoney(debt)}</span>
+                </div>
+            `;
+        }).join('');
+        
+        openModal(
+            `<svg class="icon" style="color:var(--warning)"><use href="#i-credit-card"/></svg> Qo'lda to'lov — O'quvchi tanlash`,
+            `<div style="margin-bottom:14px; padding:12px 14px; background:var(--warning-light); border-radius:12px; border-left:4px solid var(--warning);">
+                <strong style="color:#92400e; font-size:13px;">💡 Qaysi o'quvchiga to'lov qabul qilasiz?</strong>
+                <p style="font-size:12px; color:#92400e; margin-top:4px;">Qarzdor o'quvchilardan birini tanlang</p>
+            </div>
+            <div style="max-height:400px; overflow-y:auto;">${listHTML}</div>`,
+            `<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>`
+        );
+        return;
+    }
+    
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) { toast('Xatolik', 'O\'quvchi topilmadi', 'error'); return; }
     
-    const debt = getStudentDebt(studentId);
-    const unpaidMonths = getUnpaidMonths(studentId);
     const monthlyPayment = parseFloat(student.monthly_payment) || 0;
+    const monthsDetails = getMonthsDetails(studentId);
+    const totalDebt = getStudentDebt(studentId);
+    const unpaidMonths = monthsDetails.filter(m => m.debt > 0 || m.status === 'partial');
     
-    if (debt <= 0) {
+    if (!unpaidMonths.length) {
         toast('Ma\'lumot', `${student.full_name} qarzdor emas`, 'info');
         return;
     }
     
-    const monthsHTML = unpaidMonths.map(m => `
-        <label class="qp-month-item checked" id="monthLabel-${m.month}">
-            <input type="checkbox" class="quick-pay-month" value="${m.month}" data-amount="${m.amount}" 
-                   onchange="updateQuickPayTotal()"
-                   style="width:20px; height:20px; accent-color:var(--primary); cursor:pointer;" checked>
-            <div style="flex:1;">
-                <div style="font-weight:800; font-size:14px; color:var(--dark);">${formatMonth(m.month)}</div>
-                <div style="font-size:11px; color:var(--gray); margin-top:2px;">Qarz: <strong style="color:var(--danger);">${formatMoney(m.amount)}</strong></div>
+    const monthsHTML = unpaidMonths.map(m => {
+        const partialInfo = m.paid > 0 
+            ? `<span style="color:var(--warning);">To'langan: ${formatMoney(m.paid)}</span>` 
+            : `<span style="color:var(--gray);">To'lanmagan</span>`;
+        return `
+            <div class="pay-month-card checked" id="pmc-${m.month}" data-month="${m.month}" data-expected="${m.expected}" data-paid="${m.paid}" data-debt="${m.debt}">
+                <div class="pay-month-header" onclick="togglePayMonth('${m.month}')">
+                    <input type="checkbox" class="pm-checkbox" data-month="${m.month}" checked onclick="event.stopPropagation(); togglePayMonth('${m.month}')">
+                    <div class="pay-month-info">
+                        <h4>${m.monthLabel}</h4>
+                        <div class="sub ${m.paid > 0 ? 'paid' : ''}">
+                            ${partialInfo} • Qarz: <strong>${formatMoney(m.debt)}</strong>
+                        </div>
+                    </div>
+                    <div class="pay-month-amount danger">${formatMoney(m.debt)}</div>
+                </div>
+                <div class="pay-month-input">
+                    <label>To'lov summasi (so'm)</label>
+                    <div class="pay-month-input-row">
+                        <input type="number" class="pm-amount-input" data-month="${m.month}" 
+                               value="${m.debt}" min="0" max="${m.debt}" step="1000"
+                               oninput="updateManualTotal()" onclick="event.stopPropagation()">
+                        <div class="quick-fill-btns">
+                            <button type="button" onclick="event.stopPropagation(); setPayAmount('${m.month}', ${m.debt})" title="To'liq">✓</button>
+                            <button type="button" onclick="event.stopPropagation(); setPayAmount('${m.month}', ${Math.floor(m.debt/2)})" title="Yarmi">½</button>
+                            <button type="button" onclick="event.stopPropagation(); setPayAmount('${m.month}', 0)" title="Tozalash">✗</button>
+                        </div>
+                    </div>
+                    <div style="font-size:11px; color:var(--gray); margin-top:6px; font-weight:600;">
+                        Bu oyda qoladigan qarz: <span id="remain-${m.month}" style="color:var(--danger); font-weight:800;">0 so'm</span>
+                    </div>
+                </div>
             </div>
-            <div style="font-weight:800; font-size:14px; color:var(--primary-dark);">${formatMoney(m.amount)}</div>
-        </label>
-    `).join('');
+        `;
+    }).join('');
     
     const avatarHTML = student.photo 
-        ? `<div class="profile-avatar" style="width:70px;height:70px;border-radius:18px;"><img src="${student.photo}"></div>` 
-        : `<div class="profile-avatar" style="width:70px;height:70px;border-radius:18px;font-size:28px;">${student.full_name.charAt(0)}</div>`;
+        ? `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;"><img src="${student.photo}"></div>` 
+        : `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${student.full_name.charAt(0)}</div>`;
     
     const body = `
-        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--danger-light), white); border-radius:14px; margin-bottom:20px; border:1px solid var(--danger);">
+        <div style="display:flex; gap:14px; align-items:center; padding:14px 16px; background:linear-gradient(135deg, var(--warning-light), white); border-radius:14px; margin-bottom:18px; border:1px solid var(--warning);">
             ${avatarHTML}
             <div style="flex:1;">
-                <h3 style="font-size:18px; font-weight:800; color:var(--dark); margin-bottom:4px;">${student.full_name}</h3>
-                <p style="font-size:13px; color:var(--gray); margin-bottom:6px;">${student.phone || '-'} • ${getGroupName(student.group_id)}</p>
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <span class="badge badge-danger">Qarz: ${formatMoney(debt)}</span>
+                <h3 style="font-size:17px; font-weight:800; color:var(--dark); margin-bottom:3px;">${student.full_name}</h3>
+                <p style="font-size:12px; color:var(--gray); margin-bottom:6px;">${student.phone || '-'} • ${getGroupName(student.group_id)}</p>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <span class="badge badge-danger">Jami qarz: ${formatMoney(totalDebt)}</span>
                     <span class="badge badge-info">Oylik: ${formatMoney(monthlyPayment)}</span>
                 </div>
             </div>
         </div>
         
-        <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px;">
-            <div style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:#92400e; font-weight:600;">
-                <svg style="width:16px;height:16px;"><use href="#i-alert"/></svg>
-                <span>To'lamoqchi bo'lgan oylarni belgilang. Standart holatda hammasi tanlangan.</span>
+        <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;">
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e40af; font-weight:600; line-height:1.5;">
+                <svg style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"><use href="#i-info"/></svg>
+                <span><strong>Qo'lda to'lov:</strong> har bir oy uchun <strong>to'lanadigan summani</strong> o'zingiz kiriting. Yarim to'lov qilsangiz, qolgani qarz bo'lib qoladi.</span>
             </div>
         </div>
         
@@ -1498,23 +1768,24 @@ function openQuickPayment(studentId) {
                 📅 Qarzdor oylar (${unpaidMonths.length} ta)
             </h4>
             <div style="display:flex; gap:6px;">
-                <button type="button" onclick="toggleAllMonths(true)" style="padding:6px 10px; border:none; background:var(--primary); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">✓ Barchasi</button>
-                <button type="button" onclick="toggleAllMonths(false)" style="padding:6px 10px; border:none; background:var(--gray-2); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">✗ Hech biri</button>
+                <button type="button" onclick="fillAllFull()" style="padding:6px 10px; border:none; background:var(--primary); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">✓ To'liq</button>
+                <button type="button" onclick="fillAllHalf()" style="padding:6px 10px; border:none; background:var(--warning); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">½ Yarim</button>
+                <button type="button" onclick="clearAllAmounts()" style="padding:6px 10px; border:none; background:var(--gray-2); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">✗ Tozalash</button>
             </div>
         </div>
-        <div style="margin-bottom:20px; max-height:250px; overflow-y:auto; padding-right:4px;">
+        <div style="margin-bottom:18px; max-height:340px; overflow-y:auto; padding-right:4px;">
             ${monthsHTML}
         </div>
         
-        <div style="background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%); color: white; padding: 18px 20px; border-radius: 14px; margin-bottom: 20px;">
+        <div style="background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%); color: white; padding: 18px 20px; border-radius: 14px; margin-bottom: 18px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
-                    <div style="font-size:11px; opacity:0.85; text-transform:uppercase; letter-spacing:0.6px; font-weight:700;">To'lanadigan summa</div>
-                    <div id="quickPayTotal" style="font-size:28px; font-weight:900; margin-top:4px; color:#fef3c7;">${formatMoney(debt)}</div>
+                    <div style="font-size:11px; opacity:0.85; text-transform:uppercase; letter-spacing:0.6px; font-weight:700;">Qabul qilinadigan summa</div>
+                    <div id="manualPayTotal" style="font-size:28px; font-weight:900; margin-top:4px; color:#fef3c7;">0 so'm</div>
                 </div>
                 <div style="text-align:right;">
                     <div style="font-size:11px; opacity:0.85; text-transform:uppercase; letter-spacing:0.6px; font-weight:700;">Tanlangan</div>
-                    <div id="quickPayCount" style="font-size:22px; font-weight:900; margin-top:4px;">${unpaidMonths.length} oy</div>
+                    <div id="manualPayCount" style="font-size:22px; font-weight:900; margin-top:4px;">0 oy</div>
                 </div>
             </div>
         </div>
@@ -1522,11 +1793,11 @@ function openQuickPayment(studentId) {
         <div class="form-row">
             <div class="form-group">
                 <label>To'lov sanasi</label>
-                <input type="date" id="qp_date" value="${new Date().toISOString().split('T')[0]}">
+                <input type="date" id="mp_date" value="${new Date().toISOString().split('T')[0]}">
             </div>
             <div class="form-group">
                 <label>To'lov usuli</label>
-                <select id="qp_method">
+                <select id="mp_method">
                     <option>Naqd</option>
                     <option>Karta</option>
                     <option>Bank o'tkazmasi</option>
@@ -1536,46 +1807,64 @@ function openQuickPayment(studentId) {
         
         <div class="form-group">
             <label>Izoh (ixtiyoriy)</label>
-            <input type="text" id="qp_notes" placeholder="Masalan: naqd to'lov">
+            <input type="text" id="mp_notes" placeholder="Masalan: naqd to'lov, qismiy to'lov...">
         </div>
     `;
     
     window._modalSave = async () => {
-        const selectedMonths = Array.from(document.querySelectorAll('.quick-pay-month:checked'))
-            .map(cb => ({ month: cb.value, amount: parseFloat(cb.dataset.amount) }));
+        const selectedCards = document.querySelectorAll('.pay-month-card.checked');
+        const payments = [];
         
-        if (!selectedMonths.length) {
-            toast('Xatolik', 'Kamida bitta oyni tanlang', 'error');
+        selectedCards.forEach(card => {
+            const month = card.dataset.month;
+            const input = card.querySelector('.pm-amount-input');
+            const amount = parseFloat(input.value) || 0;
+            if (amount > 0) {
+                payments.push({ month, amount });
+            }
+        });
+        
+        if (!payments.length) {
+            toast('Xatolik', 'Kamida bitta oy uchun summa kiriting', 'error');
             return;
         }
         
-        const paymentDate = document.getElementById('qp_date').value;
-        const paymentMethod = document.getElementById('qp_method').value;
-        const notes = document.getElementById('qp_notes').value || null;
+        const paymentDate = document.getElementById('mp_date').value;
+        const paymentMethod = document.getElementById('mp_method').value;
+        const notes = document.getElementById('mp_notes').value || null;
         
         try {
-            for (const item of selectedMonths) {
+            for (const item of payments) {
                 const existing = DB.get('payments').find(p => p.student_id === studentId && p.month === item.month);
                 
                 if (existing) {
-                    const newPaid = parseFloat(existing.paid_amount || 0) + item.amount;
-                    const expected = parseFloat(existing.expected_amount || monthlyPayment);
+                    const newPaid = (parseFloat(existing.paid_amount) || 0) + item.amount;
+                    const expected = parseFloat(existing.expected_amount) || monthlyPayment;
                     const status = newPaid >= expected ? 'To\'langan' : newPaid > 0 ? 'Qisman to\'langan' : 'To\'lanmagan';
                     await DB.update('payments', existing.id, {
-                        paid_amount: newPaid, payment_date: paymentDate,
-                        payment_method: paymentMethod, status, notes
+                        paid_amount: newPaid,
+                        payment_date: paymentDate,
+                        payment_method: paymentMethod,
+                        status,
+                        notes
                     });
                 } else {
+                    const status = item.amount >= monthlyPayment ? 'To\'langan' : 'Qisman to\'langan';
                     await DB.insert('payments', {
-                        student_id: studentId, month: item.month,
-                        expected_amount: monthlyPayment, paid_amount: item.amount,
-                        payment_date: paymentDate, payment_method: paymentMethod,
-                        status: 'To\'langan', notes
+                        student_id: studentId,
+                        month: item.month,
+                        expected_amount: monthlyPayment,
+                        paid_amount: item.amount,
+                        payment_date: paymentDate,
+                        payment_method: paymentMethod,
+                        status,
+                        notes
                     });
                 }
             }
             
-            toast('Muvaffaqiyat', `${selectedMonths.length} oy uchun to'lov qabul qilindi! ✅`);
+            const totalAmount = payments.reduce((s, p) => s + p.amount, 0);
+            toast('Muvaffaqiyat', `${formatMoney(totalAmount)} qabul qilindi (${payments.length} oy) ✅`);
             closeModal();
             renderDashboard();
             renderStudents();
@@ -1586,35 +1875,99 @@ function openQuickPayment(studentId) {
     };
     
     openModal(
-        `<svg class="icon" style="color:var(--danger)"><use href="#i-credit-card"/></svg> To'lov qabul qilish`,
+        `<svg class="icon" style="color:var(--warning)"><use href="#i-credit-card"/></svg> Qo'lda to'lov qabul qilish`,
         body,
         `<button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button>
          <button class="btn btn-primary" onclick="saveModal()"><svg class="icon-sm"><use href="#i-check-circle"/></svg> To'lovni tasdiqlash</button>`
     );
+    
+    setTimeout(updateManualTotal, 50);
 }
 
-function updateQuickPayTotal() {
-    const checkboxes = document.querySelectorAll('.quick-pay-month');
+function togglePayMonth(month) {
+    const card = document.getElementById('pmc-' + month);
+    if (!card) return;
+    const checkbox = card.querySelector('.pm-checkbox');
+    checkbox.checked = !checkbox.checked;
+    if (checkbox.checked) card.classList.add('checked');
+    else card.classList.remove('checked');
+    updateManualTotal();
+}
+
+function setPayAmount(month, amount) {
+    const card = document.getElementById('pmc-' + month);
+    if (!card) return;
+    const input = card.querySelector('.pm-amount-input');
+    input.value = amount;
+    updateManualTotal();
+}
+
+function fillAllFull() {
+    document.querySelectorAll('.pay-month-card').forEach(card => {
+        const checkbox = card.querySelector('.pm-checkbox');
+        const input = card.querySelector('.pm-amount-input');
+        const debt = parseFloat(card.dataset.debt) || 0;
+        checkbox.checked = true;
+        card.classList.add('checked');
+        input.value = debt;
+    });
+    updateManualTotal();
+}
+
+function fillAllHalf() {
+    document.querySelectorAll('.pay-month-card').forEach(card => {
+        const checkbox = card.querySelector('.pm-checkbox');
+        const input = card.querySelector('.pm-amount-input');
+        const debt = parseFloat(card.dataset.debt) || 0;
+        checkbox.checked = true;
+        card.classList.add('checked');
+        input.value = Math.floor(debt / 2);
+    });
+    updateManualTotal();
+}
+
+function clearAllAmounts() {
+    document.querySelectorAll('.pay-month-card').forEach(card => {
+        const checkbox = card.querySelector('.pm-checkbox');
+        const input = card.querySelector('.pm-amount-input');
+        checkbox.checked = false;
+        card.classList.remove('checked');
+        input.value = 0;
+    });
+    updateManualTotal();
+}
+
+function updateManualTotal() {
     let total = 0, count = 0;
-    checkboxes.forEach(cb => {
-        const label = document.getElementById('monthLabel-' + cb.value);
-        if (cb.checked) {
-            total += parseFloat(cb.dataset.amount) || 0;
+    document.querySelectorAll('.pay-month-card').forEach(card => {
+        const month = card.dataset.month;
+        const checkbox = card.querySelector('.pm-checkbox');
+        const input = card.querySelector('.pm-amount-input');
+        const debt = parseFloat(card.dataset.debt) || 0;
+        const amount = parseFloat(input.value) || 0;
+        const remain = Math.max(0, debt - amount);
+        const remainEl = document.getElementById('remain-' + month);
+        if (remainEl) {
+            remainEl.textContent = remain > 0 ? formatMoney(remain) : '0 so\'m';
+            remainEl.style.color = remain > 0 ? 'var(--danger)' : 'var(--primary-dark)';
+        }
+        if (amount > 0) {
+            card.classList.add('checked');
+            checkbox.checked = true;
+            if (amount < debt) card.classList.add('partial');
+            else card.classList.remove('partial');
+            total += amount;
             count++;
-            if (label) label.classList.add('checked');
         } else {
-            if (label) label.classList.remove('checked');
+            checkbox.checked = false;
+            card.classList.remove('checked');
+            card.classList.remove('partial');
         }
     });
-    const totalEl = document.getElementById('quickPayTotal');
-    const countEl = document.getElementById('quickPayCount');
+    const totalEl = document.getElementById('manualPayTotal');
+    const countEl = document.getElementById('manualPayCount');
     if (totalEl) totalEl.textContent = formatMoney(total);
     if (countEl) countEl.textContent = count + ' oy';
-}
-
-function toggleAllMonths(checked) {
-    document.querySelectorAll('.quick-pay-month').forEach(cb => { cb.checked = checked; });
-    updateQuickPayTotal();
 }
 
 /* ==================== STUDENTS ==================== */
@@ -1649,10 +2002,11 @@ function renderStudents() {
             <td>${getGroupName(s.group_id)}</td>
             <td>${formatMoney(s.monthly_payment)}</td>
             <td><span class="badge ${bCls}">${ps}</span></td>
-            <td><span class="badge ${dCls}" style="cursor:pointer;" onclick="openQuickPayment(${s.id})">${debt > 0 ? formatMoney(debt) : '0'}</span></td>
+            <td><span class="badge ${dCls}" style="cursor:pointer;" onclick="openManualPaymentModal(${s.id})" title="To'lov qilish">${debt > 0 ? formatMoney(debt) : '0'}</span></td>
             <td><span class="badge ${aCls}">${att}%</span></td>
             <td><span class="badge ${s.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${s.status}</span></td>
             <td>
+                <button class="btn btn-sm btn-warning btn-icon" onclick="openManualPaymentModal(${s.id})" title="To'lov qilish"><svg><use href="#i-credit-card"/></svg></button>
                 <button class="btn btn-sm btn-secondary btn-icon" onclick="viewStudent(${s.id})"><svg><use href="#i-eye"/></svg></button>
                 <button class="btn btn-sm btn-secondary btn-icon" onclick="editStudent(${s.id})"><svg><use href="#i-edit"/></svg></button>
                 <button class="btn btn-sm btn-danger btn-icon" onclick="deleteStudent(${s.id})"><svg><use href="#i-trash"/></svg></button>
@@ -1690,7 +2044,7 @@ function openStudentModal(id = null) {
             <div class="form-group"><label>Status</label><select id="s_status"><option ${s.status === 'Faol' ? 'selected' : ''}>Faol</option><option ${s.status === 'Nofaol' ? 'selected' : ''}>Nofaol</option></select></div>
         </div>
         <div style="background: linear-gradient(135deg, var(--warning-light), white); border: 2px dashed var(--warning); border-radius: 12px; padding: 14px; font-size: 12px; color: #92400e;">
-            💡 <strong>Eslatma:</strong> Oylik to'lov oldindan olinadi. Kurs boshlanish sanasidan boshlab har oy uchun to'lov avtomatik hisoblanadi va to'lanmaguncha qarz sifatida ko'rinadi.
+            💡 <strong>Eslatma:</strong> Oylik to'lov oldindan olinadi. Kurs boshlanish sanasidan boshlab har oy uchun to'lov avtomatik hisoblanadi.
         </div>
     `;
     window._modalSave = async () => {
@@ -1722,9 +2076,9 @@ function openStudentModal(id = null) {
 function editStudent(id) { openStudentModal(id); }
 function viewStudent(id) {
     const s = DB.get('students').find(x => x.id === id); if (!s) return;
-    const payments = DB.get('payments').filter(p => p.student_id === id).slice(-6).reverse();
+    const payments = DB.get('payments').filter(p => p.student_id === id).slice(-8).reverse();
     const att = getAttendancePercent(id), debt = getStudentDebt(id);
-    const debtMonths = getDebtMonths(id);
+    const monthsDetails = getMonthsDetails(id);
     const avatarHTML = s.photo ? `<div class="profile-avatar"><img src="${s.photo}"></div>` : `<div class="profile-avatar">${s.full_name.charAt(0)}</div>`;
     const body = `
         <div class="profile-header">
@@ -1743,14 +2097,28 @@ function viewStudent(id) {
             <div class="info-item"><label>Qarz</label><div class="value" style="color:${debt > 0 ? 'var(--danger)' : 'var(--primary)'};">${formatMoney(debt)}</div></div>
             <div class="info-item"><label>Davomat</label><div class="value">${att}%</div></div>
         </div>
-        ${debt > 0 ? `<button class="btn btn-primary" style="margin-top:14px; width:100%;" onclick="closeModal(); openQuickPayment(${s.id})"><svg class="icon-sm"><use href="#i-credit-card"/></svg> To'lov qilish (${formatMoney(debt)})</button>` : ''}
-        ${debtMonths.length ? `<div style="background: var(--danger-light); border: 1px solid var(--danger); border-radius: 12px; padding: 14px; margin-top: 14px;"><strong style="color: #991b1b; font-size: 13px;">⚠️ Qarzdor oylar:</strong><p style="margin-top: 6px; font-size: 13px; color: #991b1b;">${debtMonths.join(', ')}</p></div>` : ''}
-        <h3 class="section-title">To'lovlar tarixi</h3>
+        ${debt > 0 ? `<button class="btn btn-warning" style="margin-top:14px; width:100%;" onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);"><svg class="icon-sm"><use href="#i-credit-card"/></svg> To'lov qabul qilish (${formatMoney(debt)})</button>` : ''}
+        <h3 class="section-title">Oylar bo'yicha holat</h3>
         <div class="table-responsive"><table><thead><tr><th>Oy</th><th>Kutilgan</th><th>To'langan</th><th>Qarz</th><th>Holat</th></tr></thead>
-        <tbody>${payments.length ? payments.map(p => {
-            const d = parseFloat(p.expected_amount) - parseFloat(p.paid_amount);
-            return `<tr><td>${formatMonth(p.month)}</td><td>${formatMoney(p.expected_amount)}</td><td>${formatMoney(p.paid_amount)}</td><td style="color:${d > 0 ? 'var(--danger)' : 'var(--primary)'};">${formatMoney(d)}</td><td><span class="badge ${p.status === 'To\'langan' ? 'badge-success' : p.status === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger'}">${p.status}</span></td></tr>`;
-        }).join('') : '<tr><td colspan="5" style="text-align:center;">To\'lovlar yo\'q</td></tr>'}</tbody></table></div>
+        <tbody>${monthsDetails.length ? [...monthsDetails].reverse().map(m => {
+            const cls = m.status === 'paid' ? 'badge-success' : m.status === 'partial' ? 'badge-warning' : 'badge-danger';
+            const label = m.status === 'paid' ? 'To\'langan' : m.status === 'partial' ? 'Qisman' : 'To\'lanmagan';
+            return `<tr>
+                <td>${m.monthLabel}</td>
+                <td>${formatMoney(m.expected)}</td>
+                <td>${formatMoney(m.paid)}</td>
+                <td style="color:${m.debt > 0 ? 'var(--danger)' : 'var(--primary)'}; font-weight:700;">${formatMoney(m.debt)}</td>
+                <td><span class="badge ${cls}">${label}</span></td>
+            </tr>`;
+        }).join('') : '<tr><td colspan="5" style="text-align:center;">Ma\'lumot yo\'q</td></tr>'}</tbody></table></div>
+        <h3 class="section-title">To'lovlar tarixi</h3>
+        <div class="table-responsive"><table><thead><tr><th>Sana</th><th>Oy</th><th>To'langan</th><th>Usul</th></tr></thead>
+        <tbody>${payments.length ? payments.map(p => `<tr>
+            <td>${p.payment_date || '-'}</td>
+            <td>${formatMonth(p.month)}</td>
+            <td><strong style="color:var(--primary-dark);">${formatMoney(p.paid_amount)}</strong></td>
+            <td>${p.payment_method || '-'}</td>
+        </tr>`).join('') : '<tr><td colspan="4" style="text-align:center;">To\'lovlar yo\'q</td></tr>'}</tbody></table></div>
     `;
     openModal('O\'quvchi profili', body, '<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>');
 }
@@ -1764,7 +2132,6 @@ function renderTeachers() {
     const tbody = document.getElementById('teachersTable');
     if (!teachers.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-teacher"/></svg></div><h3>O\'qituvchilar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = teachers.map(t => {
-        // Bu oy maosh
         const monthlySalary = calculateTeacherMonthlySalary(t.id);
         let salaryTypeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? `Foizli (${t.salary_percentage}%)` : 'Dars uchun';
         let salaryDisplay = formatMoney(monthlySalary.total);
@@ -1799,8 +2166,6 @@ function openTeacherModal(id = null) {
             <div class="form-group"><label>Email</label><input type="email" id="t_email" value="${t.email || ''}"></div>
         </div>
         <div class="form-group"><label>Fan</label><select id="t_subject_id">${subjects.length ? subjects.map(s => `<option value="${s.id}" ${t.subject_id == s.id ? 'selected' : ''}>${s.name}</option>`).join('') : '<option value="">Avval fan qo\'shing</option>'}</select></div>
-        
-        <!-- MAOSH TURI -->
         <div class="form-group">
             <label>Maosh turi *</label>
             <select id="t_salary_type" onchange="toggleSalaryFields()">
@@ -1809,14 +2174,10 @@ function openTeacherModal(id = null) {
                 <option value="per_lesson" ${t.salary_type === 'per_lesson' ? 'selected' : ''}>Dars uchun (har darsga summa)</option>
             </select>
         </div>
-        
-        <!-- FIXED / PER_LESSON -->
         <div class="form-group" id="salaryAmountGroup">
             <label id="salaryLabel">Maosh miqdori (so'm)</label>
             <input type="number" id="t_salary_amount" value="${t.salary_amount || 0}">
         </div>
-        
-        <!-- FOIZLI -->
         <div class="form-group" id="salaryPercentGroup" style="display:none;">
             <label>Foiz miqdori (%) *</label>
             <input type="number" id="t_salary_percentage" value="${t.salary_percentage || 30}" min="0" max="100" step="1">
@@ -1826,8 +2187,6 @@ function openTeacherModal(id = null) {
                 <p style="margin-top:6px;">📊 Misol: o'quvchi <strong>500,000 so'm</strong> to'lasa, o'qituvchi <strong id="examplePreview">150,000 so'm</strong> oladi.</p>
             </div>
         </div>
-        
-        <!-- LOGIN/PAROL -->
         <div style="background: linear-gradient(135deg, var(--info-light), white); border: 2px dashed var(--info); border-radius: 14px; padding: 18px; margin: 18px 0;">
             <h4 style="font-size:14px; font-weight:800; color:var(--dark); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
                 <svg style="width:18px;height:18px;color:var(--info);"><use href="#i-lock"/></svg>
@@ -1839,7 +2198,6 @@ function openTeacherModal(id = null) {
                 <div class="form-group" style="margin-bottom:0;"><label>Parol *</label><input type="text" id="t_password" value="${t.password || ''}" placeholder="kamida 6 belgi" required></div>
             </div>
         </div>
-        
         <div class="form-row">
             <div class="form-group"><label>Ishga kirgan sana</label><input type="date" id="t_start_date" value="${t.start_date || ''}"></div>
             <div class="form-group"><label>Status</label><select id="t_status"><option ${t.status === 'Faol' ? 'selected' : ''}>Faol</option><option ${t.status === 'Nofaol' ? 'selected' : ''}>Nofaol</option></select></div>
@@ -1852,6 +2210,11 @@ function openTeacherModal(id = null) {
         if (!name) { toast('Xatolik', 'F.I.Sh kiritilishi shart', 'error'); return; }
         if (!login || !password) { toast('Xatolik', 'Login va parol kiritilishi shart', 'error'); return; }
         if (password.length < 6) { toast('Xatolik', 'Parol kamida 6 belgi', 'error'); return; }
+        
+        // Login bandligini tekshirish
+        const existing = DB.get('teachers').find(x => x.login === login && x.id !== id);
+        if (existing) { toast('Xatolik', 'Bu login band', 'error'); return; }
+        
         const st = document.getElementById('t_salary_type').value;
         const data = {
             full_name: name, phone: document.getElementById('t_phone').value || null, email: document.getElementById('t_email').value || null,
@@ -1873,7 +2236,6 @@ function openTeacherModal(id = null) {
     setTimeout(() => { 
         toggleSalaryFields(); 
         attachPhotoListener();
-        // Foiz preview listener
         const percentInput = document.getElementById('t_salary_percentage');
         if (percentInput) {
             percentInput.addEventListener('input', () => {
@@ -1897,59 +2259,41 @@ function toggleSalaryFields() {
 function editTeacher(id) { openTeacherModal(id); }
 async function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('teachers', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderTeachers(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
-/* O'qituvchi maosh tafsiloti */
 function viewTeacherSalary(teacherId) {
     const teacher = DB.get('teachers').find(t => t.id === teacherId);
     if (!teacher) return;
-    
     const currentMonth = new Date().toISOString().slice(0, 7);
     const salary = calculateTeacherSalary(teacherId, currentMonth);
     const groups = DB.get('groups').filter(g => g.teacher_id === teacherId);
     const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
-    
     const avatarHTML = teacher.photo 
         ? `<div class="profile-avatar" style="width:70px;height:70px;border-radius:18px;"><img src="${teacher.photo}"></div>` 
         : `<div class="profile-avatar" style="width:70px;height:70px;border-radius:18px;font-size:28px;">${teacher.full_name.charAt(0)}</div>`;
-    
     let salaryTypeText = teacher.salary_type === 'percentage' 
         ? `Foizli: ${teacher.salary_percentage}%` 
         : teacher.salary_type === 'per_lesson' 
             ? `Dars uchun: ${formatMoney(teacher.salary_amount)}` 
             : `Belgilangan: ${formatMoney(teacher.salary_amount)}`;
-    
     let detailsHTML = '';
     if (teacher.salary_type === 'percentage' && salary.details.length > 0) {
         detailsHTML = `
             <h3 class="section-title">Bu oy to'lovlardan ulush</h3>
             <div class="table-responsive"><table>
                 <thead><tr><th>O'quvchi</th><th>Oy</th><th>To'langan</th><th>Ulush (${teacher.salary_percentage}%)</th></tr></thead>
-                <tbody>
-                    ${salary.details.map(d => `
-                        <tr>
-                            <td>${d.student_name}</td>
-                            <td>${formatMonth(d.month)}</td>
-                            <td>${formatMoney(d.paid)}</td>
-                            <td><strong style="color:var(--primary-dark);">${formatMoney(d.share)}</strong></td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-                <tfoot>
-                    <tr style="background:var(--primary-50);">
-                        <td colspan="3" style="text-align:right; font-weight:800;">JAMI:</td>
-                        <td style="font-weight:900; color:var(--primary-dark); font-size:16px;">${formatMoney(salary.total)}</td>
-                    </tr>
-                </tfoot>
+                <tbody>${salary.details.map(d => `
+                    <tr><td>${d.student_name}</td><td>${formatMonth(d.month)}</td><td>${formatMoney(d.paid)}</td><td><strong style="color:var(--primary-dark);">${formatMoney(d.share)}</strong></td></tr>
+                `).join('')}</tbody>
+                <tfoot><tr style="background:var(--primary-50);">
+                    <td colspan="3" style="text-align:right; font-weight:800;">JAMI:</td>
+                    <td style="font-weight:900; color:var(--primary-dark); font-size:16px;">${formatMoney(salary.total)}</td>
+                </tr></tfoot>
             </table></div>
         `;
     } else if (teacher.salary_type === 'percentage') {
-        detailsHTML = `
-            <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 14px; margin-top: 14px;">
-                <strong style="color: #92400e; font-size: 13px;">⚠️ Bu oy hali to'lovlar yo'q</strong>
-                <p style="margin-top: 6px; font-size: 13px; color: #92400e;">O'quvchilar to'lov qilganda, o'qituvchi ulushi avtomatik hisoblanadi.</p>
-            </div>
-        `;
+        detailsHTML = `<div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 14px; margin-top: 14px;">
+            <strong style="color: #92400e; font-size: 13px;">⚠️ Bu oy hali to'lovlar yo'q</strong>
+        </div>`;
     }
-    
     const body = `
         <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--info-light), white); border-radius:14px; margin-bottom:20px; border:1px solid var(--info);">
             ${avatarHTML}
@@ -1963,20 +2307,13 @@ function viewTeacherSalary(teacherId) {
                 </div>
             </div>
         </div>
-        
         <div style="background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%); color: white; padding: 20px 24px; border-radius: 14px; margin-bottom: 20px;">
             <div style="font-size:11px; opacity:0.85; text-transform:uppercase; letter-spacing:0.6px; font-weight:700;">Bu oy (${formatMonth(currentMonth)}) maosh</div>
             <div style="font-size:32px; font-weight:900; margin-top:6px; color:#fef3c7;">${formatMoney(salary.total)}</div>
         </div>
-        
         ${detailsHTML}
     `;
-    
-    openModal(
-        `<svg class="icon"><use href="#i-percent"/></svg> O'qituvchi maoshi`,
-        body,
-        `<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>`
-    );
+    openModal(`<svg class="icon"><use href="#i-percent"/></svg> O'qituvchi maoshi`, body, `<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>`);
 }
 
 /* ==================== GROUPS ==================== */
@@ -2121,20 +2458,26 @@ function renderPayments() {
     if (fm) payments = payments.filter(p => p.month === fm);
     payments = [...payments].reverse().slice(0, 100);
     const tbody = document.getElementById('paymentsTable');
-    if (!payments.length) { tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-credit-card"/></svg></div><h3>To\'lovlar yo\'q</h3></div></td></tr>'; return; }
+    if (!payments.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-credit-card"/></svg></div><h3>To\'lovlar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = payments.map(p => {
-        const debt = parseFloat(p.expected_amount) - parseFloat(p.paid_amount);
+        const expected = parseFloat(p.expected_amount) || 0;
+        const paid = parseFloat(p.paid_amount) || 0;
+        const debt = expected - paid;
+        const pct = expected > 0 ? Math.round((paid / expected) * 100) : 100;
         const cls = p.status === 'To\'langan' ? 'badge-success' : p.status === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger';
+        const fillCls = pct >= 100 ? '' : pct >= 50 ? 'warning' : 'danger';
         return `<tr>
             <td><strong>${getStudentName(p.student_id)}</strong></td>
             <td>${formatMonth(p.month)}</td>
-            <td>${formatMoney(p.expected_amount)}</td>
-            <td>${formatMoney(p.paid_amount)}</td>
+            <td>${formatMoney(expected)}</td>
+            <td><strong style="color:var(--primary-dark);">${formatMoney(paid)}</strong></td>
             <td style="color:${debt > 0 ? 'var(--danger)' : 'var(--primary)'};font-weight:700;">${formatMoney(debt)}</td>
+            <td><div style="min-width:100px;"><div style="font-size:11px; font-weight:800; color:${pct >= 100 ? 'var(--primary-dark)' : pct >= 50 ? 'var(--warning)' : 'var(--danger)'}; margin-bottom:3px;">${pct}%</div><div class="progress-bar" style="height:6px;"><div class="progress-fill ${fillCls}" style="width:${pct}%; height:6px;"></div></div></div></td>
             <td>${p.payment_date || '-'}</td>
             <td>${p.payment_method || '-'}</td>
             <td><span class="badge ${cls}">${p.status}</span></td>
             <td>
+                <button class="btn btn-sm btn-warning btn-icon" onclick="openManualPaymentModal(${p.student_id})" title="Qo'lda to'lov"><svg><use href="#i-credit-card"/></svg></button>
                 <button class="btn btn-sm btn-secondary btn-icon" onclick="editPayment(${p.id})"><svg><use href="#i-edit"/></svg></button>
                 <button class="btn btn-sm btn-danger btn-icon" onclick="deletePayment(${p.id})"><svg><use href="#i-trash"/></svg></button>
             </td>
@@ -2268,15 +2611,11 @@ function openExpenseModal(id = null) {
 function editExpense(id) { openExpenseModal(id); }
 async function deleteExpense(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('expenses', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderExpenses(); renderDashboard(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
-/* ==================== SALARIES (MAOSHLAR) ==================== */
+/* ==================== SALARIES ==================== */
 function renderSalaries() {
     const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
     const currentMonth = new Date().toISOString().slice(0, 7);
-    
-    // Bu oy umumiy maosh
-    let totalFixed = 0;
-    let totalPercentage = 0;
-    let totalPerLesson = 0;
+    let totalFixed = 0, totalPercentage = 0, totalPerLesson = 0;
     teachers.forEach(t => {
         const sal = calculateTeacherMonthlySalary(t.id);
         if (t.salary_type === 'fixed') totalFixed += sal.total;
@@ -2284,7 +2623,6 @@ function renderSalaries() {
         else totalPerLesson += sal.total;
     });
     const grandTotal = totalFixed + totalPercentage + totalPerLesson;
-    
     document.getElementById('salaryStats').innerHTML = `
         <div class="stat-card"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">Jami maoshlar</div><div class="stat-value counter" data-target="${grandTotal}">0</div><div class="stat-change up">${teachers.length} o'qituvchi</div></div>
         <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-lock"/></svg></div><div class="stat-label">Belgilangan</div><div class="stat-value counter" data-target="${totalFixed}">0</div></div>
@@ -2292,20 +2630,17 @@ function renderSalaries() {
         <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-calendar"/></svg></div><div class="stat-label">Dars uchun</div><div class="stat-value counter" data-target="${totalPerLesson}">0</div></div>
     `;
     document.querySelectorAll('#salaryStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
-    
     const tbody = document.getElementById('salariesTable');
     if (!teachers.length) {
         tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-percent"/></svg></div><h3>Faol o\'qituvchilar yo\'q</h3></div></td></tr>';
         return;
     }
-    
     tbody.innerHTML = teachers.map(t => {
         const sal = calculateTeacherMonthlySalary(t.id);
         const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
         const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
         let salaryTypeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? `Foizli (${t.salary_percentage}%)` : 'Dars uchun';
         const typeCls = t.salary_type === 'percentage' ? 'badge-purple' : t.salary_type === 'per_lesson' ? 'badge-warning' : 'badge-info';
-        
         return `<tr>
             <td><div style="display:flex; align-items:center; gap:10px;">${getPhotoHTML(t.photo, t.full_name, 38)}<div><strong>${t.full_name}</strong><br><small style="color:var(--gray);">${t.phone || ''}</small></div></div></td>
             <td><span class="badge badge-info">${getSubjectName(t.subject_id)}</span></td>
@@ -2456,14 +2791,11 @@ function renderReports() {
     const totalRec = payments.reduce((s, p) => s + parseFloat(p.paid_amount || 0), 0);
     const totalDebt = totalExp - totalRec;
     const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
-    
-    // O'qituvchilar maoshi
     let totalTeacherSalaries = 0;
     teachers.filter(t => t.status === 'Faol').forEach(t => {
         const sal = calculateTeacherMonthlySalary(t.id);
         totalTeacherSalaries += sal.total;
     });
-    
     const netProfit = totalRec - totalExpenses - totalTeacherSalaries;
     document.getElementById('reportStats').innerHTML = `
         <div class="stat-card"><div class="stat-icon"><svg><use href="#i-target"/></svg></div><div class="stat-label">Kutilgan</div><div class="stat-value counter" data-target="${totalExp}">0</div></div>
@@ -2580,14 +2912,12 @@ function createTeacherPages() {
                 <div class="card-body" id="teacherWeekSchedule"></div>
             </div>
         </div>
-        
         <div class="page" id="page-my-today">
             <div class="card">
                 <div class="card-header"><h3><svg class="icon"><use href="#i-clock-warn"/></svg> Bugungi darslar</h3></div>
                 <div class="card-body" id="teacherTodayFull"></div>
             </div>
         </div>
-        
         <div class="page" id="page-my-groups">
             <div class="card">
                 <div class="card-header"><h3><svg class="icon"><use href="#i-users"/></svg> Mening guruhlarim</h3></div>
@@ -2597,7 +2927,6 @@ function createTeacherPages() {
                 </table></div>
             </div>
         </div>
-        
         <div class="page" id="page-my-salary">
             <div id="teacherSalaryContent"></div>
         </div>
@@ -2640,18 +2969,15 @@ function renderTeacherSalary() {
     const teacherId = currentUser.teacher_id;
     const teacher = DB.get('teachers').find(t => t.id === teacherId);
     if (!teacher) return;
-    
     const currentMonth = new Date().toISOString().slice(0, 7);
     const salary = calculateTeacherSalary(teacherId, currentMonth);
     const groups = DB.get('groups').filter(g => g.teacher_id === teacherId);
     const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
-    
     let salaryTypeText = teacher.salary_type === 'percentage' 
         ? `Foizli: ${teacher.salary_percentage}%` 
         : teacher.salary_type === 'per_lesson' 
             ? `Dars uchun: ${formatMoney(teacher.salary_amount)}` 
             : `Belgilangan: ${formatMoney(teacher.salary_amount)}`;
-    
     let detailsHTML = '';
     if (teacher.salary_type === 'percentage' && salary.details.length > 0) {
         detailsHTML = `
@@ -2659,34 +2985,25 @@ function renderTeacherSalary() {
                 <div class="card-header"><h3><svg class="icon"><use href="#i-percent"/></svg> Bu oy to'lovlardan ulush</h3></div>
                 <div class="table-responsive"><table>
                     <thead><tr><th>O'quvchi</th><th>Oy</th><th>To'langan</th><th>Ulush (${teacher.salary_percentage}%)</th></tr></thead>
-                    <tbody>
-                        ${salary.details.map(d => `
-                            <tr>
-                                <td>${d.student_name}</td>
-                                <td>${formatMonth(d.month)}</td>
-                                <td>${formatMoney(d.paid)}</td>
-                                <td><strong style="color:var(--primary-dark);">${formatMoney(d.share)}</strong></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                    <tfoot>
-                        <tr style="background:var(--primary-50);">
-                            <td colspan="3" style="text-align:right; font-weight:800;">JAMI:</td>
-                            <td style="font-weight:900; color:var(--primary-dark); font-size:16px;">${formatMoney(salary.total)}</td>
-                        </tr>
-                    </tfoot>
+                    <tbody>${salary.details.map(d => `<tr>
+                        <td>${d.student_name}</td>
+                        <td>${formatMonth(d.month)}</td>
+                        <td>${formatMoney(d.paid)}</td>
+                        <td><strong style="color:var(--primary-dark);">${formatMoney(d.share)}</strong></td>
+                    </tr>`).join('')}</tbody>
+                    <tfoot><tr style="background:var(--primary-50);">
+                        <td colspan="3" style="text-align:right; font-weight:800;">JAMI:</td>
+                        <td style="font-weight:900; color:var(--primary-dark); font-size:16px;">${formatMoney(salary.total)}</td>
+                    </tr></tfoot>
                 </table></div>
             </div>
         `;
     } else if (teacher.salary_type === 'percentage') {
-        detailsHTML = `
-            <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 14px; margin-top: 20px;">
-                <strong style="color: #92400e; font-size: 13px;">⚠️ Bu oy hali to'lovlar yo'q</strong>
-                <p style="margin-top: 6px; font-size: 13px; color: #92400e;">O'quvchilar to'lov qilganda, sizning ulushingiz avtomatik hisoblanadi.</p>
-            </div>
-        `;
+        detailsHTML = `<div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 14px; margin-top: 20px;">
+            <strong style="color: #92400e; font-size: 13px;">⚠️ Bu oy hali to'lovlar yo'q</strong>
+            <p style="margin-top: 6px; font-size: 13px; color: #92400e;">O'quvchilar to'lov qilganda, sizning ulushingiz avtomatik hisoblanadi.</p>
+        </div>`;
     }
-    
     document.getElementById('teacherSalaryContent').innerHTML = `
         <div class="teacher-hero">
             <h2>💰 Mening maoshim</h2>
@@ -2735,16 +3052,14 @@ function renderTeacherSchedule() {
             else if (isPast) { statusBadge = '<span class="badge badge-gray">✓ Tugagan</span>'; borderColor = 'var(--gray-2)'; }
             else if (isNext) { statusBadge = '<span class="badge badge-warning">⏰ Keyingi</span>'; borderColor = 'var(--warning)'; }
             else { statusBadge = '<span class="badge badge-info">Rejalashtirilgan</span>'; }
-            return `
-                <div class="schedule-item" style="border-left-color: ${borderColor}; ${isNow ? 'background: var(--primary-50); box-shadow: 0 0 0 2px var(--primary);' : ''}">
-                    <div class="schedule-time">${s.start_time}<small>${s.end_time}</small></div>
-                    <div class="schedule-info">
-                        <h4>${getSubjectName(s.subject_id)}</h4>
-                        <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-home"/></svg> ${s.room || '-'} xona</p>
-                    </div>
-                    ${statusBadge}
+            return `<div class="schedule-item" style="border-left-color: ${borderColor}; ${isNow ? 'background: var(--primary-50); box-shadow: 0 0 0 2px var(--primary);' : ''}">
+                <div class="schedule-time">${s.start_time}<small>${s.end_time}</small></div>
+                <div class="schedule-info">
+                    <h4>${getSubjectName(s.subject_id)}</h4>
+                    <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-home"/></svg> ${s.room || '-'} xona</p>
                 </div>
-            `;
+                ${statusBadge}
+            </div>`;
         }).join('');
     }
     const weekEl = document.getElementById('teacherWeekSchedule');
@@ -2756,24 +3071,20 @@ function renderTeacherSchedule() {
     DAYS.forEach(day => {
         const daySchedules = schedules.filter(s => s.day === day).sort((a, b) => (a.start_time || '').localeCompare(b.start_time || ''));
         const isToday = day === today;
-        html += `
-            <div style="border:2px solid ${isToday ? 'var(--primary)' : 'var(--border)'}; border-radius:14px; padding:14px 16px; ${isToday ? 'background: linear-gradient(135deg, var(--primary-50), white);' : 'background: white;'}">
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:${daySchedules.length ? '12px' : '0'};">
-                    <strong style="font-size:14px; ${isToday ? 'color: var(--primary-dark);' : 'color: var(--dark);'}">${day}</strong>
-                    ${isToday ? '<span class="badge badge-success" style="font-size:10px;">Bugun</span>' : ''}
-                    ${daySchedules.length ? `<span class="badge badge-info" style="font-size:10px;">${daySchedules.length} ta</span>` : '<span class="badge badge-gray" style="font-size:10px;">Dars yo\'q</span>'}
-                </div>
-                ${daySchedules.map(s => `
-                    <div style="display:flex; align-items:center; gap:12px; padding:10px 12px; background: var(--light); border-radius:10px; margin-bottom:6px; border-left:3px solid var(--primary);">
-                        <div style="min-width:100px; font-weight:800; font-size:13px; color:var(--primary-dark);">${s.start_time} - ${s.end_time}</div>
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-weight:700; font-size:13px; color:var(--dark);">${getSubjectName(s.subject_id)}</div>
-                            <div style="font-size:11px; color:var(--gray); margin-top:2px;">${getGroupName(s.group_id)} • ${s.room || '-'} xona</div>
-                        </div>
-                    </div>
-                `).join('')}
+        html += `<div style="border:2px solid ${isToday ? 'var(--primary)' : 'var(--border)'}; border-radius:14px; padding:14px 16px; ${isToday ? 'background: linear-gradient(135deg, var(--primary-50), white);' : 'background: white;'}">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:${daySchedules.length ? '12px' : '0'};">
+                <strong style="font-size:14px; ${isToday ? 'color: var(--primary-dark);' : 'color: var(--dark);'}">${day}</strong>
+                ${isToday ? '<span class="badge badge-success" style="font-size:10px;">Bugun</span>' : ''}
+                ${daySchedules.length ? `<span class="badge badge-info" style="font-size:10px;">${daySchedules.length} ta</span>` : '<span class="badge badge-gray" style="font-size:10px;">Dars yo\'q</span>'}
             </div>
-        `;
+            ${daySchedules.map(s => `<div style="display:flex; align-items:center; gap:12px; padding:10px 12px; background: var(--light); border-radius:10px; margin-bottom:6px; border-left:3px solid var(--primary);">
+                <div style="min-width:100px; font-weight:800; font-size:13px; color:var(--primary-dark);">${s.start_time} - ${s.end_time}</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:700; font-size:13px; color:var(--dark);">${getSubjectName(s.subject_id)}</div>
+                    <div style="font-size:11px; color:var(--gray); margin-top:2px;">${getGroupName(s.group_id)} • ${s.room || '-'} xona</div>
+                </div>
+            </div>`).join('')}
+        </div>`;
     });
     html += '</div>';
     weekEl.innerHTML = html;
@@ -2792,21 +3103,19 @@ function renderTeacherTodayFull() {
     el.innerHTML = schedules.map(s => {
         const isNow = currentTime >= s.start_time && currentTime <= s.end_time;
         const isPast = currentTime > s.end_time;
-        return `
-            <div style="display:flex; gap:16px; padding:16px; background: ${isNow ? 'var(--primary-50)' : isPast ? 'var(--light)' : 'white'}; border:2px solid ${isNow ? 'var(--primary)' : 'var(--border)'}; border-radius:14px; margin-bottom:12px;">
-                <div style="min-width:110px; text-align:center; padding:12px; background: ${isNow ? 'var(--primary)' : isPast ? 'var(--gray-2)' : 'var(--primary-light)'}; color: ${isNow || isPast ? 'white' : 'var(--primary-dark)'}; border-radius:10px;">
-                    <div style="font-size:18px; font-weight:900;">${s.start_time}</div>
-                    <div style="font-size:11px; opacity:0.9;">${s.end_time} gacha</div>
-                </div>
-                <div style="flex:1;">
-                    <h4 style="font-size:16px; font-weight:800; color:var(--dark); margin-bottom:6px;">${getSubjectName(s.subject_id)}</h4>
-                    <p style="font-size:13px; color:var(--gray); margin-bottom:4px;"><svg style="width:14px;height:14px;vertical-align:middle;"><use href="#i-users"/></svg> <strong>${getGroupName(s.group_id)}</strong></p>
-                    <p style="font-size:13px; color:var(--gray);"><svg style="width:14px;height:14px;vertical-align:middle;"><use href="#i-home"/></svg> ${s.room || '-'} xona</p>
-                    ${isNow ? '<span class="badge badge-success" style="margin-top:10px;">🟢 Hozir davom etmoqda</span>' : ''}
-                    ${isPast ? '<span class="badge badge-gray" style="margin-top:10px;">✓ Tugagan</span>' : ''}
-                </div>
+        return `<div style="display:flex; gap:16px; padding:16px; background: ${isNow ? 'var(--primary-50)' : isPast ? 'var(--light)' : 'white'}; border:2px solid ${isNow ? 'var(--primary)' : 'var(--border)'}; border-radius:14px; margin-bottom:12px;">
+            <div style="min-width:110px; text-align:center; padding:12px; background: ${isNow ? 'var(--primary)' : isPast ? 'var(--gray-2)' : 'var(--primary-light)'}; color: ${isNow || isPast ? 'white' : 'var(--primary-dark)'}; border-radius:10px;">
+                <div style="font-size:18px; font-weight:900;">${s.start_time}</div>
+                <div style="font-size:11px; opacity:0.9;">${s.end_time} gacha</div>
             </div>
-        `;
+            <div style="flex:1;">
+                <h4 style="font-size:16px; font-weight:800; color:var(--dark); margin-bottom:6px;">${getSubjectName(s.subject_id)}</h4>
+                <p style="font-size:13px; color:var(--gray); margin-bottom:4px;"><svg style="width:14px;height:14px;vertical-align:middle;"><use href="#i-users"/></svg> <strong>${getGroupName(s.group_id)}</strong></p>
+                <p style="font-size:13px; color:var(--gray);"><svg style="width:14px;height:14px;vertical-align:middle;"><use href="#i-home"/></svg> ${s.room || '-'} xona</p>
+                ${isNow ? '<span class="badge badge-success" style="margin-top:10px;">🟢 Hozir davom etmoqda</span>' : ''}
+                ${isPast ? '<span class="badge badge-gray" style="margin-top:10px;">✓ Tugagan</span>' : ''}
+            </div>
+        </div>`;
     }).join('');
 }
 
@@ -2881,7 +3190,7 @@ window.addEventListener('online', () => document.getElementById('offlineIndicato
 window.addEventListener('offline', () => document.getElementById('offlineIndicator').classList.add('show'));
 
 console.log('%c🌿 Bloom Education', 'color: #10b981; font-size: 20px; font-weight: bold;');
-console.log('%c✅ Foizli maosh + login/parol qo\'shildi', 'color: #059669; font-size: 13px;');
+console.log('%c✅ Auto-login olib tashlandi + parol o\'zgartirish qo\'shildi', 'color: #059669; font-size: 13px;');
 </script>
 
 </body>
