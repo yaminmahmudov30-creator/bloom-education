@@ -91,6 +91,7 @@ body {
     66% { transform: translate(-30px, 30px) scale(0.95); }
 }
 
+/* LOGIN */
 .login-screen {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, #064e3b 0%, #047857 40%, #10b981 100%);
@@ -666,6 +667,7 @@ body {
     animation: itemIn 0.4s var(--ease) backwards;
     cursor: pointer;
 }
+@keyframes itemIn { from { opacity: 0; transform: translateX(-15px); } }
 .schedule-item:hover {
     background: var(--primary-50);
     transform: translateX(6px);
@@ -1062,8 +1064,6 @@ tbody tr:last-child td { border-bottom: none; }
     font-weight: 700;
     font-size: 12px;
 }
-
-/* PWA Install Button */
 #pwaInstallBtn {
     position: fixed;
     bottom: 20px;
@@ -1091,8 +1091,6 @@ tbody tr:last-child td { border-bottom: none; }
     from { opacity: 0; transform: scale(0.5) translateY(50px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
-
-/* Offline indicator */
 #offlineIndicator {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -1108,7 +1106,6 @@ tbody tr:last-child td { border-bottom: none; }
 }
 #offlineIndicator.show { display: block; }
 @keyframes slideDown { from { transform: translateY(-100%); } }
-
 @media (max-width: 1024px) {
     .search-box input { width: 200px; }
     .search-box input:focus { width: 240px; }
@@ -1210,7 +1207,6 @@ tbody tr:last-child td { border-bottom: none; }
     <div class="bg-blob b3"></div>
 </div>
 
-<!-- PWA Install Button -->
 <button id="pwaInstallBtn" onclick="installPWA()">
     <svg><use href="#i-download-app"/></svg>
     <span>Dasturni o'rnatish</span>
@@ -1251,7 +1247,6 @@ tbody tr:last-child td { border-bottom: none; }
 <!-- APP -->
 <div class="app" id="app">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo"><svg><use href="#i-leaf"/></svg></div>
@@ -1326,14 +1321,11 @@ tbody tr:last-child td { border-bottom: none; }
                     <a class="quick-action" onclick="openPaymentModal()"><div class="qa-icon"><use href="#i-credit-card"/></div> <span>To'lov qo'shish</span></a>
                     <a class="quick-action" onclick="openExpenseModal()"><div class="qa-icon"><svg><use href="#i-wallet"/></svg></div> <span>Xarajat qo'shish</span></a>
                 </div>
-
                 <div class="stats-grid" id="statsGrid"></div>
-
                 <div class="financial-box">
                     <h3><svg><use href="#i-dollar"/></svg> Moliyaviy xulosa</h3>
                     <div class="financial-grid" id="financialSummary"></div>
                 </div>
-
                 <div class="charts-grid">
                     <div class="card">
                         <div class="card-header"><h3><svg class="icon"><use href="#i-users"/></svg> O'quvchilar statistikasi</h3></div>
@@ -1352,7 +1344,6 @@ tbody tr:last-child td { border-bottom: none; }
                         <div class="card-body"><div class="chart-container"><canvas id="chartExpenses"></canvas></div></div>
                     </div>
                 </div>
-
                 <div class="charts-grid">
                     <div class="card">
                         <div class="card-header"><h3><svg class="icon"><use href="#i-calendar"/></svg> Bugungi darslar</h3></div>
@@ -1363,7 +1354,6 @@ tbody tr:last-child td { border-bottom: none; }
                         <div class="card-body"><div class="schedule-list" id="debtorsList"></div></div>
                     </div>
                 </div>
-
                 <div class="card" style="margin-top:24px;">
                     <div class="card-header"><h3><svg class="icon"><use href="#i-users"/></svg> Guruhlar bo'yicha o'quvchilar soni</h3></div>
                     <div class="card-body"><div class="chart-container"><canvas id="chartGroups"></canvas></div></div>
@@ -1562,7 +1552,7 @@ tbody tr:last-child td { border-bottom: none; }
 const SUPABASE_URL = 'https://temtisgmrrserjphinqc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlbXRpc2dtcnJzZXJqcGhpbnFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NDA5NTAsImV4cCI6MjEwNjAxNjk1MH0.hpnAEmV7aDyCW9IyhU3PkW18eWZiTqiQv8QBBmiCIR8';
 
-// Supabase client - faqat bir marta
+// Supabase client - faqat bir marta e'lon qilamiz
 window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ==================== GLOBAL STATE ==================== */
@@ -1593,35 +1583,62 @@ const EXPENSE_CATEGORIES = ['Ijara', 'Maosh', 'Kommunal', 'Jihoz', 'Reklama', 'B
     }
 })();
 
-/* ==================== DB (SUPABASE) ==================== */
+/* ==================== DB (SUPABASE) - TUZATILGAN ==================== */
 const DB = {
     _cache: {},
+    
     async loadAll() {
         const tables = ['subjects', 'teachers', 'groups', 'students', 'payments', 'expenses', 'attendance', 'schedules', 'notifications'];
+        let success = 0, failed = 0;
+        
         await Promise.all(tables.map(async (table) => {
-            const { data, error } = await window.supabaseClient.from(table).select('*');
-            if (!error) this._cache[table] = data || [];
+            try {
+                const { data, error } = await window.supabaseClient.from(table).select('*');
+                if (error) {
+                    console.warn(`⚠️ ${table}: ${error.code} - ${error.message}`);
+                    this._cache[table] = [];
+                    failed++;
+                } else {
+                    this._cache[table] = data || [];
+                    success++;
+                }
+            } catch (err) {
+                console.error(`❌ ${table}:`, err.message);
+                this._cache[table] = [];
+                failed++;
+            }
         }));
-        console.log('✅ Yuklandi:', Object.keys(this._cache).map(k => `${k}(${this._cache[k].length})`).join(', '));
+        
+        if (failed === 0) {
+            console.log('✅ Yuklandi:', Object.keys(this._cache).map(k => `${k}(${this._cache[k].length})`).join(', '));
+        } else {
+            console.warn(`⚠️ ${success}/${tables.length} jadval yuklandi. ${failed} xatolik.`);
+        }
+        
+        return { success, failed };
     },
+    
     get(key) { return this._cache[key] || []; },
+    
     async insert(table, data) {
         const { data: result, error } = await window.supabaseClient.from(table).insert(data).select().single();
-        if (error) throw error;
+        if (error) throw new Error(error.message);
         this._cache[table] = [...(this._cache[table] || []), result];
         return result;
     },
+    
     async update(table, id, data) {
         const { data: result, error } = await window.supabaseClient.from(table).update(data).eq('id', id).select().single();
-        if (error) throw error;
+        if (error) throw new Error(error.message);
         const arr = this._cache[table] || [];
         const i = arr.findIndex(x => x.id === id);
         if (i >= 0) arr[i] = result;
         return result;
     },
+    
     async remove(table, id) {
         const { error } = await window.supabaseClient.from(table).delete().eq('id', id);
-        if (error) throw error;
+        if (error) throw new Error(error.message);
         this._cache[table] = (this._cache[table] || []).filter(x => x.id !== id);
     }
 };
@@ -1828,11 +1845,14 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
     const txt = document.getElementById('loginBtnText');
     const u = document.getElementById('loginUsername').value.trim();
     const p = document.getElementById('loginPassword').value;
+    
     btn.disabled = true;
     txt.innerHTML = '<span class="loader"></span>';
     const email = u.includes('@') ? u : `${u}@bloom.uz`;
+    
     try {
         const { data, error } = await window.supabaseClient.auth.signInWithPassword({ email, password: p });
+        
         if (error) {
             btn.disabled = false;
             txt.textContent = 'Kirish';
@@ -1841,20 +1861,28 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
             toast('Xatolik', 'Login yoki parol noto\'g\'ri: ' + error.message, 'error');
             return;
         }
+        
         let { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
+        
         if (!profile) {
-            const { data: newProfile } = await window.supabaseClient.from('profiles').insert({ id: data.user.id, username: u, full_name: u, role: 'admin' }).select().single();
+            const { data: newProfile } = await window.supabaseClient.from('profiles').insert({ 
+                id: data.user.id, username: u, full_name: u, role: 'admin' 
+            }).select().single();
             profile = newProfile;
         }
+        
         currentUser = profile || { id: data.user.id, username: u, full_name: u, role: 'admin' };
+        
         await DB.loadAll();
         loginSuccess();
     } catch (err) {
+        console.error('Login error:', err);
         btn.disabled = false;
         txt.textContent = 'Kirish';
         toast('Xatolik', 'Server xatoligi: ' + err.message, 'error');
     }
 });
+
 function loginSuccess() {
     document.getElementById('loginScreen').classList.add('hidden');
     setTimeout(() => {
@@ -1862,8 +1890,13 @@ function loginSuccess() {
         document.getElementById('app').classList.add('active');
     }, 400);
     updateUserUI();
-    renderAll();
+    try {
+        renderAll();
+    } catch (err) {
+        console.error('Render xatolik:', err);
+    }
 }
+
 function updateUserUI() {
     document.getElementById('userName').textContent = currentUser.full_name;
     document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'Administrator' : 'O\'qituvchi';
@@ -1871,11 +1904,14 @@ function updateUserUI() {
     if (currentUser.photo) av.innerHTML = `<img src="${currentUser.photo}" alt="">`;
     else av.textContent = currentUser.full_name.charAt(0).toUpperCase();
 }
+
 async function logout() {
     if (!confirm('Tizimdan chiqishni xohlaysizmi?')) return;
     await window.supabaseClient.auth.signOut();
     location.reload();
 }
+
+/* AUTO LOGIN */
 (async () => {
     try {
         const { data: { session } } = await window.supabaseClient.auth.getSession();
@@ -1888,7 +1924,7 @@ async function logout() {
             updateUserUI();
             renderAll();
         }
-    } catch (err) { console.log('Auto-login:', err); }
+    } catch (err) { console.log('Auto-login:', err.message); }
 })();
 
 /* ==================== NAVIGATION ==================== */
@@ -1962,6 +1998,7 @@ function renderDashboard() {
     const days = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
     const today = days[new Date().getDay()];
     const todaySchedules = schedules.filter(s => s.day === today);
+    
     document.getElementById('statsGrid').innerHTML = `
         <div class="stat-card"><div class="stat-icon"><svg><use href="#i-user-grad"/></svg></div><div class="stat-label">Jami o'quvchilar</div><div class="stat-value counter" data-target="${students.length}">0</div><div class="stat-change up"><svg><use href="#i-trending-up"/></svg> Faol: ${activeStudents}</div></div>
         <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-user-teacher"/></svg></div><div class="stat-label">O'qituvchilar</div><div class="stat-value counter" data-target="${teachers.length}">0</div></div>
@@ -1973,6 +2010,7 @@ function renderDashboard() {
         <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-calendar"/></svg></div><div class="stat-label">Bugungi darslar</div><div class="stat-value counter" data-target="${todaySchedules.length}">0</div></div>
     `;
     document.querySelectorAll('.counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
+    
     const totalMonthly = students.reduce((s, st) => s + parseFloat(st.monthly_payment || 0), 0);
     document.getElementById('financialSummary').innerHTML = `
         <div class="financial-item"><label>Jami o'quvchilar</label><div class="value">${students.length} ta</div></div>
@@ -1982,6 +2020,7 @@ function renderDashboard() {
         <div class="financial-item"><label>Bu oy xarajatlar</label><div class="value">${formatMoney(monthExpenses)}</div></div>
         <div class="financial-item total"><label>Sof foyda</label><div class="value">${formatMoney(monthReceived - monthExpenses)}</div></div>
     `;
+    
     const todayEl = document.getElementById('todaySchedule');
     if (!todaySchedules.length) {
         todayEl.innerHTML = `<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-calendar"/></svg></div><h3>Bugun dars yo'q</h3></div>`;
@@ -1993,6 +2032,7 @@ function renderDashboard() {
             </div>
         `).join('');
     }
+    
     const debtorsEl = document.getElementById('debtorsList');
     if (!debtors.length) {
         debtorsEl.innerHTML = `<div class="empty-state"><div class="icon-wrap"><svg><use href="#i-check-circle"/></svg></div><h3>Qarzdorlar yo'q</h3></div>`;
@@ -2006,6 +2046,7 @@ function renderDashboard() {
     }
     renderCharts(students, payments, groups, expenses);
 }
+
 function renderCharts(students, payments, groups, expenses) {
     destroyCharts();
     const commonOpts = {
@@ -2661,8 +2702,10 @@ async function saveAttendance() {
         records.push({ student_id: sid, group_id: parseInt(gid), date, status: sel.value, notes: note || null });
     });
     try {
-        await window.supabaseClient.from('attendance').delete().eq('group_id', parseInt(gid)).eq('date', date);
-        const { data } = await window.supabaseClient.from('attendance').insert(records).select();
+        const { error: delError } = await window.supabaseClient.from('attendance').delete().eq('group_id', parseInt(gid)).eq('date', date);
+        if (delError) throw new Error('O\'chirishda xatolik: ' + delError.message);
+        const { data, error: insError } = await window.supabaseClient.from('attendance').insert(records).select();
+        if (insError) throw new Error('Saqlashda xatolik: ' + insError.message);
         DB._cache.attendance = [...DB.get('attendance').filter(a => !(a.group_id == gid && a.date === date)), ...(data || [])];
         toast('Muvaffaqiyat', 'Davomat saqlandi');
         renderDashboard();
@@ -2773,17 +2816,17 @@ document.getElementById('groupSearch')?.addEventListener('input', renderGroups);
 
 /* ==================== RENDER ALL ==================== */
 function renderAll() {
-    renderDashboard();
-    renderStudents();
-    renderTeachers();
-    renderGroups();
-    renderSubjects();
-    renderPayments();
-    renderExpenses();
-    renderSchedule();
-    renderAttendance();
-    renderReports();
-    renderNotifications();
+    try { renderDashboard(); } catch (e) { console.error('Dashboard:', e.message); }
+    try { renderStudents(); } catch (e) { console.error('Students:', e.message); }
+    try { renderTeachers(); } catch (e) { console.error('Teachers:', e.message); }
+    try { renderGroups(); } catch (e) { console.error('Groups:', e.message); }
+    try { renderSubjects(); } catch (e) { console.error('Subjects:', e.message); }
+    try { renderPayments(); } catch (e) { console.error('Payments:', e.message); }
+    try { renderExpenses(); } catch (e) { console.error('Expenses:', e.message); }
+    try { renderSchedule(); } catch (e) { console.error('Schedule:', e.message); }
+    try { renderAttendance(); } catch (e) { console.error('Attendance:', e.message); }
+    try { renderReports(); } catch (e) { console.error('Reports:', e.message); }
+    try { renderNotifications(); } catch (e) { console.error('Notifications:', e.message); }
 }
 
 /* ==================== PWA INSTALL ==================== */
