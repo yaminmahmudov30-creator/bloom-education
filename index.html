@@ -380,10 +380,24 @@ tbody tr:last-child td { border-bottom: none; }
 .month-selector input[type="month"] { padding: 8px 12px; border: 2px solid var(--border); border-radius: 9px; font-size: 14px; font-family: inherit; font-weight: 700; color: var(--dark); background: white; outline: none; cursor: pointer; transition: all 0.2s; }
 .month-selector input[type="month"]:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
-/* MAOSH TO'LOV STATUS */
-.salary-status-paid { color: var(--primary-dark); font-weight: 700; }
-.salary-status-partial { color: var(--warning); font-weight: 700; }
-.salary-status-unpaid { color: var(--danger); font-weight: 700; }
+/* QARZDORLAR BO'LIMI */
+.debtor-groups-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.debtor-group-card { background: white; border: 2px solid var(--border); border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.3s var(--ease); position: relative; overflow: hidden; }
+.debtor-group-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--danger); }
+.debtor-group-card:hover { border-color: var(--danger); transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(239,68,68,0.3); }
+.debtor-group-card .group-name { font-size: 15px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+.debtor-group-card .group-count { font-size: 12px; color: var(--gray); font-weight: 600; margin-bottom: 10px; }
+.debtor-group-card .debt-total { font-size: 18px; font-weight: 900; color: var(--danger); }
+.debtor-group-card .debt-label { font-size: 10px; color: var(--gray-2); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+.debtor-group-card .view-btn { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--danger); margin-top: 10px; }
+
+/* QARZDOR O'QUVCHILAR RO'YXATI */
+.debtor-student-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--light); border-radius: 12px; border-left: 4px solid var(--danger); margin-bottom: 8px; transition: all 0.25s var(--ease); cursor: pointer; }
+.debtor-student-item:hover { background: #fef2f2; transform: translateX(4px); box-shadow: 0 4px 12px rgba(239,68,68,0.15); }
+.debtor-student-item .info { flex: 1; min-width: 0; }
+.debtor-student-item .info h4 { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+.debtor-student-item .info p { font-size: 11.5px; color: var(--gray); font-weight: 500; }
+.debtor-student-item .amount { font-size: 14px; font-weight: 800; color: var(--danger); white-space: nowrap; }
 
 @media (max-width: 1024px) {
     .search-box input { width: 200px; }
@@ -413,6 +427,7 @@ tbody tr:last-child td { border-bottom: none; }
     .teacher-hero { padding: 22px; }
     .teacher-hero h2 { font-size: 20px; }
     .month-selector { flex-direction: column; align-items: stretch; width: 100%; }
+    .debtor-groups-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 480px) {
     .stats-grid { grid-template-columns: 1fr; }
@@ -421,10 +436,13 @@ tbody tr:last-child td { border-bottom: none; }
     .profile-grid { grid-template-columns: 1fr; }
     .login-box { padding: 32px 24px; }
     .toolbar input { min-width: 100%; }
+    .debtor-groups-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
-<body><div id="offlineIndicator">📡 Internetga ulanmagan</div>
+<body>
+
+<div id="offlineIndicator">📡 Internetga ulanmagan</div>
 
 <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
     <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
@@ -576,7 +594,9 @@ tbody tr:last-child td { border-bottom: none; }
     </div>
 </div>
 
-<div class="toast-container" id="toastContainer"></div><script>
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
 /* ==================== SUPABASE ==================== */
 const SUPABASE_URL = 'https://temtisgmrrserjphinqc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlbXRpc2dtcnJzZXJqcGhpbnFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NDA5NTAsImV4cCI6MjEwNjAxNjk1MH0.hpnAEmV7aDyCW9IyhU3PkW18eWZiTqiQv8QBBmiCIR8';
@@ -615,7 +635,7 @@ const EXPENSE_CATEGORIES = ['Ijara', 'Maosh', 'Kommunal', 'Jihoz', 'Reklama', 'B
 const DB = {
     _cache: {},
     async loadAll() {
-        const tables = ['subjects', 'teachers', 'groups', 'students', 'payments', 'expenses', 'attendance', 'schedules', 'notifications', 'salary_payments'];
+        const tables = ['subjects', 'teachers', 'groups', 'students', 'payments', 'expenses', 'attendance', 'schedules', 'notifications'];
         await Promise.all(tables.map(async (table) => {
             try {
                 const { data, error } = await window.supabaseClient.from(table).select('*');
@@ -812,6 +832,137 @@ async function saveModal() { if (typeof window._modalSave === 'function') await 
 document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target.id === 'modalOverlay') closeModal(); });
 function destroyCharts() { Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
 
+/* ==================== QARZDORLAR YORDAMCHI FUNKSIYALARI ==================== */
+function getAllDebtors() {
+    return DB.get('students').filter(s => getStudentDebt(s.id) > 0 && s.status === 'Faol');
+}
+
+function getGroupDebtors(groupId) {
+    return DB.get('students').filter(s => s.group_id === groupId && getStudentDebt(s.id) > 0 && s.status === 'Faol');
+}
+
+function getGroupsWithDebtors() {
+    const groups = DB.get('groups');
+    return groups.map(g => {
+        const debtors = getGroupDebtors(g.id);
+        const totalDebt = debtors.reduce((sum, s) => sum + getStudentDebt(s.id), 0);
+        return { group: g, debtors, totalDebt, count: debtors.length };
+    }).filter(x => x.count > 0).sort((a, b) => b.totalDebt - a.totalDebt);
+}
+
+/* ==================== MODAL: BARCHA QARZDORLAR ==================== */
+function openAllDebtorsModal() {
+    const debtors = getAllDebtors().sort((a, b) => getStudentDebt(b.id) - getStudentDebt(a.id));
+    if (!debtors.length) { toast('Ma\'lumot', 'Qarzdor o\'quvchilar yo\'q', 'info'); return; }
+    const totalDebt = debtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
+    const listHTML = debtors.map(s => {
+        const debt = getStudentDebt(s.id);
+        const months = getDebtMonths(s.id);
+        return `
+            <div class="debtor-student-item" onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);">
+                ${getPhotoHTML(s.photo, s.full_name, 44)}
+                <div class="info">
+                    <h4>${s.full_name}</h4>
+                    <p><svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • ${s.phone || '-'}</p>
+                    <p style="margin-top:3px; font-size:11px; color:var(--danger); font-weight:700;">📅 ${months.slice(0, 3).join(', ')}${months.length > 3 ? ` +${months.length - 3}` : ''}</p>
+                </div>
+                <div style="text-align:right;">
+                    <div class="amount">${formatMoney(debt)}</div>
+                    <span class="badge badge-danger" style="font-size:10px; margin-top:4px;">To'lash</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    const body = `
+        <div style="display:flex; gap:16px; align-items:center; padding:16px 18px; background:linear-gradient(135deg, var(--danger-light), white); border-radius:14px; margin-bottom:18px; border:1px solid var(--danger);">
+            <div style="width:54px; height:54px; border-radius:14px; background:var(--danger); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg style="width:26px;height:26px;stroke:white;"><use href="#i-alert"/></svg>
+            </div>
+            <div style="flex:1;">
+                <h3 style="font-size:18px; font-weight:900; color:var(--dark); margin-bottom:4px;">Barcha qarzdorlar</h3>
+                <p style="font-size:12.5px; color:var(--gray); font-weight:600;">
+                    Jami: <strong style="color:var(--danger);">${debtors.length} ta o'quvchi</strong> • Umumiy qarz: <strong style="color:var(--danger);">${formatMoney(totalDebt)}</strong>
+                </p>
+            </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:14px;">
+            <input type="text" id="debtorSearchInput" placeholder="🔍 O'quvchi yoki guruhni qidirish..." 
+                   oninput="filterDebtorsList()" 
+                   style="flex:1; padding:11px 14px; border:2px solid var(--border); border-radius:11px; font-size:13px; font-family:inherit; font-weight:600; outline:none;">
+        </div>
+        <div id="allDebtorsList" style="max-height:450px; overflow-y:auto; padding-right:4px;">
+            ${listHTML}
+        </div>
+    `;
+    openModal(
+        `<svg class="icon" style="color:var(--danger)"><use href="#i-alert"/></svg> Qarzdor o'quvchilar ro'yxati`,
+        body,
+        `<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>`
+    );
+}
+
+function filterDebtorsList() {
+    const q = (document.getElementById('debtorSearchInput')?.value || '').toLowerCase();
+    document.querySelectorAll('#allDebtorsList .debtor-student-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(q) ? 'flex' : 'none';
+    });
+}
+
+/* ==================== MODAL: GURUH QARZDORLARI ==================== */
+function openGroupDebtorsModal(groupId) {
+    const group = DB.get('groups').find(g => g.id === groupId);
+    if (!group) { toast('Xatolik', 'Guruh topilmadi', 'error'); return; }
+    const debtors = getGroupDebtors(groupId).sort((a, b) => getStudentDebt(b.id) - getStudentDebt(a.id));
+    if (!debtors.length) { toast('Ma\'lumot', `${group.name} guruhida qarzdor yo'q`, 'info'); return; }
+    const totalDebt = debtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
+    const allStudents = DB.get('students').filter(s => s.group_id === groupId);
+    const listHTML = debtors.map(s => {
+        const debt = getStudentDebt(s.id);
+        const months = getDebtMonths(s.id);
+        return `
+            <div class="debtor-student-item" onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);">
+                ${getPhotoHTML(s.photo, s.full_name, 44)}
+                <div class="info">
+                    <h4>${s.full_name}</h4>
+                    <p>${s.phone || '-'} • Oylik: ${formatMoney(s.monthly_payment)}</p>
+                    <p style="margin-top:3px; font-size:11px; color:var(--danger); font-weight:700;">📅 ${months.slice(0, 3).join(', ')}${months.length > 3 ? ` +${months.length - 3}` : ''}</p>
+                </div>
+                <div style="text-align:right;">
+                    <div class="amount">${formatMoney(debt)}</div>
+                    <span class="badge badge-danger" style="font-size:10px; margin-top:4px;">To'lash</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    const body = `
+        <div style="display:flex; gap:16px; align-items:center; padding:16px 18px; background:linear-gradient(135deg, var(--danger-light), white); border-radius:14px; margin-bottom:18px; border:1px solid var(--danger);">
+            <div style="width:54px; height:54px; border-radius:14px; background:var(--danger); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg style="width:26px;height:26px;stroke:white;"><use href="#i-users"/></svg>
+            </div>
+            <div style="flex:1;">
+                <h3 style="font-size:18px; font-weight:900; color:var(--dark); margin-bottom:4px;">${group.name} — Qarzdorlar</h3>
+                <p style="font-size:12.5px; color:var(--gray); font-weight:600;">
+                    Guruhda jami: <strong>${allStudents.length} o'quvchi</strong> • Qarzdor: <strong style="color:var(--danger);">${debtors.length} ta</strong> • Qarz: <strong style="color:var(--danger);">${formatMoney(totalDebt)}</strong>
+                </p>
+            </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:14px;">
+            <input type="text" placeholder="🔍 O'quvchini qidirish..." 
+                   oninput="(function(el){const q=el.value.toLowerCase();document.querySelectorAll('#groupDebtorsList .debtor-student-item').forEach(i=>{i.style.display=i.textContent.toLowerCase().includes(q)?'flex':'none';});})(this)" 
+                   style="flex:1; padding:11px 14px; border:2px solid var(--border); border-radius:11px; font-size:13px; font-family:inherit; font-weight:600; outline:none;">
+        </div>
+        <div id="groupDebtorsList" style="max-height:450px; overflow-y:auto; padding-right:4px;">
+            ${listHTML}
+        </div>
+    `;
+    openModal(
+        `<svg class="icon" style="color:var(--danger)"><use href="#i-users"/></svg> Guruhdagi qarzdorlar`,
+        body,
+        `<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>`
+    );
+}
+
 /* ==================== TEACHER SALARY ==================== */
 function calculateTeacherSalary(teacherId, month = null) {
     const teacher = DB.get('teachers').find(t => t.id === teacherId);
@@ -860,45 +1011,6 @@ function getAvailableSalaryMonths() {
         monthSet.add(d.toISOString().slice(0, 7));
     }
     return [...monthSet].sort().reverse();
-}
-
-/* ==================== TEACHER SALARY PAYMENTS ==================== */
-function getTeacherSalaryPayment(teacherId, month) {
-    return DB.get('salary_payments').find(sp => sp.teacher_id === teacherId && sp.month === month);
-}
-
-function getTeacherSalaryPaymentStatus(teacherId, month) {
-    const payment = getTeacherSalaryPayment(teacherId, month);
-    const salary = calculateTeacherSalary(teacherId, month);
-    const expected = salary.total;
-    const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
-    if (expected === 0) return { status: 'none', expected: 0, paid: 0, debt: 0 };
-    if (paid >= expected) return { status: 'paid', expected, paid, debt: 0 };
-    if (paid > 0) return { status: 'partial', expected, paid, debt: expected - paid };
-    return { status: 'unpaid', expected, paid: 0, debt: expected };
-}
-
-function getTeacherTotalDebt(teacherId) {
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const months = getAvailableSalaryMonths().filter(m => m < currentMonth);
-    let totalDebt = 0;
-    months.forEach(m => {
-        const st = getTeacherSalaryPaymentStatus(teacherId, m);
-        if (st.status === 'unpaid' || st.status === 'partial') {
-            totalDebt += st.debt;
-        }
-    });
-    return totalDebt;
-}
-
-function formatSalaryStatus(status) {
-    const map = {
-        'paid': { label: 'To\'langan', cls: 'badge-success' },
-        'partial': { label: 'Qisman', cls: 'badge-warning' },
-        'unpaid': { label: 'To\'lanmagan', cls: 'badge-danger' },
-        'none': { label: 'Hisoblanmagan', cls: 'badge-gray' }
-    };
-    return map[status] || map.none;
 }
 
 /* ==================== PHOTO ==================== */
@@ -1106,7 +1218,9 @@ async function logout() {
     try {
         await window.supabaseClient.auth.signOut();
     } catch(e) {}
-})();/* ==================== HISOB SOZLAMALARI ==================== */
+})();
+
+/* ==================== HISOB SOZLAMALARI ==================== */
 function openAccountSettings() {
     if (currentUser.role === 'admin') openAdminAccountSettings();
     else openTeacherAccountSettings();
@@ -1304,15 +1418,31 @@ function createAdminPages() {
                 <div class="card"><div class="card-header"><h3><svg class="icon"><use href="#i-credit-card"/></svg> To'lovlar</h3></div><div class="card-body"><div class="chart-container"><canvas id="chartPayments"></canvas></div></div></div>
                 <div class="card"><div class="card-header"><h3><svg class="icon"><use href="#i-wallet"/></svg> Xarajatlar</h3></div><div class="card-body"><div class="chart-container"><canvas id="chartExpenses"></canvas></div></div></div>
             </div>
+
+            <!-- YANGI: QARZDORLAR BO'LIMI -->
             <div class="charts-grid">
-                <div class="card"><div class="card-header"><h3><svg class="icon"><use href="#i-calendar"/></svg> Bugungi darslar</h3></div><div class="card-body"><div class="schedule-list" id="todaySchedule"></div></div></div>
                 <div class="card">
                     <div class="card-header">
                         <h3><svg class="icon" style="color:var(--danger)"><use href="#i-alert"/></svg> Qarzdor o'quvchilar</h3>
-                        <span style="font-size:11px; color:var(--gray); font-weight:600;">💡 To'lash uchun bosing</span>
+                        <button class="btn btn-sm btn-danger" onclick="openAllDebtorsModal()">
+                            <svg class="icon-sm"><use href="#i-eye"/></svg> Barchasini ko'rish
+                        </button>
                     </div>
                     <div class="card-body"><div class="schedule-list" id="debtorsList"></div></div>
                 </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><svg class="icon" style="color:var(--danger)"><use href="#i-users"/></svg> Guruhlardagi qarzdorlar</h3>
+                        <span style="font-size:11px; color:var(--gray); font-weight:600;">💡 Guruhga bosing</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="debtor-groups-grid" id="debtorGroupsGrid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid" style="margin-top:24px;">
+                <div class="card"><div class="card-header"><h3><svg class="icon"><use href="#i-calendar"/></svg> Bugungi darslar</h3></div><div class="card-body"><div class="schedule-list" id="todaySchedule"></div></div></div>
             </div>
             <div class="card" style="margin-top:24px;"><div class="card-header"><h3><svg class="icon"><use href="#i-users"/></svg> Guruhlar bo'yicha o'quvchilar</h3></div><div class="card-body"><div class="chart-container"><canvas id="chartGroups"></canvas></div></div></div>
         </div>
@@ -1351,7 +1481,7 @@ function createAdminPages() {
                 <button class="btn btn-primary btn-sm" onclick="openGroupModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> Yangi guruh</button>
             </div>
             <div class="card"><div class="table-responsive"><table>
-                <thead><tr><th>Guruh</th><th>Fan</th><th>O'qituvchi</th><th>Xona</th><th>Dars kunlari</th><th>O'quvchilar</th><th>Oylik</th><th>Status</th><th>Amallar</th></tr></thead>
+                <thead><tr><th>Guruh</th><th>Fan</th><th>O'qituvchi</th><th>Xona</th><th>Dars kunlari</th><th>O'quvchilar</th><th>Oylik</th><th>Qarzdorlar</th><th>Status</th><th>Amallar</th></tr></thead>
                 <tbody id="groupsTable"></tbody>
             </table></div></div>
         </div>
@@ -1405,7 +1535,7 @@ function createAdminPages() {
             </div>
             <div class="stats-grid" id="salaryStats" style="margin-bottom:20px;"></div>
             <div class="card"><div class="table-responsive"><table>
-                <thead><tr><th>O'qituvchi</th><th>Fan</th><th>Maosh turi</th><th>Guruhlar</th><th>O'quvchilar</th><th>Hisoblangan</th><th>To'lov holati</th><th>Amallar</th></tr></thead>
+                <thead><tr><th>O'qituvchi</th><th>Fan</th><th>Maosh turi</th><th>Guruhlar</th><th>O'quvchilar</th><th>Tanlangan oy maosh</th><th>Amallar</th></tr></thead>
                 <tbody id="salariesTable"></tbody>
             </table></div></div>
         </div>
@@ -1496,7 +1626,9 @@ function closeSidebar() {
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebarOverlay').classList.remove('active');
 }
-document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);/* ==================== DASHBOARD ==================== */
+document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+/* ==================== DASHBOARD ==================== */
 function renderDashboard() {
     const students = DB.get('students');
     const teachers = DB.get('teachers');
@@ -1513,18 +1645,13 @@ function renderDashboard() {
     const monthExpected = monthPayments.reduce((s, p) => s + parseFloat(p.expected_amount || 0), 0);
     const monthReceived = monthPayments.reduce((s, p) => s + parseFloat(p.paid_amount || 0), 0);
     const monthExpenses = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + parseFloat(e.amount || 0), 0);
-    const debtors = students.filter(s => getStudentDebt(s.id) > 0);
+    const debtors = getAllDebtors();
     
     let totalTeacherSalaries = 0;
-    let totalPaidSalaries = 0;
-    let totalSalaryDebt = 0;
     teachers.forEach(t => {
         if (t.status === 'Faol') {
             const sal = calculateTeacherSalary(t.id, thisMonth);
             totalTeacherSalaries += sal.total;
-            const st = getTeacherSalaryPaymentStatus(t.id, thisMonth);
-            totalPaidSalaries += st.paid;
-            totalSalaryDebt += st.debt;
         }
     });
 
@@ -1551,9 +1678,7 @@ function renderDashboard() {
         <div class="financial-item"><label>O'rtacha oylik</label><div class="value">${formatMoney(totalMonthly / (students.length || 1))}</div></div>
         <div class="financial-item total"><label>Kutilayotgan oylik</label><div class="value">${formatMoney(totalMonthly)}</div></div>
         <div class="financial-item"><label>Bu oy tushgan</label><div class="value">${formatMoney(monthReceived)}</div></div>
-        <div class="financial-item"><label>O'qituvchilar maoshi (hisob.)</label><div class="value">${formatMoney(totalTeacherSalaries)}</div></div>
-        <div class="financial-item"><label>To'langan maosh</label><div class="value">${formatMoney(totalPaidSalaries)}</div></div>
-        <div class="financial-item"><label>Maosh qarzi</label><div class="value" style="color: #fca5a5;">${formatMoney(totalSalaryDebt)}</div></div>
+        <div class="financial-item"><label>O'qituvchilar maoshi</label><div class="value">${formatMoney(totalTeacherSalaries)}</div></div>
         <div class="financial-item total"><label>Umumiy qarz</label><div class="value" style="color: #fca5a5;">${formatMoney(totalDebt)}</div></div>
     `;
 
@@ -1572,6 +1697,7 @@ function renderDashboard() {
         `).join('');
     }
 
+    // ========== QARZDOR O'QUVCHILAR ==========
     const debtorsEl = document.getElementById('debtorsList');
     if (!debtors.length) {
         debtorsEl.innerHTML = `<div class="empty-state" style="padding:30px;"><div class="icon-wrap" style="width:60px;height:60px;"><svg style="width:28px;height:28px;"><use href="#i-check-circle"/></svg></div><h3>Qarzdorlar yo'q</h3></div>`;
@@ -1581,27 +1707,47 @@ function renderDashboard() {
             const debt = getStudentDebt(s.id);
             const months = getDebtMonths(s.id);
             return `
-                <div class="schedule-item" style="border-left-color: var(--danger); cursor: pointer; position: relative; transition: all 0.25s var(--ease);" 
-                     onclick="openManualPaymentModal(${s.id})"
-                     onmouseover="this.style.background='#fef2f2'; this.style.transform='translateX(6px)'; this.style.boxShadow='0 8px 20px -8px rgba(239,68,68,0.4)'"
-                     onmouseout="this.style.background=''; this.style.transform=''; this.style.boxShadow=''">
-                    <div class="schedule-time" style="color: var(--danger); font-size: 11px; background: #fef2f2; min-width: 90px;">
-                        ${formatMoney(debt)}
-                        <small style="color: #991b1b;">Qarz</small>
-                    </div>
+                <div class="schedule-item" style="border-left-color: var(--danger); cursor: pointer;" 
+                     onclick="openManualPaymentModal(${s.id})">
+                    ${getPhotoHTML(s.photo, s.full_name, 40)}
                     <div class="schedule-info">
                         <h4>${s.full_name}</h4>
-                        <p><svg><use href="#i-phone"/></svg> ${s.phone || '-'} • <svg><use href="#i-calendar"/></svg> ${months.slice(0, 2).join(', ')}${months.length > 2 ? ` +${months.length - 2}` : ''}</p>
+                        <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-phone"/></svg> ${s.phone || '-'}</p>
+                        <p style="margin-top:3px; font-size:11px; color:var(--danger); font-weight:700;">📅 ${months.slice(0, 2).join(', ')}${months.length > 2 ? ` +${months.length - 2}` : ''}</p>
                     </div>
-                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-                        <span class="badge badge-danger" style="font-size:10px;">Qarzdor</span>
-                        <span style="font-size:10px; color:var(--primary-dark); font-weight:700; display:flex; align-items:center; gap:4px;">
-                            <svg style="width:12px;height:12px;"><use href="#i-credit-card"/></svg> To'lash
-                        </span>
+                    <div style="text-align:right;">
+                        <div style="font-weight:800; font-size:13px; color:var(--danger);">${formatMoney(debt)}</div>
+                        <span class="badge badge-danger" style="font-size:10px; margin-top:4px;">To'lash</span>
                     </div>
                 </div>
             `;
         }).join('');
+        if (debtors.length > 8) {
+            debtorsEl.innerHTML += `
+                <button class="btn btn-danger btn-sm" style="width:100%; margin-top:10px;" onclick="openAllDebtorsModal()">
+                    <svg class="icon-sm"><use href="#i-eye"/></svg> Yana ${debtors.length - 8} ta qarzdorni ko'rish
+                </button>
+            `;
+        }
+    }
+
+    // ========== GURUHLARDAGI QARZDORLAR ==========
+    const groupsWithDebtors = getGroupsWithDebtors();
+    const debtorGroupsGrid = document.getElementById('debtorGroupsGrid');
+    if (!groupsWithDebtors.length) {
+        debtorGroupsGrid.innerHTML = `<div class="empty-state" style="padding:30px;"><div class="icon-wrap" style="width:60px;height:60px;"><svg style="width:28px;height:28px;"><use href="#i-check-circle"/></svg></div><h3>Guruhlarda qarzdor yo'q</h3></div>`;
+    } else {
+        debtorGroupsGrid.innerHTML = groupsWithDebtors.map(item => `
+            <div class="debtor-group-card" onclick="openGroupDebtorsModal(${item.group.id})">
+                <div class="group-name">${item.group.name}</div>
+                <div class="group-count">📚 ${getSubjectName(item.group.subject_id)} • ${item.count} ta qarzdor</div>
+                <div class="debt-total">${formatMoney(item.totalDebt)}</div>
+                <div class="debt-label">Umumiy qarz</div>
+                <div class="view-btn">
+                    <svg style="width:14px;height:14px;"><use href="#i-eye"/></svg> Ko'rish
+                </div>
+            </div>
+        `).join('');
     }
 
     renderCharts(students, payments, groups, expenses);
@@ -1614,48 +1760,63 @@ function renderCharts(students, payments, groups, expenses) {
         plugins: { legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11, weight: '600' }, padding: 14, usePointStyle: true, pointStyle: 'circle' } } }
     };
     const activeCount = students.filter(s => s.status === 'Faol').length;
-    charts.students = new Chart(document.getElementById('chartStudents'), {
-        type: 'doughnut',
-        data: { labels: ['Faol', 'Nofaol'], datasets: [{ data: [activeCount, students.length - activeCount], backgroundColor: ['#10b981', '#e2e8f0'], borderWidth: 0, cutout: '72%' }] },
-        options: commonOpts
-    });
+    const chartStudentsEl = document.getElementById('chartStudents');
+    if (chartStudentsEl) {
+        charts.students = new Chart(chartStudentsEl, {
+            type: 'doughnut',
+            data: { labels: ['Faol', 'Nofaol'], datasets: [{ data: [activeCount, students.length - activeCount], backgroundColor: ['#10b981', '#e2e8f0'], borderWidth: 0, cutout: '72%' }] },
+            options: commonOpts
+        });
+    }
     const months = {};
     payments.forEach(p => { if (!months[p.month]) months[p.month] = 0; months[p.month] += parseFloat(p.paid_amount || 0); });
     const sortedMonths = Object.keys(months).sort().slice(-6);
-    charts.revenue = new Chart(document.getElementById('chartRevenue'), {
-        type: 'line',
-        data: { labels: sortedMonths.length ? sortedMonths.map(m => formatMonth(m)) : ['Ma\'lumot yo\'q'], datasets: [{ label: 'Daromad', data: sortedMonths.length ? sortedMonths.map(m => months[m]) : [0], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.12)', fill: true, tension: 0.4, borderWidth: 3, pointBackgroundColor: '#10b981', pointRadius: 5 }] },
-        options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
-    });
+    const chartRevenueEl = document.getElementById('chartRevenue');
+    if (chartRevenueEl) {
+        charts.revenue = new Chart(chartRevenueEl, {
+            type: 'line',
+            data: { labels: sortedMonths.length ? sortedMonths.map(m => formatMonth(m)) : ['Ma\'lumot yo\'q'], datasets: [{ label: 'Daromad', data: sortedMonths.length ? sortedMonths.map(m => months[m]) : [0], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.12)', fill: true, tension: 0.4, borderWidth: 3, pointBackgroundColor: '#10b981', pointRadius: 5 }] },
+            options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+        });
+    }
     const statusCounts = { 'To\'langan': 0, 'Qisman to\'langan': 0, 'To\'lanmagan': 0 };
     payments.forEach(p => { if (statusCounts[p.status] !== undefined) statusCounts[p.status]++; });
-    charts.payments = new Chart(document.getElementById('chartPayments'), {
-        type: 'bar',
-        data: { labels: ['To\'langan', 'Qisman', 'To\'lanmagan'], datasets: [{ data: [statusCounts['To\'langan'], statusCounts['Qisman to\'langan'], statusCounts['To\'lanmagan']], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderRadius: 10, borderWidth: 0, barThickness: 50 }] },
-        options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
-    });
+    const chartPaymentsEl = document.getElementById('chartPayments');
+    if (chartPaymentsEl) {
+        charts.payments = new Chart(chartPaymentsEl, {
+            type: 'bar',
+            data: { labels: ['To\'langan', 'Qisman', 'To\'lanmagan'], datasets: [{ data: [statusCounts['To\'langan'], statusCounts['Qisman to\'langan'], statusCounts['To\'lanmagan']], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderRadius: 10, borderWidth: 0, barThickness: 50 }] },
+            options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+        });
+    }
     const expByCat = {};
     EXPENSE_CATEGORIES.forEach(c => expByCat[c] = 0);
     expenses.forEach(e => { const cat = e.category || 'Boshqa'; expByCat[cat] = (expByCat[cat] || 0) + parseFloat(e.amount || 0); });
     const catLabels = Object.keys(expByCat).filter(k => expByCat[k] > 0);
     const catColors = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4'];
-    charts.expenses = new Chart(document.getElementById('chartExpenses'), {
-        type: 'doughnut',
-        data: { labels: catLabels.length ? catLabels : ['Xarajat yo\'q'], datasets: [{ data: catLabels.length ? catLabels.map(k => expByCat[k]) : [1], backgroundColor: catLabels.length ? catLabels.map((_, i) => catColors[i % catColors.length]) : ['#e2e8f0'], borderWidth: 0, cutout: '65%' }] },
-        options: commonOpts
-    });
+    const chartExpensesEl = document.getElementById('chartExpenses');
+    if (chartExpensesEl) {
+        charts.expenses = new Chart(chartExpensesEl, {
+            type: 'doughnut',
+            data: { labels: catLabels.length ? catLabels : ['Xarajat yo\'q'], datasets: [{ data: catLabels.length ? catLabels.map(k => expByCat[k]) : [1], backgroundColor: catLabels.length ? catLabels.map((_, i) => catColors[i % catColors.length]) : ['#e2e8f0'], borderWidth: 0, cutout: '65%' }] },
+            options: commonOpts
+        });
+    }
     const groupCounts = groups.map(g => ({ name: g.name, count: students.filter(s => s.group_id === g.id).length }));
-    charts.groups = new Chart(document.getElementById('chartGroups'), {
-        type: 'bar',
-        data: { labels: groupCounts.length ? groupCounts.map(g => g.name) : ['Ma\'lumot yo\'q'], datasets: [{ label: 'O\'quvchilar', data: groupCounts.length ? groupCounts.map(g => g.count) : [0], backgroundColor: 'rgba(16,185,129,0.85)', borderRadius: 10, barThickness: 45 }] },
-        options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
-    });
+    const chartGroupsEl = document.getElementById('chartGroups');
+    if (chartGroupsEl) {
+        charts.groups = new Chart(chartGroupsEl, {
+            type: 'bar',
+            data: { labels: groupCounts.length ? groupCounts.map(g => g.name) : ['Ma\'lumot yo\'q'], datasets: [{ label: 'O\'quvchilar', data: groupCounts.length ? groupCounts.map(g => g.count) : [0], backgroundColor: 'rgba(16,185,129,0.85)', borderRadius: 10, barThickness: 45 }] },
+            options: { ...commonOpts, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+        });
+    }
 }
 
 /* ==================== QO'LDA TO'LOV ==================== */
 function openManualPaymentModal(studentId = null) {
     if (!studentId) {
-        const debtors = DB.get('students').filter(s => getStudentDebt(s.id) > 0 && s.status === 'Faol');
+        const debtors = getAllDebtors();
         if (!debtors.length) {
             toast('Ma\'lumot', 'Qarzdor o\'quvchilar yo\'q', 'info');
             return;
@@ -1669,7 +1830,7 @@ function openManualPaymentModal(studentId = null) {
                     ${getPhotoHTML(s.photo, s.full_name, 44)}
                     <div class="schedule-info" style="margin-left:10px;">
                         <h4>${s.full_name}</h4>
-                        <p><svg><use href="#i-phone"/></svg> ${s.phone || '-'} • <svg><use href="#i-calendar"/></svg> ${months} oy qarzdor</p>
+                        <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-phone"/></svg> ${s.phone || '-'} • ${months} oy qarzdor</p>
                     </div>
                     <span class="badge badge-danger">${formatMoney(debt)}</span>
                 </div>
@@ -1833,7 +1994,7 @@ function openManualPaymentModal(studentId = null) {
             const totalAmount = payments.reduce((s, p) => s + p.amount, 0);
             toast('Muvaffaqiyat', `${formatMoney(totalAmount)} qabul qilindi (${payments.length} oy) ✅`);
             closeModal();
-            renderDashboard(); renderStudents(); renderPayments();
+            renderDashboard(); renderStudents(); renderPayments(); renderGroups();
         } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
     openModal(
@@ -2200,15 +2361,15 @@ function toggleSalaryFields() {
     else { a.style.display = 'block'; p.style.display = 'none'; l.textContent = t === 'per_lesson' ? 'Bir dars narxi (so\'m)' : 'Maosh miqdori (so\'m)'; }
 }
 function editTeacher(id) { openTeacherModal(id); }
-async function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('teachers', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderTeachers(); } catch (err) { toast('Xatolik', err.message, 'error'); } }/* ==================== O'QITUVCHI MAOSHINI KO'RISH ==================== */
+async function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('teachers', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderTeachers(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
+
+/* ==================== O'QITUVCHI MAOSHINI KO'RISH ==================== */
 function viewTeacherSalary(teacherId, initialMonth = null) {
     const teacher = DB.get('teachers').find(t => t.id === teacherId);
     if (!teacher) return;
     const months = getAvailableSalaryMonths();
     const selectedMonth = initialMonth || _selectedSalaryMonth || new Date().toISOString().slice(0, 7);
-    
     const monthOptions = months.map(m => `<option value="${m}" ${m === selectedMonth ? 'selected' : ''}>${formatMonth(m)}</option>`).join('');
-    
     const body = `
         <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--info-light), white); border-radius:14px; margin-bottom:20px; border:1px solid var(--info);">
             ${teacher.photo ? `<div class="profile-avatar" style="width:70px;height:70px;border-radius:18px;"><img src="${teacher.photo}"></div>` : `<div class="profile-avatar" style="width:70px;height:70px;border-radius:18px;font-size:28px;">${teacher.full_name.charAt(0)}</div>`}
@@ -2220,7 +2381,6 @@ function viewTeacherSalary(teacherId, initialMonth = null) {
                 </span>
             </div>
         </div>
-        
         <div style="background: var(--light); border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
             <label style="display:block; font-size: 12px; font-weight: 800; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">📅 Oyni tanlang</label>
             <select id="tsm_month_select" onchange="onTeacherSalaryMonthChange(${teacherId}, this.value)" 
@@ -2228,12 +2388,9 @@ function viewTeacherSalary(teacherId, initialMonth = null) {
                 ${monthOptions}
             </select>
         </div>
-        
         <div id="tsm_content"></div>
     `;
-    
     openModal(`<svg class="icon"><use href="#i-percent"/></svg> O'qituvchi maoshi`, body, `<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>`);
-    
     setTimeout(() => renderTeacherSalaryContent(teacherId, selectedMonth), 50);
 }
 
@@ -2247,15 +2404,10 @@ function renderTeacherSalaryContent(teacherId, month) {
     if (!teacher) return;
     const el = document.getElementById('tsm_content');
     if (!el) return;
-    
     const salary = calculateTeacherSalary(teacherId, month);
     const groups = DB.get('groups').filter(g => g.teacher_id === teacherId);
     const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
-    const st = getTeacherSalaryPaymentStatus(teacherId, month);
-    const statusInfo = formatSalaryStatus(st.status);
-    
     let detailsHTML = '';
-    
     if (teacher.salary_type === 'percentage') {
         if (salary.details.length > 0) {
             detailsHTML = `
@@ -2309,25 +2461,17 @@ function renderTeacherSalaryContent(teacherId, month) {
             </div>
         `;
     }
-    
     const isCurrentMonth = month === new Date().toISOString().slice(0, 7);
     const monthBadge = isCurrentMonth ? '<span class="badge badge-success" style="font-size:10px;">Joriy oy</span>' : '<span class="badge badge-gray" style="font-size:10px;">O\'tgan oy</span>';
-    
     el.innerHTML = `
         <div style="background: linear-gradient(135deg, ${isCurrentMonth ? '#064e3b 0%, #047857 50%, #10b981 100%' : '#1e40af 0%, #3b82f6 50%, #60a5fa 100%'}); color: white; padding: 22px 24px; border-radius: 14px; margin-bottom: 20px; position:relative; overflow:hidden;">
             <div style="position: absolute; top: 14px; right: 16px;">${monthBadge}</div>
             <div style="font-size:11px; opacity:0.85; text-transform:uppercase; letter-spacing:0.6px; font-weight:700;">${formatMonth(month)} — Maosh</div>
             <div style="font-size:36px; font-weight:900; margin-top:8px; color:#fef3c7; letter-spacing:-0.5px;">${formatMoney(salary.total)}</div>
-            <div style="margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <span class="badge ${statusInfo.cls}" style="font-size: 11px;">${statusInfo.label}</span>
-                ${st.paid > 0 ? `<span style="font-size: 12px; opacity: 0.9;">To'langan: ${formatMoney(st.paid)}</span>` : ''}
-                ${st.debt > 0 ? `<span style="font-size: 12px; color: #fca5a5; font-weight: 700;">Qarz: ${formatMoney(st.debt)}</span>` : ''}
-            </div>
-            ${teacher.salary_type === 'percentage' && salary.details.length > 0 ? ` 
+            ${teacher.salary_type === 'percentage' && salary.details.length > 0 ? `
                 <div style="font-size: 12px; opacity: 0.9; margin-top: 8px;">${salary.details.length} ta to'lovdan ${teacher.salary_percentage}% ulush</div>
             ` : ''}
         </div>
-        
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
             <div style="padding: 14px; background: var(--light); border-radius: 12px; text-align: center;">
                 <div style="font-size: 22px; font-weight: 900; color: var(--primary-dark);">${groups.length}</div>
@@ -2338,238 +2482,8 @@ function renderTeacherSalaryContent(teacherId, month) {
                 <div style="font-size: 11px; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px;">O'quvchilar</div>
             </div>
         </div>
-        
         ${detailsHTML}
-        
-        <div style="margin-top: 20px;">
-            <button class="btn ${st.status === 'paid' ? 'btn-secondary' : 'btn-warning'}" style="width: 100%;" onclick="closeModal(); setTimeout(() => openTeacherSalaryPaymentModal(${teacherId}, '${month}'), 100);">
-                <svg class="icon-sm"><use href="#i-credit-card"/></svg> 
-                ${st.status === 'paid' ? 'To\'langan (o\'zgartirish)' : st.status === 'partial' ? `Qolganini berish (${formatMoney(st.debt)})` : `Oylik berish (${formatMoney(st.debt)})`}
-            </button>
-        </div>
     `;
-}
-
-/* ==================== O'QITUVCHIGA OYLIK BERISH ==================== */
-function openTeacherSalaryPaymentModal(teacherId, month) {
-    const teacher = DB.get('teachers').find(t => t.id === teacherId);
-    if (!teacher) { toast('Xatolik', 'O\'qituvchi topilmadi', 'error'); return; }
-    
-    const salary = calculateTeacherSalary(teacherId, month);
-    const st = getTeacherSalaryPaymentStatus(teacherId, month);
-    const existingPayment = getTeacherSalaryPayment(teacherId, month);
-    
-    const remaining = st.debt;
-    const paid = st.paid;
-    
-    const body = `
-        <div style="display:flex; gap:14px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:14px; margin-bottom:18px; border:1px solid var(--primary-light);">
-            ${teacher.photo ? `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;"><img src="${teacher.photo}"></div>` : `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${teacher.full_name.charAt(0)}</div>`}
-            <div style="flex:1;">
-                <h3 style="font-size:17px; font-weight:800; color:var(--dark); margin-bottom:3px;">${teacher.full_name}</h3>
-                <p style="font-size:12px; color:var(--gray); margin-bottom:6px;">${getSubjectName(teacher.subject_id)} • ${formatMonth(month)}</p>
-                <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                    <span class="badge badge-info">Hisoblangan: ${formatMoney(salary.total)}</span>
-                    ${paid > 0 ? `<span class="badge badge-success">To'langan: ${formatMoney(paid)}</span>` : ''}
-                    ${remaining > 0 ? `<span class="badge badge-danger">Qoldiq: ${formatMoney(remaining)}</span>` : '<span class="badge badge-success">To\'liq to\'langan</span>'}
-                </div>
-            </div>
-        </div>
-        
-        <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;">
-            <div style="display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e40af; font-weight:600; line-height:1.5;">
-                <svg style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"><use href="#i-info"/></svg>
-                <span><strong>Oylik berish:</strong> Bu oy uchun o'qituvchiga beriladigan summani kiriting. To'liq yoki qisman berishingiz mumkin.</span>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label>To'lanadigan summa (so'm) *</label>
-            <div style="display:flex; gap:8px;">
-                <input type="number" id="sp_amount" value="${remaining > 0 ? remaining : 0}" min="0" step="1000" style="flex:1; padding:13px 16px; border:2px solid var(--border); border-radius:12px; font-size:15px; font-weight:700; font-family:inherit; outline:none; color:var(--dark);">
-                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('sp_amount').value=${remaining}" style="white-space:nowrap;">To'liq</button>
-            </div>
-            <div style="font-size:11.5px; color:var(--gray); margin-top:6px; font-weight:600;">
-                Maksimal: <strong style="color:var(--primary-dark);">${formatMoney(remaining)}</strong> • Hisoblangan: <strong>${formatMoney(salary.total)}</strong>
-            </div>
-        </div>
-        
-        <div class="form-row">
-            <div class="form-group">
-                <label>To'lov sanasi</label>
-                <input type="date" id="sp_date" value="${new Date().toISOString().split('T')[0]}">
-            </div>
-            <div class="form-group">
-                <label>To'lov usuli</label>
-                <select id="sp_method">
-                    <option>Naqd</option>
-                    <option>Karta</option>
-                    <option>Bank o'tkazmasi</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label>Izoh (ixtiyoriy)</label>
-            <input type="text" id="sp_notes" value="${existingPayment?.notes || ''}" placeholder="Masalan: oylik to'liq berildi...">
-        </div>
-        
-        ${existingPayment && existingPayment.paid_amount > 0 ? `
-            <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 14px; margin-top: 10px;">
-                <strong style="color:#92400e; font-size:12.5px; display:flex; align-items:center; gap:6px;">
-                    <svg style="width:14px;height:14px;"><use href="#i-alert"/></svg>
-                    Diqqat: oldin ${formatMoney(existingPayment.paid_amount)} to'langan
-                </strong>
-                <p style="font-size:11.5px; color:#92400e; margin-top:4px;">Yangi kiritgan summangiz avvalgi to'lovga <strong>qo'shiladi</strong>.</p>
-            </div>
-        ` : ''}
-    `;
-    
-    window._modalSave = async () => {
-        const amount = parseFloat(document.getElementById('sp_amount').value) || 0;
-        const date = document.getElementById('sp_date').value;
-        const method = document.getElementById('sp_method').value;
-        const notes = document.getElementById('sp_notes').value || null;
-        
-        if (amount <= 0) { toast('Xatolik', 'Summani kiriting', 'error'); return; }
-        if (amount > remaining && remaining > 0) { 
-            toast('Xatolik', `Maksimal ${formatMoney(remaining)} kiritish mumkin`, 'error'); 
-            return; 
-        }
-        
-        try {
-            if (existingPayment) {
-                const newPaid = (parseFloat(existingPayment.paid_amount) || 0) + amount;
-                const expected = salary.total;
-                const newStatus = newPaid >= expected ? 'To\'langan' : 'Qisman to\'langan';
-                await DB.update('salary_payments', existingPayment.id, {
-                    paid_amount: newPaid,
-                    payment_date: date,
-                    payment_method: method,
-                    status: newStatus,
-                    notes
-                });
-            } else {
-                const status = amount >= salary.total ? 'To\'langan' : 'Qisman to\'langan';
-                await DB.insert('salary_payments', {
-                    teacher_id: teacherId,
-                    month,
-                    expected_amount: salary.total,
-                    paid_amount: amount,
-                    payment_date: date,
-                    payment_method: method,
-                    status,
-                    notes
-                });
-            }
-            toast('Muvaffaqiyat', `${teacher.full_name} ga ${formatMoney(amount)} oylik berildi ✅`);
-            closeModal();
-            renderSalaries();
-            renderDashboard();
-        } catch (err) { toast('Xatolik', err.message, 'error'); }
-    };
-    
-    openModal(
-        `<svg class="icon" style="color:var(--warning)"><use href="#i-credit-card"/></svg> Oylik berish — ${formatMonth(month)}`,
-        body,
-        `<button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button>
-         <button class="btn btn-primary" onclick="saveModal()"><svg class="icon-sm"><use href="#i-check-circle"/></svg> Oylik berish</button>`
-    );
-}
-
-/* ==================== SALARIES (oy tanlash bilan) ==================== */
-function renderSalaries() {
-    const monthPicker = document.getElementById('salaryMonthPicker');
-    if (monthPicker && !monthPicker.value) {
-        monthPicker.value = _selectedSalaryMonth;
-    }
-    const selectedMonth = monthPicker ? monthPicker.value : _selectedSalaryMonth;
-    _selectedSalaryMonth = selectedMonth;
-    
-    const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
-    
-    let totalFixed = 0, totalPercentage = 0, totalPerLesson = 0;
-    let totalExpected = 0, totalPaid = 0, totalDebt = 0;
-    
-    teachers.forEach(t => {
-        const sal = calculateTeacherSalary(t.id, selectedMonth);
-        if (t.salary_type === 'fixed') totalFixed += sal.total;
-        else if (t.salary_type === 'percentage') totalPercentage += sal.total;
-        else totalPerLesson += sal.total;
-        totalExpected += sal.total;
-        
-        const st = getTeacherSalaryPaymentStatus(t.id, selectedMonth);
-        totalPaid += st.paid;
-        totalDebt += st.debt;
-    });
-    
-    const isCurrentMonth = selectedMonth === new Date().toISOString().slice(0, 7);
-    const monthBadge = isCurrentMonth ? 'Joriy oy' : 'O\'tgan oy';
-    
-    document.getElementById('salaryStats').innerHTML = `
-        <div class="stat-card"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">${formatMonth(selectedMonth)} — Hisoblangan</div><div class="stat-value counter" data-target="${totalExpected}">0</div><div class="stat-change ${isCurrentMonth ? 'up' : 'down'}">${monthBadge} • ${teachers.length} o'qituvchi</div></div>
-        <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-lock"/></svg></div><div class="stat-label">Belgilangan</div><div class="stat-value counter" data-target="${totalFixed}">0</div></div>
-        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-percent"/></svg></div><div class="stat-label">Foizli ulush</div><div class="stat-value counter" data-target="${totalPercentage}">0</div></div>
-        <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-check-circle"/></svg></div><div class="stat-label">To'langan</div><div class="stat-value counter" data-target="${totalPaid}">0</div></div>
-        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Qarz (berilmagan)</div><div class="stat-value counter" data-target="${totalDebt}">0</div></div>
-    `;
-    document.querySelectorAll('#salaryStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
-    
-    const tbody = document.getElementById('salariesTable');
-    if (!teachers.length) {
-        tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-percent"/></svg></div><h3>Faol o\'qituvchilar yo\'q</h3></div></td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = teachers.map(t => {
-        const sal = calculateTeacherSalary(t.id, selectedMonth);
-        const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
-        const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
-        const st = getTeacherSalaryPaymentStatus(t.id, selectedMonth);
-        const statusInfo = formatSalaryStatus(st.status);
-        
-        let salaryTypeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? `Foizli (${t.salary_percentage}%)` : 'Dars uchun';
-        const typeCls = t.salary_type === 'percentage' ? 'badge-purple' : t.salary_type === 'per_lesson' ? 'badge-warning' : 'badge-info';
-        
-        return `<tr>
-            <td><div style="display:flex; align-items:center; gap:10px;">${getPhotoHTML(t.photo, t.full_name, 38)}<div><strong>${t.full_name}</strong><br><small style="color:var(--gray);">${t.phone || ''}</small></div></div></td>
-            <td><span class="badge badge-info">${getSubjectName(t.subject_id)}</span></td>
-            <td><span class="badge ${typeCls}">${salaryTypeLabel}</span></td>
-            <td>${groups.length} ta</td>
-            <td>${students.length} ta</td>
-            <td><strong style="color:var(--primary-dark); font-size:15px;">${formatMoney(sal.total)}</strong></td>
-            <td><span class="badge ${statusInfo.cls}">${statusInfo.label}</span>${st.paid > 0 && st.status !== 'paid' ? `<br><small style="color:var(--warning);font-weight:700;">${formatMoney(st.paid)} to'langan</small>` : ''}</td>
-            <td>
-                <button class="btn btn-sm btn-secondary btn-icon" onclick="viewTeacherSalary(${t.id}, '${selectedMonth}')" title="Tafsilot"><svg><use href="#i-eye"/></svg></button>
-                <button class="btn btn-sm ${st.status === 'paid' ? 'btn-secondary' : 'btn-warning'} btn-icon" onclick="openTeacherSalaryPaymentModal(${t.id}, '${selectedMonth}')" title="${st.status === 'paid' ? 'To\'langan (tahrirlash)' : 'Oylik berish'}"><svg><use href="#i-credit-card"/></svg></button>
-            </td>
-        </tr>`;
-    }).join('');
-}
-
-function onSalaryMonthChange(month) {
-    _selectedSalaryMonth = month;
-    renderSalaries();
-}
-
-function exportSalaries() {
-    const selectedMonth = _selectedSalaryMonth;
-    const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
-    let csv = `O'qituvchi,Fan,Maosh turi,Foiz,Guruhlar,O'quvchilar,Hisoblangan,To'langan,Qarz,Holati\n`;
-    teachers.forEach(t => {
-        const sal = calculateTeacherSalary(t.id, selectedMonth);
-        const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
-        const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
-        const st = getTeacherSalaryPaymentStatus(t.id, selectedMonth);
-        const typeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? 'Foizli' : 'Dars uchun';
-        csv += `"${t.full_name}","${getSubjectName(t.subject_id)}","${typeLabel}","${t.salary_percentage || 0}%",${groups.length},${students.length},${Math.round(sal.total)},${Math.round(st.paid)},${Math.round(st.debt)},"${formatSalaryStatus(st.status).label}"\n`;
-    });
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `maoshlar_${selectedMonth}.csv`;
-    link.click();
-    toast('Muvaffaqiyat', `${formatMonth(selectedMonth)} maoshlari yuklab olindi`);
 }
 
 /* ==================== GROUPS ==================== */
@@ -2579,11 +2493,13 @@ function renderGroups() {
     if (search) groups = groups.filter(g => g.name.toLowerCase().includes(search));
     const students = DB.get('students');
     const tbody = document.getElementById('groupsTable');
-    if (!groups.length) { tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-users"/></svg></div><h3>Guruhlar yo\'q</h3></div></td></tr>'; return; }
+    if (!groups.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-users"/></svg></div><h3>Guruhlar yo\'q</h3></div></td></tr>'; return; }
     tbody.innerHTML = groups.map(g => {
         const count = students.filter(s => s.group_id === g.id).length;
         const pct = Math.round((count / (g.max_students || 15)) * 100);
         const cls = pct >= 90 ? 'danger' : pct >= 70 ? 'warning' : '';
+        const debtors = getGroupDebtors(g.id);
+        const totalGroupDebt = debtors.reduce((sum, s) => sum + getStudentDebt(s.id), 0);
         return `<tr>
             <td><strong>${g.name}</strong></td>
             <td><span class="badge badge-info">${getSubjectName(g.subject_id)}</span></td>
@@ -2592,6 +2508,15 @@ function renderGroups() {
             <td><div style="max-width:340px;white-space:normal;font-size:12px;font-weight:600;">${getGroupDaysText(g)}</div></td>
             <td><div style="min-width:130px;"><strong>${count} / ${g.max_students}</strong><div class="progress-bar"><div class="progress-fill ${cls}" style="width:${Math.min(pct,100)}%"></div></div></div></td>
             <td>${formatMoney(g.monthly_payment)}</td>
+            <td>
+                ${debtors.length > 0 
+                    ? `<button class="btn btn-sm btn-danger" style="font-size:11px; padding:6px 10px;" onclick="openGroupDebtorsModal(${g.id})" title="Qarzdorlarni ko'rish">
+                        <svg style="width:13px;height:13px;"><use href="#i-alert"/></svg>
+                        ${debtors.length} ta
+                       </button>
+                       <div style="font-size:10px; color:var(--danger); font-weight:700; margin-top:3px;">${formatMoney(totalGroupDebt)}</div>`
+                    : `<span class="badge badge-success" style="font-size:10px;">✓ Qarzdor yo'q</span>`}
+            </td>
             <td><span class="badge ${g.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${g.status}</span></td>
             <td>
                 <button class="btn btn-sm btn-secondary btn-icon" onclick="editGroup(${g.id})"><svg><use href="#i-edit"/></svg></button>
@@ -2695,7 +2620,9 @@ function openSubjectModal(id = null) {
     openModal(`<svg class="icon"><use href="#i-book"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi fan'}`, body);
 }
 function editSubject(id) { openSubjectModal(id); }
-async function deleteSubject(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('subjects', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderSubjects(); } catch (err) { toast('Xatolik', err.message, 'error'); } }/* ==================== PAYMENTS ==================== */
+async function deleteSubject(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('subjects', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderSubjects(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
+
+/* ==================== PAYMENTS ==================== */
 function renderPayments() {
     const months = [...new Set(DB.get('payments').map(p => p.month))].sort().reverse();
     const mf = document.getElementById('paymentFilterMonth');
@@ -2865,6 +2792,81 @@ function openExpenseModal(id = null) {
 function editExpense(id) { openExpenseModal(id); }
 async function deleteExpense(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('expenses', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderExpenses(); renderDashboard(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
+/* ==================== SALARIES ==================== */
+function renderSalaries() {
+    const monthPicker = document.getElementById('salaryMonthPicker');
+    if (monthPicker && !monthPicker.value) {
+        monthPicker.value = _selectedSalaryMonth;
+    }
+    const selectedMonth = monthPicker ? monthPicker.value : _selectedSalaryMonth;
+    _selectedSalaryMonth = selectedMonth;
+    const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
+    let totalFixed = 0, totalPercentage = 0, totalPerLesson = 0;
+    teachers.forEach(t => {
+        const sal = calculateTeacherSalary(t.id, selectedMonth);
+        if (t.salary_type === 'fixed') totalFixed += sal.total;
+        else if (t.salary_type === 'percentage') totalPercentage += sal.total;
+        else totalPerLesson += sal.total;
+    });
+    const grandTotal = totalFixed + totalPercentage + totalPerLesson;
+    const isCurrentMonth = selectedMonth === new Date().toISOString().slice(0, 7);
+    const monthBadge = isCurrentMonth ? 'Joriy oy' : 'O\'tgan oy';
+    document.getElementById('salaryStats').innerHTML = `
+        <div class="stat-card"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">${formatMonth(selectedMonth)} — Jami</div><div class="stat-value counter" data-target="${grandTotal}">0</div><div class="stat-change ${isCurrentMonth ? 'up' : 'down'}">${monthBadge} • ${teachers.length} o'qituvchi</div></div>
+        <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-lock"/></svg></div><div class="stat-label">Belgilangan</div><div class="stat-value counter" data-target="${totalFixed}">0</div></div>
+        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-percent"/></svg></div><div class="stat-label">Foizli ulush</div><div class="stat-value counter" data-target="${totalPercentage}">0</div></div>
+        <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-calendar"/></svg></div><div class="stat-label">Dars uchun</div><div class="stat-value counter" data-target="${totalPerLesson}">0</div></div>
+    `;
+    document.querySelectorAll('#salaryStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
+    const tbody = document.getElementById('salariesTable');
+    if (!teachers.length) {
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-percent"/></svg></div><h3>Faol o\'qituvchilar yo\'q</h3></div></td></tr>';
+        return;
+    }
+    tbody.innerHTML = teachers.map(t => {
+        const sal = calculateTeacherSalary(t.id, selectedMonth);
+        const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
+        const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
+        let salaryTypeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? `Foizli (${t.salary_percentage}%)` : 'Dars uchun';
+        const typeCls = t.salary_type === 'percentage' ? 'badge-purple' : t.salary_type === 'per_lesson' ? 'badge-warning' : 'badge-info';
+        return `<tr>
+            <td><div style="display:flex; align-items:center; gap:10px;">${getPhotoHTML(t.photo, t.full_name, 38)}<div><strong>${t.full_name}</strong><br><small style="color:var(--gray);">${t.phone || ''}</small></div></div></td>
+            <td><span class="badge badge-info">${getSubjectName(t.subject_id)}</span></td>
+            <td><span class="badge ${typeCls}">${salaryTypeLabel}</span></td>
+            <td>${groups.length} ta</td>
+            <td>${students.length} ta</td>
+            <td><strong style="color:var(--primary-dark); font-size:15px;">${formatMoney(sal.total)}</strong></td>
+            <td>
+                <button class="btn btn-sm btn-primary btn-icon" onclick="viewTeacherSalary(${t.id}, '${selectedMonth}')" title="Tafsilot"><svg><use href="#i-eye"/></svg></button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function onSalaryMonthChange(month) {
+    _selectedSalaryMonth = month;
+    renderSalaries();
+}
+
+function exportSalaries() {
+    const selectedMonth = _selectedSalaryMonth;
+    const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
+    let csv = `O'qituvchi,Fan,Maosh turi,Foiz,Guruhlar,O'quvchilar,${formatMonth(selectedMonth)} maosh\n`;
+    teachers.forEach(t => {
+        const sal = calculateTeacherSalary(t.id, selectedMonth);
+        const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
+        const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
+        const typeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? 'Foizli' : 'Dars uchun';
+        csv += `"${t.full_name}","${getSubjectName(t.subject_id)}","${typeLabel}","${t.salary_percentage || 0}%",${groups.length},${students.length},${Math.round(sal.total)}\n`;
+    });
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `maoshlar_${selectedMonth}.csv`;
+    link.click();
+    toast('Muvaffaqiyat', `${formatMonth(selectedMonth)} maoshlari yuklab olindi`);
+}
+
 /* ==================== SCHEDULE ==================== */
 function renderSchedule() {
     const schedules = DB.get('schedules');
@@ -2985,12 +2987,9 @@ function renderReports() {
     const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const thisMonth = new Date().toISOString().slice(0, 7);
     let totalTeacherSalaries = 0;
-    let totalSalaryDebt = 0;
     teachers.filter(t => t.status === 'Faol').forEach(t => {
         const sal = calculateTeacherSalary(t.id, thisMonth);
         totalTeacherSalaries += sal.total;
-        const st = getTeacherSalaryPaymentStatus(t.id, thisMonth);
-        totalSalaryDebt += st.debt;
     });
     const netProfit = totalRec - totalExpenses - totalTeacherSalaries;
     document.getElementById('reportStats').innerHTML = `
@@ -2999,7 +2998,6 @@ function renderReports() {
         <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Qarz</div><div class="stat-value counter" data-target="${Math.max(0, totalDebt)}">0</div></div>
         <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Xarajat</div><div class="stat-value counter" data-target="${totalExpenses}">0</div></div>
         <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-percent"/></svg></div><div class="stat-label">Maoshlar (bu oy)</div><div class="stat-value counter" data-target="${totalTeacherSalaries}">0</div></div>
-        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Maosh qarzi</div><div class="stat-value counter" data-target="${totalSalaryDebt}">0</div></div>
         <div class="stat-card ${netProfit >= 0 ? '' : 'red'}"><div class="stat-icon"><svg><use href="#i-award"/></svg></div><div class="stat-label">Sof foyda</div><div class="stat-value counter" data-target="${netProfit}">0</div></div>
     `;
     document.querySelectorAll('#reportStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
@@ -3069,7 +3067,9 @@ async function markAllRead() {
         renderNotifications();
         toast('Muvaffaqiyat', 'Barcha o\'qilgan');
     } catch (err) { toast('Xatolik', err.message, 'error'); }
-}/* ==================== TEACHER PANEL ==================== */
+}
+
+/* ==================== TEACHER PANEL ==================== */
 function setupTeacherPanel() {
     document.getElementById('sidebarNav').innerHTML = `
         <div class="nav-section">
@@ -3077,6 +3077,7 @@ function setupTeacherPanel() {
             <div class="nav-item active" data-page="my-schedule"><svg class="icon"><use href="#i-calendar"/></svg> Dars jadvalim</div>
             <div class="nav-item" data-page="my-today"><svg class="icon"><use href="#i-clock-warn"/></svg> Bugungi darslar <span class="badge" id="todayLessonBadge">0</span></div>
             <div class="nav-item" data-page="my-groups"><svg class="icon"><use href="#i-users"/></svg> Mening guruhlarim</div>
+            <div class="nav-item" data-page="my-debtors"><svg class="icon"><use href="#i-alert"/></svg> Qarzdor o'quvchilar <span class="badge" id="teacherDebtorsBadge">0</span></div>
             <div class="nav-item" data-page="my-salary"><svg class="icon"><use href="#i-percent"/></svg> Mening maoshim</div>
         </div>
     `;
@@ -3117,9 +3118,23 @@ function createTeacherPages() {
             <div class="card">
                 <div class="card-header"><h3><svg class="icon"><use href="#i-users"/></svg> Mening guruhlarim</h3></div>
                 <div class="table-responsive"><table>
-                    <thead><tr><th>Guruh</th><th>Fan</th><th>Xona</th><th>Dars kunlari</th><th>O'quvchilar</th></tr></thead>
+                    <thead><tr><th>Guruh</th><th>Fan</th><th>Xona</th><th>Dars kunlari</th><th>O'quvchilar</th><th>Qarzdorlar</th></tr></thead>
                     <tbody id="teacherGroupsTable"></tbody>
                 </table></div>
+            </div>
+        </div>
+        <div class="page" id="page-my-debtors">
+            <div class="teacher-hero" style="background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 50%, #ef4444 100%);">
+                <h2>⚠️ Qarzdor o'quvchilar</h2>
+                <p>Sizning guruhlaringizdagi oylik to'lov qilmagan o'quvchilar</p>
+                <div class="hero-stats" id="teacherDebtorsStats"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3><svg class="icon" style="color:var(--danger)"><use href="#i-alert"/></svg> Barcha qarzdorlar</h3>
+                    <span class="badge badge-danger" id="teacherDebtorsCount">0 ta</span>
+                </div>
+                <div class="card-body" id="teacherDebtorsList"></div>
             </div>
         </div>
         <div class="page" id="page-my-salary">
@@ -3133,6 +3148,7 @@ const teacherPageTitles = {
     'my-schedule': ['Mening darslarim', 'Dars jadvali va bugungi darslar'],
     'my-today': ['Bugungi darslar', 'Bugun o\'tkaziladigan darslar'],
     'my-groups': ['Mening guruhlarim', 'Sizga biriktirilgan guruhlar'],
+    'my-debtors': ['Qarzdor o\'quvchilar', 'Oylik to\'lov qilmagan o\'quvchilar'],
     'my-salary': ['Mening maoshim', 'Oylik maosh — oy tanlash bilan']
 };
 
@@ -3150,6 +3166,7 @@ function navigateTeacher(page) {
     if (page === 'my-schedule') renderTeacherSchedule();
     if (page === 'my-today') renderTeacherTodayFull();
     if (page === 'my-groups') renderTeacherGroups();
+    if (page === 'my-debtors') renderTeacherDebtors();
     if (page === 'my-salary') renderTeacherSalary();
 }
 
@@ -3159,28 +3176,96 @@ function getTeacherSchedules() {
 function getTeacherGroups() {
     return DB.get('groups').filter(g => g.teacher_id === currentUser.teacher_id);
 }
+function getTeacherDebtors() {
+    const groups = getTeacherGroups();
+    const groupIds = groups.map(g => g.id);
+    return DB.get('students').filter(s => groupIds.includes(s.group_id) && getStudentDebt(s.id) > 0 && s.status === 'Faol');
+}
+
+/* O'qituvchi o'z qarzdorlarini ko'radi */
+function renderTeacherDebtors() {
+    const debtors = getTeacherDebtors().sort((a, b) => getStudentDebt(b.id) - getStudentDebt(a.id));
+    const totalDebt = debtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
+    const groups = getTeacherGroups();
+    
+    const badge = document.getElementById('teacherDebtorsBadge');
+    if (badge) badge.textContent = debtors.length;
+    const countBadge = document.getElementById('teacherDebtorsCount');
+    if (countBadge) countBadge.textContent = `${debtors.length} ta`;
+    
+    const statsEl = document.getElementById('teacherDebtorsStats');
+    if (statsEl) {
+        statsEl.innerHTML = `
+            <div class="hero-stat"><span class="num">${debtors.length}</span><span class="lbl">Qarzdorlar</span></div>
+            <div class="hero-stat"><span class="num">${groups.length}</span><span class="lbl">Guruhlar</span></div>
+            <div class="hero-stat"><span class="num">${formatMoney(totalDebt)}</span><span class="lbl">Umumiy qarz</span></div>
+        `;
+    }
+    
+    const listEl = document.getElementById('teacherDebtorsList');
+    if (!listEl) return;
+    
+    if (!debtors.length) {
+        listEl.innerHTML = `<div class="empty-state" style="padding:60px 20px;"><div class="icon-wrap" style="width:80px;height:80px;"><svg style="width:38px;height:38px;"><use href="#i-check-circle"/></svg></div><h3>Qarzdor o'quvchilar yo'q</h3><p>Sizning guruhlaringizda hamma to'lov qilgan ✅</p></div>`;
+        return;
+    }
+    
+    // Guruh bo'yicha guruhlash
+    let html = '';
+    groups.forEach(group => {
+        const groupDebtors = debtors.filter(s => s.group_id === group.id);
+        if (!groupDebtors.length) return;
+        const groupTotalDebt = groupDebtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
+        html += `
+            <div style="margin-bottom:20px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:linear-gradient(135deg, #fef2f2, white); border-radius:12px; border-left:4px solid var(--danger); margin-bottom:10px;">
+                    <div>
+                        <strong style="font-size:15px; color:var(--dark);">${group.name}</strong>
+                        <span style="font-size:12px; color:var(--gray); margin-left:8px;">${getSubjectName(group.subject_id)}</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:14px; font-weight:800; color:var(--danger);">${formatMoney(groupTotalDebt)}</div>
+                        <div style="font-size:10px; color:var(--gray); font-weight:700;">${groupDebtors.length} ta qarzdor</div>
+                    </div>
+                </div>
+                ${groupDebtors.map(s => {
+                    const debt = getStudentDebt(s.id);
+                    const months = getDebtMonths(s.id);
+                    return `
+                        <div class="debtor-student-item">
+                            ${getPhotoHTML(s.photo, s.full_name, 44)}
+                            <div class="info">
+                                <h4>${s.full_name}</h4>
+                                <p><svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-phone"/></svg> ${s.phone || '-'} • Oylik: ${formatMoney(s.monthly_payment)}</p>
+                                <p style="margin-top:3px; font-size:11px; color:var(--danger); font-weight:700;">📅 ${months.slice(0, 3).join(', ')}${months.length > 3 ? ` +${months.length - 3}` : ''}</p>
+                            </div>
+                            <div style="text-align:right;">
+                                <div class="amount">${formatMoney(debt)}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+    });
+    listEl.innerHTML = html;
+}
 
 function renderTeacherSalary() {
     const teacherId = currentUser.teacher_id;
     const teacher = DB.get('teachers').find(t => t.id === teacherId);
     if (!teacher) return;
-    
     const months = getAvailableSalaryMonths();
     const selectedMonth = _selectedSalaryMonth || new Date().toISOString().slice(0, 7);
     const monthOptions = months.map(m => `<option value="${m}" ${m === selectedMonth ? 'selected' : ''}>${formatMonth(m)}</option>`).join('');
-    
     const salary = calculateTeacherSalary(teacherId, selectedMonth);
     const groups = DB.get('groups').filter(g => g.teacher_id === teacherId);
     const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
-    const st = getTeacherSalaryPaymentStatus(teacherId, selectedMonth);
-    const statusInfo = formatSalaryStatus(st.status);
-    
     let salaryTypeText = teacher.salary_type === 'percentage' 
         ? `Foizli: ${teacher.salary_percentage}%` 
         : teacher.salary_type === 'per_lesson' 
             ? `Dars uchun: ${formatMoney(teacher.salary_amount)}` 
             : `Belgilangan: ${formatMoney(teacher.salary_amount)}`;
-    
     let detailsHTML = '';
     if (teacher.salary_type === 'percentage') {
         if (salary.details.length > 0) {
@@ -3206,32 +3291,7 @@ function renderTeacherSalary() {
             </div>`;
         }
     }
-    
-    const salaryPayments = DB.get('salary_payments').filter(sp => sp.teacher_id === teacherId).sort((a, b) => (b.month || '').localeCompare(a.month || ''));
-    let paymentsHistoryHTML = '';
-    if (salaryPayments.length) {
-        paymentsHistoryHTML = `
-            <div class="card" style="margin-top:20px;">
-                <div class="card-header"><h3><svg class="icon"><use href="#i-credit-card"/></svg> Oylik to'lovlar tarixi</h3></div>
-                <div class="table-responsive"><table>
-                    <thead><tr><th>Oy</th><th>Hisoblangan</th><th>To'langan</th><th>Holat</th><th>Sana</th></tr></thead>
-                    <tbody>${salaryPayments.map(sp => {
-                        const cls = sp.status === 'To\'langan' ? 'badge-success' : 'badge-warning';
-                        return `<tr>
-                            <td><strong>${formatMonth(sp.month)}</strong></td>
-                            <td>${formatMoney(sp.expected_amount)}</td>
-                            <td><strong style="color:var(--primary-dark);">${formatMoney(sp.paid_amount)}</strong></td>
-                            <td><span class="badge ${cls}">${sp.status}</span></td>
-                            <td>${sp.payment_date || '-'}</td>
-                        </tr>`;
-                    }).join('')}</tbody>
-                </table></div>
-            </div>
-        `;
-    }
-    
     const isCurrentMonth = selectedMonth === new Date().toISOString().slice(0, 7);
-    
     document.getElementById('teacherSalaryContent').innerHTML = `
         <div class="teacher-hero" style="background: linear-gradient(135deg, ${isCurrentMonth ? '#064e3b 0%, #047857 50%, #10b981 100%' : '#1e40af 0%, #3b82f6 50%, #60a5fa 100%'});">
             <h2>💰 Mening maoshim</h2>
@@ -3248,14 +3308,8 @@ function renderTeacherSalary() {
                 <div class="hero-stat"><span class="num">${groups.length}</span><span class="lbl">Guruhlar</span></div>
                 <div class="hero-stat"><span class="num">${students.length}</span><span class="lbl">O'quvchilar</span></div>
             </div>
-            <div style="margin-top: 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; position: relative;">
-                <span class="badge ${statusInfo.cls}" style="font-size: 11px;">${statusInfo.label}</span>
-                ${st.paid > 0 ? `<span style="font-size: 12px; opacity: 0.9;">To'langan: ${formatMoney(st.paid)}</span>` : ''}
-                ${st.debt > 0 ? `<span style="font-size: 12px; color: #fca5a5; font-weight: 700;">Qarz: ${formatMoney(st.debt)}</span>` : ''}
-            </div>
         </div>
         ${detailsHTML}
-        ${paymentsHistoryHTML}
     `;
 }
 
@@ -3373,17 +3427,28 @@ function renderTeacherGroups() {
     const students = DB.get('students');
     const tbody = document.getElementById('teacherGroupsTable');
     if (!groups.length) {
-        tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-users"/></svg></div><h3>Guruhlar yo\'q</h3><p>Sizga hali guruhlar biriktirilmagan</p></div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-users"/></svg></div><h3>Guruhlar yo\'q</h3><p>Sizga hali guruhlar biriktirilmagan</p></div></td></tr>';
         return;
     }
     tbody.innerHTML = groups.map(g => {
         const count = students.filter(s => s.group_id === g.id).length;
+        const debtors = getGroupDebtors(g.id);
+        const totalDebt = debtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
         return `<tr>
             <td><strong>${g.name}</strong></td>
             <td><span class="badge badge-info">${getSubjectName(g.subject_id)}</span></td>
             <td>${g.room || '-'}</td>
             <td><div style="max-width:340px;white-space:normal;font-size:12px;font-weight:600;">${getGroupDaysText(g)}</div></td>
             <td><span class="badge badge-success">${count} ta</span></td>
+            <td>
+                ${debtors.length > 0 
+                    ? `<button class="btn btn-sm btn-danger" style="font-size:11px; padding:6px 10px;" onclick="openGroupDebtorsModal(${g.id})">
+                        <svg style="width:13px;height:13px;"><use href="#i-alert"/></svg>
+                        ${debtors.length} ta
+                       </button>
+                       <div style="font-size:10px; color:var(--danger); font-weight:700; margin-top:3px;">${formatMoney(totalDebt)}</div>`
+                    : `<span class="badge badge-success" style="font-size:10px;">✓ Qarzdor yo'q</span>`}
+            </td>
         </tr>`;
     }).join('');
 }
@@ -3439,7 +3504,7 @@ window.addEventListener('online', () => document.getElementById('offlineIndicato
 window.addEventListener('offline', () => document.getElementById('offlineIndicator').classList.add('show'));
 
 console.log('%c🌿 Bloom Education', 'color: #10b981; font-size: 20px; font-weight: bold;');
-console.log('%c✅ Oylik berish funksiyasi qo\'shildi', 'color: #059669; font-size: 13px;');
+console.log('%c✅ Qarzdorlar bo\'limi qo\'shildi', 'color: #059669; font-size: 13px;');
 </script>
 
 </body>
