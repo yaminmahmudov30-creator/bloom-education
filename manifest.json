@@ -4,8 +4,8 @@
   "description": "O'quv markaz boshqaruv tizimi",
   "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "any",
-  "background_color": "#f8fafc",
+  "orientation": "portrait",
+  "background_color": "#10b981",
   "theme_color": "#10b981",
   "lang": "uz",
   "icons": [

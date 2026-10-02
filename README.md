@@ -1,44 +1,31 @@
 ﻿# 🌿 Bloom Education
 
-O'quv markazlar uchun zamonaviy va professional boshqaruv tizimi.
+O'quv markaz boshqaruv tizimi (PWA).
 
-## 📖 Loyiha Haqida
+## ✨ Xususiyatlar
 
-**Bloom Education** — bu o'quv markazlar uchun to'liq funksional boshqaruv tizimi. Bitta HTML faylda yozilgan, hech qanday server yoki o'rnatish talab qilmaydi.
+- 👨‍🎓 O'quvchilar boshqaruvi
+- 👨‍🏫 O'qituvchilar boshqaruvi
+- 📚 Guruhlar va fanlar
+- 💰 To'lovlar (qo'lda to'lov, oylik hisoblash)
+- 💵 O'qituvchilarga oylik berish
+- 📅 Dars jadvali va davomat
+- 📊 Hisobotlar va grafiklar
+- 📱 PWA — o'rnatiladigan ilova
 
-## ✨ Asosiy Xususiyatlar
+## 🛠 Texnologiyalar
 
-- 📊 Dashboard - barcha ko'rsatkichlar
-- 👨‍🎓 O'quvchilar (3x4 rasm bilan)
-- 👨‍🏫 O'qituvchilar (dars kunlari)
-- 👥 Guruhlar
-- 📚 Fanlar
-- 💳 To'lovlar
-- 💰 Xarajatlar
-- 📈 Hisobotlar
-- ✅ Davomat
-- 📅 Dars jadvali
-- 🔔 Bildirishnomalar
+- HTML5, CSS3, JavaScript (Vanilla)
+- Supabase (backend)
+- Chart.js (grafiklar)
+- PWA (offline ishlash)
 
-## 🚀 Foydalanish
+## 🚀 Ishga tushirish
 
-1. index.html faylini brauzerda oching
-2. Login: **javohir** / **0031_Ja**
-
-## 🛠️ Texnologiyalar
-
-- HTML5, CSS3, Vanilla JavaScript
-- Chart.js (Grafiklar)
-- LocalStorage (Ma'lumotlar bazasi)
-
-## 🌐 Demo
-
-https://yaminmahmudov30-creator.github.io/bloom-education/
-
-## 👨‍💻 Muallif
-
-**Yamin Mahmudov** — [@yaminmahmudov30-creator](https://github.com/yaminmahmudov30-creator)
+1. Repozitoriyani klonlash
+2. `index.html` ni brauzerda ochish
+3. Yoki **Live Server** orqali ishga tushirish
 
 ## 📄 Litsenziya
 
-MIT License
+MIT

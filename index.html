@@ -380,6 +380,11 @@ tbody tr:last-child td { border-bottom: none; }
 .month-selector input[type="month"] { padding: 8px 12px; border: 2px solid var(--border); border-radius: 9px; font-size: 14px; font-family: inherit; font-weight: 700; color: var(--dark); background: white; outline: none; cursor: pointer; transition: all 0.2s; }
 .month-selector input[type="month"]:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
+/* MAOSH TO'LOV STATUS */
+.salary-status-paid { color: var(--primary-dark); font-weight: 700; }
+.salary-status-partial { color: var(--warning); font-weight: 700; }
+.salary-status-unpaid { color: var(--danger); font-weight: 700; }
+
 @media (max-width: 1024px) {
     .search-box input { width: 200px; }
     .search-box input:focus { width: 240px; }
@@ -419,9 +424,7 @@ tbody tr:last-child td { border-bottom: none; }
 }
 </style>
 </head>
-<body>
-
-<div id="offlineIndicator">📡 Internetga ulanmagan</div>
+<body><div id="offlineIndicator">📡 Internetga ulanmagan</div>
 
 <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
     <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
@@ -573,9 +576,7 @@ tbody tr:last-child td { border-bottom: none; }
     </div>
 </div>
 
-<div class="toast-container" id="toastContainer"></div>
-
-<script>
+<div class="toast-container" id="toastContainer"></div><script>
 /* ==================== SUPABASE ==================== */
 const SUPABASE_URL = 'https://temtisgmrrserjphinqc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlbXRpc2dtcnJzZXJqcGhpbnFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NDA5NTAsImV4cCI6MjEwNjAxNjk1MH0.hpnAEmV7aDyCW9IyhU3PkW18eWZiTqiQv8QBBmiCIR8';
@@ -586,7 +587,7 @@ let charts = {};
 let currentUser = null;
 let _pendingPhoto = null;
 let deferredPrompt = null;
-let _selectedSalaryMonth = new Date().toISOString().slice(0, 7); // Default: bu oy
+let _selectedSalaryMonth = new Date().toISOString().slice(0, 7);
 
 const DAYS = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'];
 const DAYS_SHORT = { 'Dushanba': 'Du', 'Seshanba': 'Se', 'Chorshanba': 'Cho', 'Payshanba': 'Pay', 'Juma': 'Ju', 'Shanba': 'Sha', 'Yakshanba': 'Yak' };
@@ -614,7 +615,7 @@ const EXPENSE_CATEGORIES = ['Ijara', 'Maosh', 'Kommunal', 'Jihoz', 'Reklama', 'B
 const DB = {
     _cache: {},
     async loadAll() {
-        const tables = ['subjects', 'teachers', 'groups', 'students', 'payments', 'expenses', 'attendance', 'schedules', 'notifications'];
+        const tables = ['subjects', 'teachers', 'groups', 'students', 'payments', 'expenses', 'attendance', 'schedules', 'notifications', 'salary_payments'];
         await Promise.all(tables.map(async (table) => {
             try {
                 const { data, error } = await window.supabaseClient.from(table).select('*');
@@ -836,7 +837,6 @@ function calculateTeacherSalary(teacherId, month = null) {
                 month: p.month, paid: paidAmount, share: share
             });
         });
-        // Saralash: oy bo'yicha
         details.sort((a, b) => (b.month || '').localeCompare(a.month || ''));
         return { total, details, type: 'percentage', percentage };
     } else if (teacher.salary_type === 'fixed') {
@@ -849,20 +849,56 @@ function calculateTeacherSalary(teacherId, month = null) {
     return { total: 0, details: [], type: 'unknown' };
 }
 
-/* Oylar ro'yxatini olish — to'lovlar mavjud oylar */
 function getAvailableSalaryMonths() {
     const payments = DB.get('payments');
     const monthSet = new Set();
     payments.forEach(p => { if (p.month) monthSet.add(p.month); });
-    // Hozirgi oyni qo'shish
     monthSet.add(new Date().toISOString().slice(0, 7));
-    // O'tgan 12 oyni ham qo'shish
     const now = new Date();
     for (let i = 1; i <= 12; i++) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
         monthSet.add(d.toISOString().slice(0, 7));
     }
     return [...monthSet].sort().reverse();
+}
+
+/* ==================== TEACHER SALARY PAYMENTS ==================== */
+function getTeacherSalaryPayment(teacherId, month) {
+    return DB.get('salary_payments').find(sp => sp.teacher_id === teacherId && sp.month === month);
+}
+
+function getTeacherSalaryPaymentStatus(teacherId, month) {
+    const payment = getTeacherSalaryPayment(teacherId, month);
+    const salary = calculateTeacherSalary(teacherId, month);
+    const expected = salary.total;
+    const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
+    if (expected === 0) return { status: 'none', expected: 0, paid: 0, debt: 0 };
+    if (paid >= expected) return { status: 'paid', expected, paid, debt: 0 };
+    if (paid > 0) return { status: 'partial', expected, paid, debt: expected - paid };
+    return { status: 'unpaid', expected, paid: 0, debt: expected };
+}
+
+function getTeacherTotalDebt(teacherId) {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const months = getAvailableSalaryMonths().filter(m => m < currentMonth);
+    let totalDebt = 0;
+    months.forEach(m => {
+        const st = getTeacherSalaryPaymentStatus(teacherId, m);
+        if (st.status === 'unpaid' || st.status === 'partial') {
+            totalDebt += st.debt;
+        }
+    });
+    return totalDebt;
+}
+
+function formatSalaryStatus(status) {
+    const map = {
+        'paid': { label: 'To\'langan', cls: 'badge-success' },
+        'partial': { label: 'Qisman', cls: 'badge-warning' },
+        'unpaid': { label: 'To\'lanmagan', cls: 'badge-danger' },
+        'none': { label: 'Hisoblanmagan', cls: 'badge-gray' }
+    };
+    return map[status] || map.none;
 }
 
 /* ==================== PHOTO ==================== */
@@ -1070,9 +1106,7 @@ async function logout() {
     try {
         await window.supabaseClient.auth.signOut();
     } catch(e) {}
-})();
-
-/* ==================== HISOB SOZLAMALARI ==================== */
+})();/* ==================== HISOB SOZLAMALARI ==================== */
 function openAccountSettings() {
     if (currentUser.role === 'admin') openAdminAccountSettings();
     else openTeacherAccountSettings();
@@ -1371,7 +1405,7 @@ function createAdminPages() {
             </div>
             <div class="stats-grid" id="salaryStats" style="margin-bottom:20px;"></div>
             <div class="card"><div class="table-responsive"><table>
-                <thead><tr><th>O'qituvchi</th><th>Fan</th><th>Maosh turi</th><th>Guruhlar</th><th>O'quvchilar</th><th>Tanlangan oy maosh</th><th>Amallar</th></tr></thead>
+                <thead><tr><th>O'qituvchi</th><th>Fan</th><th>Maosh turi</th><th>Guruhlar</th><th>O'quvchilar</th><th>Hisoblangan</th><th>To'lov holati</th><th>Amallar</th></tr></thead>
                 <tbody id="salariesTable"></tbody>
             </table></div></div>
         </div>
@@ -1462,9 +1496,7 @@ function closeSidebar() {
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebarOverlay').classList.remove('active');
 }
-document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
-
-/* ==================== DASHBOARD ==================== */
+document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);/* ==================== DASHBOARD ==================== */
 function renderDashboard() {
     const students = DB.get('students');
     const teachers = DB.get('teachers');
@@ -1484,10 +1516,15 @@ function renderDashboard() {
     const debtors = students.filter(s => getStudentDebt(s.id) > 0);
     
     let totalTeacherSalaries = 0;
+    let totalPaidSalaries = 0;
+    let totalSalaryDebt = 0;
     teachers.forEach(t => {
         if (t.status === 'Faol') {
             const sal = calculateTeacherSalary(t.id, thisMonth);
             totalTeacherSalaries += sal.total;
+            const st = getTeacherSalaryPaymentStatus(t.id, thisMonth);
+            totalPaidSalaries += st.paid;
+            totalSalaryDebt += st.debt;
         }
     });
 
@@ -1514,7 +1551,9 @@ function renderDashboard() {
         <div class="financial-item"><label>O'rtacha oylik</label><div class="value">${formatMoney(totalMonthly / (students.length || 1))}</div></div>
         <div class="financial-item total"><label>Kutilayotgan oylik</label><div class="value">${formatMoney(totalMonthly)}</div></div>
         <div class="financial-item"><label>Bu oy tushgan</label><div class="value">${formatMoney(monthReceived)}</div></div>
-        <div class="financial-item"><label>O'qituvchilar maoshi</label><div class="value">${formatMoney(totalTeacherSalaries)}</div></div>
+        <div class="financial-item"><label>O'qituvchilar maoshi (hisob.)</label><div class="value">${formatMoney(totalTeacherSalaries)}</div></div>
+        <div class="financial-item"><label>To'langan maosh</label><div class="value">${formatMoney(totalPaidSalaries)}</div></div>
+        <div class="financial-item"><label>Maosh qarzi</label><div class="value" style="color: #fca5a5;">${formatMoney(totalSalaryDebt)}</div></div>
         <div class="financial-item total"><label>Umumiy qarz</label><div class="value" style="color: #fca5a5;">${formatMoney(totalDebt)}</div></div>
     `;
 
@@ -2161,9 +2200,7 @@ function toggleSalaryFields() {
     else { a.style.display = 'block'; p.style.display = 'none'; l.textContent = t === 'per_lesson' ? 'Bir dars narxi (so\'m)' : 'Maosh miqdori (so\'m)'; }
 }
 function editTeacher(id) { openTeacherModal(id); }
-async function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('teachers', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderTeachers(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
-
-/* ==================== O'QITUVCHI MAOSHINI KO'RISH (OY TANLASH BILAN) ==================== */
+async function deleteTeacher(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('teachers', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderTeachers(); } catch (err) { toast('Xatolik', err.message, 'error'); } }/* ==================== O'QITUVCHI MAOSHINI KO'RISH ==================== */
 function viewTeacherSalary(teacherId, initialMonth = null) {
     const teacher = DB.get('teachers').find(t => t.id === teacherId);
     if (!teacher) return;
@@ -2197,7 +2234,6 @@ function viewTeacherSalary(teacherId, initialMonth = null) {
     
     openModal(`<svg class="icon"><use href="#i-percent"/></svg> O'qituvchi maoshi`, body, `<button class="btn btn-secondary" onclick="closeModal()">Yopish</button>`);
     
-    // Boshlang'ich oy uchun content yuklash
     setTimeout(() => renderTeacherSalaryContent(teacherId, selectedMonth), 50);
 }
 
@@ -2215,6 +2251,8 @@ function renderTeacherSalaryContent(teacherId, month) {
     const salary = calculateTeacherSalary(teacherId, month);
     const groups = DB.get('groups').filter(g => g.teacher_id === teacherId);
     const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
+    const st = getTeacherSalaryPaymentStatus(teacherId, month);
+    const statusInfo = formatSalaryStatus(st.status);
     
     let detailsHTML = '';
     
@@ -2280,7 +2318,12 @@ function renderTeacherSalaryContent(teacherId, month) {
             <div style="position: absolute; top: 14px; right: 16px;">${monthBadge}</div>
             <div style="font-size:11px; opacity:0.85; text-transform:uppercase; letter-spacing:0.6px; font-weight:700;">${formatMonth(month)} — Maosh</div>
             <div style="font-size:36px; font-weight:900; margin-top:8px; color:#fef3c7; letter-spacing:-0.5px;">${formatMoney(salary.total)}</div>
-            ${teacher.salary_type === 'percentage' && salary.details.length > 0 ? `
+            <div style="margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <span class="badge ${statusInfo.cls}" style="font-size: 11px;">${statusInfo.label}</span>
+                ${st.paid > 0 ? `<span style="font-size: 12px; opacity: 0.9;">To'langan: ${formatMoney(st.paid)}</span>` : ''}
+                ${st.debt > 0 ? `<span style="font-size: 12px; color: #fca5a5; font-weight: 700;">Qarz: ${formatMoney(st.debt)}</span>` : ''}
+            </div>
+            ${teacher.salary_type === 'percentage' && salary.details.length > 0 ? ` 
                 <div style="font-size: 12px; opacity: 0.9; margin-top: 8px;">${salary.details.length} ta to'lovdan ${teacher.salary_percentage}% ulush</div>
             ` : ''}
         </div>
@@ -2297,7 +2340,236 @@ function renderTeacherSalaryContent(teacherId, month) {
         </div>
         
         ${detailsHTML}
+        
+        <div style="margin-top: 20px;">
+            <button class="btn ${st.status === 'paid' ? 'btn-secondary' : 'btn-warning'}" style="width: 100%;" onclick="closeModal(); setTimeout(() => openTeacherSalaryPaymentModal(${teacherId}, '${month}'), 100);">
+                <svg class="icon-sm"><use href="#i-credit-card"/></svg> 
+                ${st.status === 'paid' ? 'To\'langan (o\'zgartirish)' : st.status === 'partial' ? `Qolganini berish (${formatMoney(st.debt)})` : `Oylik berish (${formatMoney(st.debt)})`}
+            </button>
+        </div>
     `;
+}
+
+/* ==================== O'QITUVCHIGA OYLIK BERISH ==================== */
+function openTeacherSalaryPaymentModal(teacherId, month) {
+    const teacher = DB.get('teachers').find(t => t.id === teacherId);
+    if (!teacher) { toast('Xatolik', 'O\'qituvchi topilmadi', 'error'); return; }
+    
+    const salary = calculateTeacherSalary(teacherId, month);
+    const st = getTeacherSalaryPaymentStatus(teacherId, month);
+    const existingPayment = getTeacherSalaryPayment(teacherId, month);
+    
+    const remaining = st.debt;
+    const paid = st.paid;
+    
+    const body = `
+        <div style="display:flex; gap:14px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:14px; margin-bottom:18px; border:1px solid var(--primary-light);">
+            ${teacher.photo ? `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;"><img src="${teacher.photo}"></div>` : `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${teacher.full_name.charAt(0)}</div>`}
+            <div style="flex:1;">
+                <h3 style="font-size:17px; font-weight:800; color:var(--dark); margin-bottom:3px;">${teacher.full_name}</h3>
+                <p style="font-size:12px; color:var(--gray); margin-bottom:6px;">${getSubjectName(teacher.subject_id)} • ${formatMonth(month)}</p>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <span class="badge badge-info">Hisoblangan: ${formatMoney(salary.total)}</span>
+                    ${paid > 0 ? `<span class="badge badge-success">To'langan: ${formatMoney(paid)}</span>` : ''}
+                    ${remaining > 0 ? `<span class="badge badge-danger">Qoldiq: ${formatMoney(remaining)}</span>` : '<span class="badge badge-success">To\'liq to\'langan</span>'}
+                </div>
+            </div>
+        </div>
+        
+        <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;">
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e40af; font-weight:600; line-height:1.5;">
+                <svg style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"><use href="#i-info"/></svg>
+                <span><strong>Oylik berish:</strong> Bu oy uchun o'qituvchiga beriladigan summani kiriting. To'liq yoki qisman berishingiz mumkin.</span>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>To'lanadigan summa (so'm) *</label>
+            <div style="display:flex; gap:8px;">
+                <input type="number" id="sp_amount" value="${remaining > 0 ? remaining : 0}" min="0" step="1000" style="flex:1; padding:13px 16px; border:2px solid var(--border); border-radius:12px; font-size:15px; font-weight:700; font-family:inherit; outline:none; color:var(--dark);">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('sp_amount').value=${remaining}" style="white-space:nowrap;">To'liq</button>
+            </div>
+            <div style="font-size:11.5px; color:var(--gray); margin-top:6px; font-weight:600;">
+                Maksimal: <strong style="color:var(--primary-dark);">${formatMoney(remaining)}</strong> • Hisoblangan: <strong>${formatMoney(salary.total)}</strong>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>To'lov sanasi</label>
+                <input type="date" id="sp_date" value="${new Date().toISOString().split('T')[0]}">
+            </div>
+            <div class="form-group">
+                <label>To'lov usuli</label>
+                <select id="sp_method">
+                    <option>Naqd</option>
+                    <option>Karta</option>
+                    <option>Bank o'tkazmasi</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Izoh (ixtiyoriy)</label>
+            <input type="text" id="sp_notes" value="${existingPayment?.notes || ''}" placeholder="Masalan: oylik to'liq berildi...">
+        </div>
+        
+        ${existingPayment && existingPayment.paid_amount > 0 ? `
+            <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 14px; margin-top: 10px;">
+                <strong style="color:#92400e; font-size:12.5px; display:flex; align-items:center; gap:6px;">
+                    <svg style="width:14px;height:14px;"><use href="#i-alert"/></svg>
+                    Diqqat: oldin ${formatMoney(existingPayment.paid_amount)} to'langan
+                </strong>
+                <p style="font-size:11.5px; color:#92400e; margin-top:4px;">Yangi kiritgan summangiz avvalgi to'lovga <strong>qo'shiladi</strong>.</p>
+            </div>
+        ` : ''}
+    `;
+    
+    window._modalSave = async () => {
+        const amount = parseFloat(document.getElementById('sp_amount').value) || 0;
+        const date = document.getElementById('sp_date').value;
+        const method = document.getElementById('sp_method').value;
+        const notes = document.getElementById('sp_notes').value || null;
+        
+        if (amount <= 0) { toast('Xatolik', 'Summani kiriting', 'error'); return; }
+        if (amount > remaining && remaining > 0) { 
+            toast('Xatolik', `Maksimal ${formatMoney(remaining)} kiritish mumkin`, 'error'); 
+            return; 
+        }
+        
+        try {
+            if (existingPayment) {
+                const newPaid = (parseFloat(existingPayment.paid_amount) || 0) + amount;
+                const expected = salary.total;
+                const newStatus = newPaid >= expected ? 'To\'langan' : 'Qisman to\'langan';
+                await DB.update('salary_payments', existingPayment.id, {
+                    paid_amount: newPaid,
+                    payment_date: date,
+                    payment_method: method,
+                    status: newStatus,
+                    notes
+                });
+            } else {
+                const status = amount >= salary.total ? 'To\'langan' : 'Qisman to\'langan';
+                await DB.insert('salary_payments', {
+                    teacher_id: teacherId,
+                    month,
+                    expected_amount: salary.total,
+                    paid_amount: amount,
+                    payment_date: date,
+                    payment_method: method,
+                    status,
+                    notes
+                });
+            }
+            toast('Muvaffaqiyat', `${teacher.full_name} ga ${formatMoney(amount)} oylik berildi ✅`);
+            closeModal();
+            renderSalaries();
+            renderDashboard();
+        } catch (err) { toast('Xatolik', err.message, 'error'); }
+    };
+    
+    openModal(
+        `<svg class="icon" style="color:var(--warning)"><use href="#i-credit-card"/></svg> Oylik berish — ${formatMonth(month)}`,
+        body,
+        `<button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button>
+         <button class="btn btn-primary" onclick="saveModal()"><svg class="icon-sm"><use href="#i-check-circle"/></svg> Oylik berish</button>`
+    );
+}
+
+/* ==================== SALARIES (oy tanlash bilan) ==================== */
+function renderSalaries() {
+    const monthPicker = document.getElementById('salaryMonthPicker');
+    if (monthPicker && !monthPicker.value) {
+        monthPicker.value = _selectedSalaryMonth;
+    }
+    const selectedMonth = monthPicker ? monthPicker.value : _selectedSalaryMonth;
+    _selectedSalaryMonth = selectedMonth;
+    
+    const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
+    
+    let totalFixed = 0, totalPercentage = 0, totalPerLesson = 0;
+    let totalExpected = 0, totalPaid = 0, totalDebt = 0;
+    
+    teachers.forEach(t => {
+        const sal = calculateTeacherSalary(t.id, selectedMonth);
+        if (t.salary_type === 'fixed') totalFixed += sal.total;
+        else if (t.salary_type === 'percentage') totalPercentage += sal.total;
+        else totalPerLesson += sal.total;
+        totalExpected += sal.total;
+        
+        const st = getTeacherSalaryPaymentStatus(t.id, selectedMonth);
+        totalPaid += st.paid;
+        totalDebt += st.debt;
+    });
+    
+    const isCurrentMonth = selectedMonth === new Date().toISOString().slice(0, 7);
+    const monthBadge = isCurrentMonth ? 'Joriy oy' : 'O\'tgan oy';
+    
+    document.getElementById('salaryStats').innerHTML = `
+        <div class="stat-card"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">${formatMonth(selectedMonth)} — Hisoblangan</div><div class="stat-value counter" data-target="${totalExpected}">0</div><div class="stat-change ${isCurrentMonth ? 'up' : 'down'}">${monthBadge} • ${teachers.length} o'qituvchi</div></div>
+        <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-lock"/></svg></div><div class="stat-label">Belgilangan</div><div class="stat-value counter" data-target="${totalFixed}">0</div></div>
+        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-percent"/></svg></div><div class="stat-label">Foizli ulush</div><div class="stat-value counter" data-target="${totalPercentage}">0</div></div>
+        <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-check-circle"/></svg></div><div class="stat-label">To'langan</div><div class="stat-value counter" data-target="${totalPaid}">0</div></div>
+        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Qarz (berilmagan)</div><div class="stat-value counter" data-target="${totalDebt}">0</div></div>
+    `;
+    document.querySelectorAll('#salaryStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
+    
+    const tbody = document.getElementById('salariesTable');
+    if (!teachers.length) {
+        tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-percent"/></svg></div><h3>Faol o\'qituvchilar yo\'q</h3></div></td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = teachers.map(t => {
+        const sal = calculateTeacherSalary(t.id, selectedMonth);
+        const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
+        const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
+        const st = getTeacherSalaryPaymentStatus(t.id, selectedMonth);
+        const statusInfo = formatSalaryStatus(st.status);
+        
+        let salaryTypeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? `Foizli (${t.salary_percentage}%)` : 'Dars uchun';
+        const typeCls = t.salary_type === 'percentage' ? 'badge-purple' : t.salary_type === 'per_lesson' ? 'badge-warning' : 'badge-info';
+        
+        return `<tr>
+            <td><div style="display:flex; align-items:center; gap:10px;">${getPhotoHTML(t.photo, t.full_name, 38)}<div><strong>${t.full_name}</strong><br><small style="color:var(--gray);">${t.phone || ''}</small></div></div></td>
+            <td><span class="badge badge-info">${getSubjectName(t.subject_id)}</span></td>
+            <td><span class="badge ${typeCls}">${salaryTypeLabel}</span></td>
+            <td>${groups.length} ta</td>
+            <td>${students.length} ta</td>
+            <td><strong style="color:var(--primary-dark); font-size:15px;">${formatMoney(sal.total)}</strong></td>
+            <td><span class="badge ${statusInfo.cls}">${statusInfo.label}</span>${st.paid > 0 && st.status !== 'paid' ? `<br><small style="color:var(--warning);font-weight:700;">${formatMoney(st.paid)} to'langan</small>` : ''}</td>
+            <td>
+                <button class="btn btn-sm btn-secondary btn-icon" onclick="viewTeacherSalary(${t.id}, '${selectedMonth}')" title="Tafsilot"><svg><use href="#i-eye"/></svg></button>
+                <button class="btn btn-sm ${st.status === 'paid' ? 'btn-secondary' : 'btn-warning'} btn-icon" onclick="openTeacherSalaryPaymentModal(${t.id}, '${selectedMonth}')" title="${st.status === 'paid' ? 'To\'langan (tahrirlash)' : 'Oylik berish'}"><svg><use href="#i-credit-card"/></svg></button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function onSalaryMonthChange(month) {
+    _selectedSalaryMonth = month;
+    renderSalaries();
+}
+
+function exportSalaries() {
+    const selectedMonth = _selectedSalaryMonth;
+    const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
+    let csv = `O'qituvchi,Fan,Maosh turi,Foiz,Guruhlar,O'quvchilar,Hisoblangan,To'langan,Qarz,Holati\n`;
+    teachers.forEach(t => {
+        const sal = calculateTeacherSalary(t.id, selectedMonth);
+        const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
+        const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
+        const st = getTeacherSalaryPaymentStatus(t.id, selectedMonth);
+        const typeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? 'Foizli' : 'Dars uchun';
+        csv += `"${t.full_name}","${getSubjectName(t.subject_id)}","${typeLabel}","${t.salary_percentage || 0}%",${groups.length},${students.length},${Math.round(sal.total)},${Math.round(st.paid)},${Math.round(st.debt)},"${formatSalaryStatus(st.status).label}"\n`;
+    });
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `maoshlar_${selectedMonth}.csv`;
+    link.click();
+    toast('Muvaffaqiyat', `${formatMonth(selectedMonth)} maoshlari yuklab olindi`);
 }
 
 /* ==================== GROUPS ==================== */
@@ -2423,9 +2695,7 @@ function openSubjectModal(id = null) {
     openModal(`<svg class="icon"><use href="#i-book"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi fan'}`, body);
 }
 function editSubject(id) { openSubjectModal(id); }
-async function deleteSubject(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('subjects', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderSubjects(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
-
-/* ==================== PAYMENTS ==================== */
+async function deleteSubject(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('subjects', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderSubjects(); } catch (err) { toast('Xatolik', err.message, 'error'); } }/* ==================== PAYMENTS ==================== */
 function renderPayments() {
     const months = [...new Set(DB.get('payments').map(p => p.month))].sort().reverse();
     const mf = document.getElementById('paymentFilterMonth');
@@ -2595,87 +2865,6 @@ function openExpenseModal(id = null) {
 function editExpense(id) { openExpenseModal(id); }
 async function deleteExpense(id) { if (!confirm('O\'chirishni xohlaysizmi?')) return; try { await DB.remove('expenses', id); toast('Muvaffaqiyat', 'O\'chirildi'); renderExpenses(); renderDashboard(); } catch (err) { toast('Xatolik', err.message, 'error'); } }
 
-/* ==================== SALARIES (OY TANLASH BILAN) ==================== */
-function renderSalaries() {
-    // Oy tanlash maydonini to'ldirish
-    const monthPicker = document.getElementById('salaryMonthPicker');
-    if (monthPicker && !monthPicker.value) {
-        monthPicker.value = _selectedSalaryMonth;
-    }
-    const selectedMonth = monthPicker ? monthPicker.value : _selectedSalaryMonth;
-    _selectedSalaryMonth = selectedMonth;
-    
-    const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
-    
-    let totalFixed = 0, totalPercentage = 0, totalPerLesson = 0;
-    teachers.forEach(t => {
-        const sal = calculateTeacherSalary(t.id, selectedMonth);
-        if (t.salary_type === 'fixed') totalFixed += sal.total;
-        else if (t.salary_type === 'percentage') totalPercentage += sal.total;
-        else totalPerLesson += sal.total;
-    });
-    const grandTotal = totalFixed + totalPercentage + totalPerLesson;
-    
-    const isCurrentMonth = selectedMonth === new Date().toISOString().slice(0, 7);
-    const monthBadge = isCurrentMonth ? 'Joriy oy' : 'O\'tgan oy';
-    
-    document.getElementById('salaryStats').innerHTML = `
-        <div class="stat-card"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">${formatMonth(selectedMonth)} — Jami</div><div class="stat-value counter" data-target="${grandTotal}">0</div><div class="stat-change ${isCurrentMonth ? 'up' : 'down'}">${monthBadge} • ${teachers.length} o'qituvchi</div></div>
-        <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-lock"/></svg></div><div class="stat-label">Belgilangan</div><div class="stat-value counter" data-target="${totalFixed}">0</div></div>
-        <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-percent"/></svg></div><div class="stat-label">Foizli ulush</div><div class="stat-value counter" data-target="${totalPercentage}">0</div></div>
-        <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-calendar"/></svg></div><div class="stat-label">Dars uchun</div><div class="stat-value counter" data-target="${totalPerLesson}">0</div></div>
-    `;
-    document.querySelectorAll('#salaryStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
-    
-    const tbody = document.getElementById('salariesTable');
-    if (!teachers.length) {
-        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-percent"/></svg></div><h3>Faol o\'qituvchilar yo\'q</h3></div></td></tr>';
-        return;
-    }
-    tbody.innerHTML = teachers.map(t => {
-        const sal = calculateTeacherSalary(t.id, selectedMonth);
-        const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
-        const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
-        let salaryTypeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? `Foizli (${t.salary_percentage}%)` : 'Dars uchun';
-        const typeCls = t.salary_type === 'percentage' ? 'badge-purple' : t.salary_type === 'per_lesson' ? 'badge-warning' : 'badge-info';
-        return `<tr>
-            <td><div style="display:flex; align-items:center; gap:10px;">${getPhotoHTML(t.photo, t.full_name, 38)}<div><strong>${t.full_name}</strong><br><small style="color:var(--gray);">${t.phone || ''}</small></div></div></td>
-            <td><span class="badge badge-info">${getSubjectName(t.subject_id)}</span></td>
-            <td><span class="badge ${typeCls}">${salaryTypeLabel}</span></td>
-            <td>${groups.length} ta</td>
-            <td>${students.length} ta</td>
-            <td><strong style="color:var(--primary-dark); font-size:15px;">${formatMoney(sal.total)}</strong></td>
-            <td>
-                <button class="btn btn-sm btn-primary btn-icon" onclick="viewTeacherSalary(${t.id}, '${selectedMonth}')" title="Tafsilot"><svg><use href="#i-eye"/></svg></button>
-            </td>
-        </tr>`;
-    }).join('');
-}
-
-function onSalaryMonthChange(month) {
-    _selectedSalaryMonth = month;
-    renderSalaries();
-}
-
-function exportSalaries() {
-    const selectedMonth = _selectedSalaryMonth;
-    const teachers = DB.get('teachers').filter(t => t.status === 'Faol');
-    let csv = `O'qituvchi,Fan,Maosh turi,Foiz,Guruhlar,O'quvchilar,${formatMonth(selectedMonth)} maosh\n`;
-    teachers.forEach(t => {
-        const sal = calculateTeacherSalary(t.id, selectedMonth);
-        const groups = DB.get('groups').filter(g => g.teacher_id === t.id);
-        const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
-        const typeLabel = t.salary_type === 'fixed' ? 'Belgilangan' : t.salary_type === 'percentage' ? 'Foizli' : 'Dars uchun';
-        csv += `"${t.full_name}","${getSubjectName(t.subject_id)}","${typeLabel}","${t.salary_percentage || 0}%",${groups.length},${students.length},${Math.round(sal.total)}\n`;
-    });
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `maoshlar_${selectedMonth}.csv`;
-    link.click();
-    toast('Muvaffaqiyat', `${formatMonth(selectedMonth)} maoshlari yuklab olindi`);
-}
-
 /* ==================== SCHEDULE ==================== */
 function renderSchedule() {
     const schedules = DB.get('schedules');
@@ -2796,9 +2985,12 @@ function renderReports() {
     const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const thisMonth = new Date().toISOString().slice(0, 7);
     let totalTeacherSalaries = 0;
+    let totalSalaryDebt = 0;
     teachers.filter(t => t.status === 'Faol').forEach(t => {
         const sal = calculateTeacherSalary(t.id, thisMonth);
         totalTeacherSalaries += sal.total;
+        const st = getTeacherSalaryPaymentStatus(t.id, thisMonth);
+        totalSalaryDebt += st.debt;
     });
     const netProfit = totalRec - totalExpenses - totalTeacherSalaries;
     document.getElementById('reportStats').innerHTML = `
@@ -2807,6 +2999,7 @@ function renderReports() {
         <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Qarz</div><div class="stat-value counter" data-target="${Math.max(0, totalDebt)}">0</div></div>
         <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Xarajat</div><div class="stat-value counter" data-target="${totalExpenses}">0</div></div>
         <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-percent"/></svg></div><div class="stat-label">Maoshlar (bu oy)</div><div class="stat-value counter" data-target="${totalTeacherSalaries}">0</div></div>
+        <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Maosh qarzi</div><div class="stat-value counter" data-target="${totalSalaryDebt}">0</div></div>
         <div class="stat-card ${netProfit >= 0 ? '' : 'red'}"><div class="stat-icon"><svg><use href="#i-award"/></svg></div><div class="stat-label">Sof foyda</div><div class="stat-value counter" data-target="${netProfit}">0</div></div>
     `;
     document.querySelectorAll('#reportStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
@@ -2876,9 +3069,7 @@ async function markAllRead() {
         renderNotifications();
         toast('Muvaffaqiyat', 'Barcha o\'qilgan');
     } catch (err) { toast('Xatolik', err.message, 'error'); }
-}
-
-/* ==================== TEACHER PANEL ==================== */
+}/* ==================== TEACHER PANEL ==================== */
 function setupTeacherPanel() {
     document.getElementById('sidebarNav').innerHTML = `
         <div class="nav-section">
@@ -2969,7 +3160,6 @@ function getTeacherGroups() {
     return DB.get('groups').filter(g => g.teacher_id === currentUser.teacher_id);
 }
 
-/* O'qituvchi o'z maoshini oy tanlash bilan ko'radi */
 function renderTeacherSalary() {
     const teacherId = currentUser.teacher_id;
     const teacher = DB.get('teachers').find(t => t.id === teacherId);
@@ -2982,6 +3172,8 @@ function renderTeacherSalary() {
     const salary = calculateTeacherSalary(teacherId, selectedMonth);
     const groups = DB.get('groups').filter(g => g.teacher_id === teacherId);
     const students = DB.get('students').filter(s => groups.some(g => g.id === s.group_id));
+    const st = getTeacherSalaryPaymentStatus(teacherId, selectedMonth);
+    const statusInfo = formatSalaryStatus(st.status);
     
     let salaryTypeText = teacher.salary_type === 'percentage' 
         ? `Foizli: ${teacher.salary_percentage}%` 
@@ -3015,6 +3207,29 @@ function renderTeacherSalary() {
         }
     }
     
+    const salaryPayments = DB.get('salary_payments').filter(sp => sp.teacher_id === teacherId).sort((a, b) => (b.month || '').localeCompare(a.month || ''));
+    let paymentsHistoryHTML = '';
+    if (salaryPayments.length) {
+        paymentsHistoryHTML = `
+            <div class="card" style="margin-top:20px;">
+                <div class="card-header"><h3><svg class="icon"><use href="#i-credit-card"/></svg> Oylik to'lovlar tarixi</h3></div>
+                <div class="table-responsive"><table>
+                    <thead><tr><th>Oy</th><th>Hisoblangan</th><th>To'langan</th><th>Holat</th><th>Sana</th></tr></thead>
+                    <tbody>${salaryPayments.map(sp => {
+                        const cls = sp.status === 'To\'langan' ? 'badge-success' : 'badge-warning';
+                        return `<tr>
+                            <td><strong>${formatMonth(sp.month)}</strong></td>
+                            <td>${formatMoney(sp.expected_amount)}</td>
+                            <td><strong style="color:var(--primary-dark);">${formatMoney(sp.paid_amount)}</strong></td>
+                            <td><span class="badge ${cls}">${sp.status}</span></td>
+                            <td>${sp.payment_date || '-'}</td>
+                        </tr>`;
+                    }).join('')}</tbody>
+                </table></div>
+            </div>
+        `;
+    }
+    
     const isCurrentMonth = selectedMonth === new Date().toISOString().slice(0, 7);
     
     document.getElementById('teacherSalaryContent').innerHTML = `
@@ -3033,8 +3248,14 @@ function renderTeacherSalary() {
                 <div class="hero-stat"><span class="num">${groups.length}</span><span class="lbl">Guruhlar</span></div>
                 <div class="hero-stat"><span class="num">${students.length}</span><span class="lbl">O'quvchilar</span></div>
             </div>
+            <div style="margin-top: 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; position: relative;">
+                <span class="badge ${statusInfo.cls}" style="font-size: 11px;">${statusInfo.label}</span>
+                ${st.paid > 0 ? `<span style="font-size: 12px; opacity: 0.9;">To'langan: ${formatMoney(st.paid)}</span>` : ''}
+                ${st.debt > 0 ? `<span style="font-size: 12px; color: #fca5a5; font-weight: 700;">Qarz: ${formatMoney(st.debt)}</span>` : ''}
+            </div>
         </div>
         ${detailsHTML}
+        ${paymentsHistoryHTML}
     `;
 }
 
@@ -3218,7 +3439,7 @@ window.addEventListener('online', () => document.getElementById('offlineIndicato
 window.addEventListener('offline', () => document.getElementById('offlineIndicator').classList.add('show'));
 
 console.log('%c🌿 Bloom Education', 'color: #10b981; font-size: 20px; font-weight: bold;');
-console.log('%c✅ Oy tanlash funksiyasi qo\'shildi', 'color: #059669; font-size: 13px;');
+console.log('%c✅ Oylik berish funksiyasi qo\'shildi', 'color: #059669; font-size: 13px;');
 </script>
 
 </body>
