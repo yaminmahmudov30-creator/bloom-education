@@ -21,79 +21,82 @@
 :root {
     --primary: #10b981; --primary-dark: #059669; --primary-deep: #047857;
     --primary-light: #d1fae5; --primary-50: #ecfdf5; --primary-glow: rgba(16,185,129,0.35);
+    --primary-soft: #a7f3d0; --primary-mist: #f0fdf4;
     --secondary: #065f46; --danger: #ef4444; --danger-light: #fee2e2;
     --warning: #f59e0b; --warning-light: #fef3c7;
     --info: #3b82f6; --info-light: #dbeafe;
     --purple: #8b5cf6; --purple-light: #ede9fe;
     --dark: #0f172a; --dark-2: #1e293b; --gray: #64748b; --gray-2: #94a3b8;
     --light: #f8fafc; --border: #e2e8f0; --white: #ffffff;
-    --shadow-sm: 0 1px 2px rgba(15,23,42,0.06);
-    --shadow: 0 4px 12px -2px rgba(15,23,42,0.08), 0 2px 6px -1px rgba(15,23,42,0.04);
-    --shadow-md: 0 10px 24px -4px rgba(15,23,42,0.12);
-    --shadow-lg: 0 24px 48px -12px rgba(15,23,42,0.18);
+    --shadow-sm: 0 1px 3px rgba(16,185,129,0.06);
+    --shadow: 0 4px 14px -2px rgba(16,185,129,0.10), 0 2px 6px -1px rgba(16,185,129,0.06);
+    --shadow-md: 0 10px 28px -4px rgba(16,185,129,0.15);
+    --shadow-lg: 0 24px 48px -12px rgba(16,185,129,0.22);
     --shadow-glow: 0 8px 32px rgba(16,185,129,0.28);
-    --radius: 14px; --radius-lg: 20px;
+    --radius: 16px; --radius-lg: 22px;
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--light); color: var(--dark); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(180deg, #f0fdf4 0%, #f8fafc 100%); color: var(--dark); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: var(--primary-soft); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 .icon { width: 20px; height: 20px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; display: inline-block; vertical-align: middle; flex-shrink: 0; }
 .icon-sm { width: 16px; height: 16px; }
 .icon-lg { width: 24px; height: 24px; }
 .bg-decoration { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-.bg-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: floatBlob 20s ease-in-out infinite; }
-.bg-blob.b1 { width: 500px; height: 500px; background: var(--primary-light); top: -200px; left: -100px; }
-.bg-blob.b2 { width: 400px; height: 400px; background: #dbeafe; bottom: -150px; right: -100px; animation-delay: -7s; }
-.bg-blob.b3 { width: 350px; height: 350px; background: #ede9fe; top: 40%; left: 40%; animation-delay: -14s; }
+.bg-blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.55; animation: floatBlob 20s ease-in-out infinite; }
+.bg-blob.b1 { width: 500px; height: 500px; background: #a7f3d0; top: -200px; left: -100px; }
+.bg-blob.b2 { width: 400px; height: 400px; background: #d1fae5; bottom: -150px; right: -100px; animation-delay: -7s; }
+.bg-blob.b3 { width: 350px; height: 350px; background: #ecfdf5; top: 40%; left: 40%; animation-delay: -14s; }
 @keyframes floatBlob { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(40px, -30px) scale(1.1); } 66% { transform: translate(-30px, 30px) scale(0.95); } }
 
 /* LOGIN */
-.login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, #064e3b 0%, #047857 40%, #10b981 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+.login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, #047857 0%, #059669 40%, #10b981 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
 .login-screen.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
-.login-screen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 15% 25%, rgba(255,255,255,0.15) 0%, transparent 45%), radial-gradient(circle at 85% 75%, rgba(255,255,255,0.1) 0%, transparent 45%); animation: bgPulse 8s ease-in-out infinite; }
+.login-screen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 15% 25%, rgba(255,255,255,0.2) 0%, transparent 45%), radial-gradient(circle at 85% 75%, rgba(255,255,255,0.15) 0%, transparent 45%); animation: bgPulse 8s ease-in-out infinite; }
 @keyframes bgPulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
 .particles { position: absolute; inset: 0; overflow: hidden; }
-.particle { position: absolute; width: 6px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 50%; animation: floatUp linear infinite; }
+.particle { position: absolute; width: 6px; height: 6px; background: rgba(255,255,255,0.5); border-radius: 50%; animation: floatUp linear infinite; }
 @keyframes floatUp { from { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } to { transform: translateY(-100px) scale(1); opacity: 0; } }
-.login-box { background: rgba(255,255,255,0.98); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); padding: 48px 40px; border-radius: 24px; box-shadow: 0 32px 64px -16px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.2); width: 100%; max-width: 440px; position: relative; z-index: 1; animation: loginIn 0.7s var(--ease-bounce); }
+.login-box { background: rgba(255,255,255,0.98); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); padding: 48px 40px; border-radius: 28px; box-shadow: 0 32px 64px -16px rgba(4,120,87,0.5), 0 0 0 1px rgba(255,255,255,0.3); width: 100%; max-width: 440px; position: relative; z-index: 1; animation: loginIn 0.7s var(--ease-bounce); }
 @keyframes loginIn { 0% { opacity: 0; transform: translateY(40px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 .login-logo { text-align: center; margin-bottom: 32px; }
-.login-logo-icon { width: 84px; height: 84px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 24px; display: inline-flex; align-items: center; justify-content: center; color: white; margin-bottom: 18px; box-shadow: 0 12px 32px var(--primary-glow), inset 0 0 0 1px rgba(255,255,255,0.2); animation: logoPulse 3s ease-in-out infinite; }
+.login-logo-icon { width: 90px; height: 90px; background: linear-gradient(135deg, #10b981 0%, #047857 100%); border-radius: 26px; display: inline-flex; align-items: center; justify-content: center; color: white; margin-bottom: 20px; box-shadow: 0 16px 40px rgba(16,185,129,0.45), inset 0 0 0 1px rgba(255,255,255,0.25); animation: logoPulse 3s ease-in-out infinite; }
 @keyframes logoPulse { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.05) rotate(-3deg); } }
-.login-logo-icon svg { width: 46px; height: 46px; stroke: white; stroke-width: 1.8; fill: none; }
-.login-logo h1 { font-size: 30px; font-weight: 900; color: var(--dark); letter-spacing: -1px; }
+.login-logo-icon svg { width: 50px; height: 50px; stroke: white; stroke-width: 1.8; fill: none; }
+.login-logo h1 { font-size: 32px; font-weight: 900; color: var(--dark); letter-spacing: -1px; }
 .login-logo h1 span { background: linear-gradient(135deg, var(--primary), var(--primary-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
-.login-logo p { color: var(--gray); font-size: 14px; margin-top: 6px; font-weight: 500; }
+.login-logo p { color: var(--gray); font-size: 14px; margin-top: 8px; font-weight: 500; }
 .form-group { margin-bottom: 18px; position: relative; }
 .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--dark-2); margin-bottom: 8px; transition: color 0.2s; }
 .form-group:focus-within label { color: var(--primary-dark); }
 .input-wrap { position: relative; }
 .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gray-2); transition: color 0.2s; pointer-events: none; width: 20px; height: 20px; }
 .form-group:focus-within .input-icon { color: var(--primary); }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 13px 16px 13px 44px; border: 2px solid var(--border); border-radius: 12px; font-size: 14px; font-family: inherit; font-weight: 500; transition: all 0.25s var(--ease); background: var(--white); color: var(--dark); outline: none; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 13px 16px 13px 44px; border: 2px solid var(--border); border-radius: 14px; font-size: 14px; font-family: inherit; font-weight: 500; transition: all 0.25s var(--ease); background: var(--white); color: var(--dark); outline: none; }
 .form-group input:not(.with-icon), .form-group select:not(.with-icon), .form-group textarea:not(.with-icon) { padding-left: 16px; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); transform: translateY(-1px); }
 .form-group input::placeholder { color: var(--gray-2); font-weight: 400; }
-.pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-2); padding: 6px; border-radius: 6px; display: flex; align-items: center; transition: all 0.2s; }
+.pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-2); padding: 6px; border-radius: 8px; display: flex; align-items: center; transition: all 0.2s; }
 .pw-toggle:hover { color: var(--primary); background: var(--primary-50); }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.25s var(--ease); text-decoration: none; white-space: nowrap; }
-.btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; width: 100%; padding: 15px; font-size: 15px; box-shadow: 0 8px 20px var(--primary-glow); letter-spacing: 0.2px; }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px var(--primary-glow); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px; border: none; border-radius: 14px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.25s var(--ease); text-decoration: none; white-space: nowrap; }
+.btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; width: 100%; padding: 15px; font-size: 15px; box-shadow: 0 10px 24px var(--primary-glow); letter-spacing: 0.2px; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px var(--primary-glow); }
 .btn-primary:active { transform: translateY(0); }
 .btn-secondary { background: var(--white); color: var(--dark-2); border: 2px solid var(--border); }
 .btn-secondary:hover { background: var(--primary-50); border-color: var(--primary); color: var(--primary-dark); transform: translateY(-1px); }
-.btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
-.btn-danger:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
-.btn-warning { background: linear-gradient(135deg, var(--warning), #d97706); color: white; box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+.btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; box-shadow: 0 4px 14px rgba(239,68,68,0.3); }
+.btn-danger:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(239,68,68,0.4); }
+.btn-warning { background: linear-gradient(135deg, var(--warning), #d97706); color: white; box-shadow: 0 4px 14px rgba(245,158,11,0.3); }
 .btn-warning:hover { transform: translateY(-1px); }
+.btn-success { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 4px 14px var(--primary-glow); }
+.btn-success:hover { transform: translateY(-1px); }
 .btn-sm { padding: 9px 16px; font-size: 13px; }
-.btn-icon { width: 38px; height: 38px; padding: 0; border-radius: 10px; }
+.btn-icon { width: 38px; height: 38px; padding: 0; border-radius: 12px; }
 .btn-icon svg { width: 17px; height: 17px; }
 .loader { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -102,59 +105,59 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .app { display: none; min-height: 100vh; position: relative; z-index: 1; }
 .app.active { display: flex; animation: appIn 0.5s var(--ease); }
 @keyframes appIn { from { opacity: 0; } to { opacity: 1; } }
-.sidebar { width: 268px; background: linear-gradient(180deg, #ffffff 0%, #fafcfb 100%); border-right: 1px solid var(--border); height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; transition: transform 0.35s var(--ease); z-index: 1000; box-shadow: 2px 0 20px rgba(15,23,42,0.03); }
-.sidebar-header { padding: 22px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; position: relative; }
-.sidebar-header::after { content: ''; position: absolute; bottom: -1px; left: 20px; right: 20px; height: 1px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.4; }
-.sidebar-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 13px; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 6px 16px var(--primary-glow); transition: transform 0.3s var(--ease-bounce); }
+.sidebar { width: 272px; background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%); border-right: 1px solid var(--primary-soft); height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; transition: transform 0.35s var(--ease); z-index: 1000; box-shadow: 4px 0 24px rgba(16,185,129,0.06); }
+.sidebar-header { padding: 22px 20px; border-bottom: 1px solid var(--primary-soft); display: flex; align-items: center; gap: 12px; position: relative; }
+.sidebar-header::after { content: ''; position: absolute; bottom: -1px; left: 20px; right: 20px; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.5; }
+.sidebar-logo { width: 46px; height: 46px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 8px 20px var(--primary-glow); transition: transform 0.3s var(--ease-bounce); }
 .sidebar-logo:hover { transform: rotate(-8deg) scale(1.08); }
-.sidebar-logo svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 1.8; }
-.sidebar-title h2 { font-size: 16.5px; font-weight: 800; color: var(--dark); letter-spacing: -0.4px; }
+.sidebar-logo svg { width: 26px; height: 26px; stroke: white; fill: none; stroke-width: 1.8; }
+.sidebar-title h2 { font-size: 17px; font-weight: 800; color: var(--dark); letter-spacing: -0.4px; }
 .sidebar-title h2 span { background: linear-gradient(135deg, var(--primary), var(--primary-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
-.sidebar-title p { font-size: 11px; color: var(--gray-2); font-weight: 600; letter-spacing: 0.3px; }
+.sidebar-title p { font-size: 11px; color: var(--primary-dark); font-weight: 700; letter-spacing: 0.5px; }
 .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
 .nav-section { margin-bottom: 20px; }
-.nav-section-title { font-size: 10px; font-weight: 800; color: var(--gray-2); text-transform: uppercase; letter-spacing: 1.2px; padding: 0 12px 10px; display: flex; align-items: center; gap: 8px; }
-.nav-section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
-.nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 11px; color: var(--gray); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s var(--ease); margin-bottom: 3px; position: relative; overflow: hidden; user-select: none; }
-.nav-item::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%) scaleY(0); width: 3px; height: 60%; background: var(--primary); border-radius: 0 4px 4px 0; transition: transform 0.25s var(--ease); }
+.nav-section-title { font-size: 10px; font-weight: 800; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 1.2px; padding: 0 12px 10px; display: flex; align-items: center; gap: 8px; }
+.nav-section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--primary-soft), transparent); }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; color: var(--gray); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s var(--ease); margin-bottom: 4px; position: relative; overflow: hidden; user-select: none; }
+.nav-item::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%) scaleY(0); width: 4px; height: 60%; background: var(--primary); border-radius: 0 4px 4px 0; transition: transform 0.25s var(--ease); }
 .nav-item:hover { background: var(--primary-50); color: var(--primary-dark); transform: translateX(3px); }
 .nav-item:hover::before { transform: translateY(-50%) scaleY(1); }
-.nav-item.active { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; box-shadow: 0 8px 20px var(--primary-glow); transform: translateX(0); }
+.nav-item.active { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; box-shadow: 0 10px 24px var(--primary-glow); transform: translateX(0); }
 .nav-item.active::before { display: none; }
 .nav-item .icon { width: 20px; height: 20px; transition: transform 0.3s var(--ease-bounce); }
 .nav-item:hover .icon { transform: scale(1.15) rotate(-5deg); }
 .nav-item .badge { margin-left: auto; background: var(--danger); color: white; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 10px; min-width: 22px; text-align: center; animation: badgePulse 2s ease-in-out infinite; }
 @keyframes badgePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); } 50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); } }
 .nav-item.active .badge { background: rgba(255,255,255,0.3); animation: none; }
-.sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
-.user-card { display: flex; align-items: center; gap: 10px; padding: 10px; background: linear-gradient(135deg, var(--primary-50), white); border-radius: 12px; border: 1px solid var(--primary-light); transition: all 0.25s var(--ease); }
+.sidebar-footer { padding: 16px; border-top: 1px solid var(--primary-soft); }
+.user-card { display: flex; align-items: center; gap: 10px; padding: 12px; background: linear-gradient(135deg, var(--primary-50), white); border-radius: 14px; border: 1px solid var(--primary-light); transition: all 0.25s var(--ease); }
 .user-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
-.user-avatar { width: 40px; height: 40px; border-radius: 11px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; flex-shrink: 0; box-shadow: 0 4px 12px var(--primary-glow); overflow: hidden; }
+.user-avatar { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; flex-shrink: 0; box-shadow: 0 6px 14px var(--primary-glow); overflow: hidden; }
 .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .user-info { flex: 1; min-width: 0; }
 .user-info h4 { font-size: 13px; font-weight: 700; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.user-info p { font-size: 11px; color: var(--gray); font-weight: 500; }
+.user-info p { font-size: 11px; color: var(--primary-dark); font-weight: 600; }
 .user-actions { display: flex; gap: 4px; }
 .account-btn { width: 30px; height: 30px; border: none; background: transparent; color: var(--gray); cursor: pointer; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: all 0.2s var(--ease); }
 .account-btn:hover { background: var(--primary); color: white; transform: scale(1.05); }
 .account-btn svg { width: 15px; height: 15px; }
-.logout-btn { width: 34px; height: 34px; border: none; background: transparent; color: var(--gray); cursor: pointer; border-radius: 9px; display: flex; align-items: center; justify-content: center; transition: all 0.2s var(--ease); }
+.logout-btn { width: 34px; height: 34px; border: none; background: transparent; color: var(--gray); cursor: pointer; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s var(--ease); }
 .logout-btn:hover { background: var(--danger); color: white; transform: rotate(90deg); }
 .logout-btn svg { width: 17px; height: 17px; }
-.main { flex: 1; margin-left: 268px; min-height: 100vh; display: flex; flex-direction: column; }
-.topbar { background: rgba(255,255,255,0.85); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; gap: 20px; position: sticky; top: 0; z-index: 100; }
-.menu-toggle { display: none; background: none; border: none; color: var(--dark); cursor: pointer; padding: 8px; border-radius: 9px; transition: all 0.2s; }
-.menu-toggle:hover { background: var(--light); }
+.main { flex: 1; margin-left: 272px; min-height: 100vh; display: flex; flex-direction: column; }
+.topbar { background: rgba(255,255,255,0.9); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-bottom: 1px solid var(--primary-soft); padding: 14px 28px; display: flex; align-items: center; gap: 20px; position: sticky; top: 0; z-index: 100; }
+.menu-toggle { display: none; background: none; border: none; color: var(--dark); cursor: pointer; padding: 8px; border-radius: 10px; transition: all 0.2s; }
+.menu-toggle:hover { background: var(--primary-50); }
 .menu-toggle svg { width: 22px; height: 22px; }
 .topbar-title h1 { font-size: 20px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; transition: opacity 0.3s; }
-.topbar-title p { font-size: 12px; color: var(--gray); margin-top: 2px; font-weight: 500; }
+.topbar-title p { font-size: 12px; color: var(--primary-dark); margin-top: 2px; font-weight: 600; }
 .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 .search-box { position: relative; }
-.search-box input { padding: 10px 16px 10px 42px; border: 2px solid var(--border); border-radius: 11px; font-size: 13px; font-family: inherit; width: 280px; outline: none; transition: all 0.25s var(--ease); background: rgba(248,250,252,0.8); font-weight: 500; }
+.search-box input { padding: 10px 16px 10px 42px; border: 2px solid var(--primary-soft); border-radius: 12px; font-size: 13px; font-family: inherit; width: 280px; outline: none; transition: all 0.25s var(--ease); background: var(--primary-mist); font-weight: 500; }
 .search-box input:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 4px var(--primary-light); width: 320px; }
-.search-box .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gray-2); width: 17px; height: 17px; pointer-events: none; }
-.icon-btn { width: 42px; height: 42px; border: none; background: var(--light); border-radius: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--gray); position: relative; transition: all 0.25s var(--ease); }
-.icon-btn:hover { background: var(--primary-50); color: var(--primary); transform: translateY(-2px); }
+.search-box .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--primary); width: 17px; height: 17px; pointer-events: none; }
+.icon-btn { width: 44px; height: 44px; border: none; background: var(--primary-mist); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--primary-dark); position: relative; transition: all 0.25s var(--ease); }
+.icon-btn:hover { background: var(--primary-light); color: var(--primary-deep); transform: translateY(-2px); box-shadow: 0 6px 16px var(--primary-glow); }
 .icon-btn svg { width: 19px; height: 19px; }
 .icon-btn .dot { position: absolute; top: 9px; right: 9px; width: 9px; height: 9px; background: var(--danger); border-radius: 50%; border: 2px solid var(--white); animation: dotPulse 1.5s ease-in-out infinite; }
 @keyframes dotPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239,68,68,0.7); } 50% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(239,68,68,0); } }
@@ -162,17 +165,17 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .page { display: none; }
 .page.active { display: block; animation: pageIn 0.5s var(--ease); }
 @keyframes pageIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-.card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; transition: all 0.3s var(--ease); }
-.card:hover { box-shadow: var(--shadow); }
-.card-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: linear-gradient(180deg, white, #fafcfb); }
+.card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--primary-soft); box-shadow: var(--shadow-sm); overflow: hidden; transition: all 0.3s var(--ease); }
+.card:hover { box-shadow: var(--shadow); border-color: var(--primary-light); }
+.card-header { padding: 18px 22px; border-bottom: 1px solid var(--primary-soft); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: linear-gradient(180deg, white, var(--primary-mist)); }
 .card-header h3 { font-size: 15px; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 9px; letter-spacing: -0.2px; }
 .card-header h3 .icon { color: var(--primary); }
 .card-body { padding: 22px; }
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 24px; }
-.stat-card { background: var(--white); border-radius: var(--radius); padding: 22px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; transition: all 0.35s var(--ease); }
-.stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--primary), var(--primary-deep)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease); }
+.stat-card { background: var(--white); border-radius: var(--radius); padding: 22px; border: 1px solid var(--primary-soft); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; transition: all 0.35s var(--ease); }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary), var(--primary-deep)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease); }
 .stat-card:hover::before { transform: scaleX(1); }
-.stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--primary-light); }
+.stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--primary); }
 .stat-card.blue::before { background: linear-gradient(90deg, var(--info), #2563eb); }
 .stat-card.blue .stat-icon { background: var(--info-light); color: #1e40af; }
 .stat-card.orange::before { background: linear-gradient(90deg, var(--warning), #d97706); }
@@ -181,8 +184,8 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .stat-card.red .stat-icon { background: var(--danger-light); color: #b91c1c; }
 .stat-card.purple::before { background: linear-gradient(90deg, var(--purple), #7c3aed); }
 .stat-card.purple .stat-icon { background: var(--purple-light); color: #6d28d9; }
-.stat-icon { width: 48px; height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; background: var(--primary-light); color: var(--primary-dark); transition: all 0.3s var(--ease-bounce); }
-.stat-icon svg { width: 24px; height: 24px; }
+.stat-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; background: var(--primary-light); color: var(--primary-dark); transition: all 0.3s var(--ease-bounce); }
+.stat-icon svg { width: 25px; height: 25px; }
 .stat-card:hover .stat-icon { transform: scale(1.15) rotate(-8deg); }
 .stat-label { font-size: 11.5px; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
 .stat-value { font-size: 26px; font-weight: 800; color: var(--dark); letter-spacing: -0.8px; line-height: 1.1; }
@@ -192,14 +195,14 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .stat-change svg { width: 13px; height: 13px; }
 .counter { display: inline-block; }
 .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 24px; }
-.quick-action { display: flex; align-items: center; gap: 13px; padding: 16px 18px; background: var(--white); border: 2px solid var(--border); border-radius: 14px; cursor: pointer; transition: all 0.3s var(--ease); color: var(--dark); font-weight: 600; font-size: 13.5px; }
-.quick-action:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 12px 24px -8px var(--primary-glow); }
-.qa-icon { width: 42px; height: 42px; border-radius: 11px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 6px 14px var(--primary-glow); transition: transform 0.3s var(--ease-bounce); }
-.qa-icon svg { width: 20px; height: 20px; }
+.quick-action { display: flex; align-items: center; gap: 13px; padding: 16px 18px; background: var(--white); border: 2px solid var(--primary-soft); border-radius: 16px; cursor: pointer; transition: all 0.3s var(--ease); color: var(--dark); font-weight: 600; font-size: 13.5px; }
+.quick-action:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 14px 28px -8px var(--primary-glow); background: var(--primary-mist); }
+.qa-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 8px 18px var(--primary-glow); transition: transform 0.3s var(--ease-bounce); }
+.qa-icon svg { width: 21px; height: 21px; }
 .quick-action:hover .qa-icon { transform: scale(1.12) rotate(-8deg); }
 .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px; margin-bottom: 24px; }
 .chart-container { height: 290px; position: relative; }
-.financial-box { background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%); color: white; padding: 28px; border-radius: var(--radius-lg); margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 20px 40px -12px rgba(16,185,129,0.35); }
+.financial-box { background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%); color: white; padding: 28px; border-radius: var(--radius-lg); margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 24px 48px -12px rgba(16,185,129,0.4); }
 .financial-box h3 { font-size: 14px; font-weight: 700; opacity: 0.95; margin-bottom: 20px; position: relative; display: flex; align-items: center; gap: 8px; }
 .financial-box h3 svg { width: 18px; height: 18px; }
 .financial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; position: relative; z-index: 1; }
@@ -207,9 +210,9 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .financial-item .value { font-size: 24px; font-weight: 800; margin-top: 8px; letter-spacing: -0.8px; }
 .financial-item.total .value { font-size: 30px; color: #fef3c7; text-shadow: 0 2px 10px rgba(254,243,199,0.4); }
 .schedule-list { display: flex; flex-direction: column; gap: 10px; }
-.schedule-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--light); border-radius: 12px; border-left: 4px solid var(--primary); transition: all 0.3s var(--ease); cursor: pointer; }
+.schedule-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--primary-mist); border-radius: 14px; border-left: 4px solid var(--primary); transition: all 0.3s var(--ease); cursor: pointer; }
 .schedule-item:hover { background: var(--primary-50); transform: translateX(6px); box-shadow: var(--shadow-sm); }
-.schedule-time { display: flex; flex-direction: column; align-items: center; min-width: 74px; padding: 8px 12px; background: var(--white); border-radius: 10px; font-weight: 800; font-size: 13.5px; color: var(--primary-dark); box-shadow: var(--shadow-sm); }
+.schedule-time { display: flex; flex-direction: column; align-items: center; min-width: 74px; padding: 8px 12px; background: var(--white); border-radius: 12px; font-weight: 800; font-size: 13.5px; color: var(--primary-dark); box-shadow: var(--shadow-sm); }
 .schedule-time small { font-size: 10px; color: var(--gray); font-weight: 600; margin-top: 2px; }
 .schedule-info { flex: 1; min-width: 0; }
 .schedule-info h4 { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
@@ -217,11 +220,11 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .schedule-info p svg { width: 13px; height: 13px; }
 .table-responsive { overflow-x: auto; border-radius: var(--radius); }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
-thead { background: linear-gradient(180deg, var(--light), #f1f5f9); }
-th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 800; color: var(--gray); text-transform: uppercase; letter-spacing: 0.7px; white-space: nowrap; border-bottom: 1px solid var(--border); }
-td { padding: 15px 16px; border-bottom: 1px solid var(--border); color: var(--dark); white-space: nowrap; font-weight: 500; }
+thead { background: linear-gradient(180deg, var(--primary-mist), var(--primary-50)); }
+th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 800; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.7px; white-space: nowrap; border-bottom: 1px solid var(--primary-soft); }
+td { padding: 15px 16px; border-bottom: 1px solid var(--primary-soft); color: var(--dark); white-space: nowrap; font-weight: 500; }
 tbody tr { transition: all 0.2s var(--ease); }
-tbody tr:hover { background: var(--primary-50); }
+tbody tr:hover { background: var(--primary-mist); }
 tbody tr:last-child td { border-bottom: none; }
 .badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .badge-success { background: var(--primary-light); color: var(--primary-deep); }
@@ -230,26 +233,26 @@ tbody tr:last-child td { border-bottom: none; }
 .badge-info { background: var(--info-light); color: #1e40af; }
 .badge-gray { background: #f1f5f9; color: #334155; }
 .badge-purple { background: var(--purple-light); color: #6d28d9; }
-.toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; padding: 16px 18px; background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-.toolbar input, .toolbar select { padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 13px; font-family: inherit; font-weight: 500; outline: none; transition: all 0.25s var(--ease); background: var(--light); }
+.toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; padding: 16px 18px; background: var(--white); border-radius: var(--radius); border: 1px solid var(--primary-soft); box-shadow: var(--shadow-sm); }
+.toolbar input, .toolbar select { padding: 10px 14px; border: 2px solid var(--primary-soft); border-radius: 12px; font-size: 13px; font-family: inherit; font-weight: 500; outline: none; transition: all 0.25s var(--ease); background: var(--primary-mist); }
 .toolbar input:focus, .toolbar select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); background: var(--white); }
 .toolbar input { min-width: 240px; }
 .toolbar .spacer { flex: 1; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; opacity: 0; transition: opacity 0.3s var(--ease); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(4,120,87,0.4); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; opacity: 0; transition: opacity 0.3s var(--ease); }
 .modal-overlay.active { display: flex; opacity: 1; }
-.modal { background: var(--white); border-radius: 20px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; box-shadow: 0 32px 64px -12px rgba(0,0,0,0.4); transform: scale(0.9) translateY(20px); opacity: 0; transition: all 0.4s var(--ease-bounce); }
+.modal { background: var(--white); border-radius: 24px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; box-shadow: 0 32px 64px -12px rgba(4,120,87,0.4); transform: scale(0.9) translateY(20px); opacity: 0; transition: all 0.4s var(--ease-bounce); }
 .modal-overlay.active .modal { transform: scale(1) translateY(0); opacity: 1; }
-.modal-header { padding: 22px 26px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--white); z-index: 1; border-radius: 20px 20px 0 0; }
+.modal-header { padding: 22px 26px; border-bottom: 1px solid var(--primary-soft); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: linear-gradient(180deg, white, var(--primary-mist)); z-index: 1; border-radius: 24px 24px 0 0; }
 .modal-header h3 { font-size: 18px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; }
 .modal-header h3 svg { color: var(--primary); }
-.modal-close { width: 36px; height: 36px; border: none; background: var(--light); border-radius: 10px; cursor: pointer; color: var(--gray); display: flex; align-items: center; justify-content: center; transition: all 0.25s var(--ease); }
+.modal-close { width: 38px; height: 38px; border: none; background: var(--primary-mist); border-radius: 12px; cursor: pointer; color: var(--gray); display: flex; align-items: center; justify-content: center; transition: all 0.25s var(--ease); }
 .modal-close:hover { background: var(--danger); color: white; transform: rotate(90deg); }
 .modal-close svg { width: 18px; height: 18px; }
 .modal-body { padding: 26px; }
-.modal-footer { padding: 18px 26px; border-top: 1px solid var(--border); display: flex; gap: 12px; justify-content: flex-end; position: sticky; bottom: 0; background: var(--white); border-radius: 0 0 20px 20px; }
+.modal-footer { padding: 18px 26px; border-top: 1px solid var(--primary-soft); display: flex; gap: 12px; justify-content: flex-end; position: sticky; bottom: 0; background: var(--white); border-radius: 0 0 24px 24px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.photo-upload-section { display: flex; gap: 20px; align-items: flex-start; padding: 18px; background: linear-gradient(135deg, var(--primary-50), white); border: 2px dashed var(--primary-light); border-radius: 14px; margin-bottom: 22px; }
-.photo-preview-box { width: 110px; height: 145px; border-radius: 12px; overflow: hidden; background: white; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.photo-upload-section { display: flex; gap: 20px; align-items: flex-start; padding: 18px; background: linear-gradient(135deg, var(--primary-50), white); border: 2px dashed var(--primary-soft); border-radius: 16px; margin-bottom: 22px; }
+.photo-preview-box { width: 110px; height: 145px; border-radius: 14px; overflow: hidden; background: white; border: 2px solid var(--primary-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .photo-preview-box img { width: 100%; height: 100%; object-fit: cover; }
 .photo-preview-box .placeholder-icon { color: var(--gray-2); display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .photo-preview-box .placeholder-icon svg { width: 32px; height: 32px; stroke: var(--primary); opacity: 0.5; }
@@ -259,25 +262,25 @@ tbody tr:last-child td { border-bottom: none; }
 .photo-actions h4 svg { width: 18px; height: 18px; color: var(--primary); }
 .photo-actions p { font-size: 12px; color: var(--gray); line-height: 1.5; font-weight: 500; }
 .photo-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-.photo-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: all 0.25s var(--ease); border: 2px solid transparent; }
+.photo-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 12px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: all 0.25s var(--ease); border: 2px solid transparent; }
 .photo-btn svg { width: 15px; height: 15px; }
-.photo-btn.primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
+.photo-btn.primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 6px 16px var(--primary-glow); }
 .photo-btn.primary:hover { transform: translateY(-2px); }
 .photo-btn.danger { background: white; color: var(--danger); border-color: var(--danger-light); }
 .photo-btn.danger:hover { background: var(--danger); color: white; }
 #photoInput { display: none; }
 .notif-list { max-height: 500px; overflow-y: auto; }
-.notif-item { display: flex; gap: 14px; padding: 16px; border-radius: 12px; margin-bottom: 10px; background: var(--light); border-left: 4px solid var(--primary); transition: all 0.3s var(--ease); }
+.notif-item { display: flex; gap: 14px; padding: 16px; border-radius: 14px; margin-bottom: 10px; background: var(--primary-mist); border-left: 4px solid var(--primary); transition: all 0.3s var(--ease); }
 .notif-item.warning { border-left-color: var(--warning); }
 .notif-item.danger { border-left-color: var(--danger); }
 .notif-item.info { border-left-color: var(--info); }
-.notif-icon { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--primary-light); color: var(--primary-dark); }
-.notif-icon svg { width: 19px; height: 19px; }
+.notif-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--primary-light); color: var(--primary-dark); }
+.notif-icon svg { width: 20px; height: 20px; }
 .notif-content { flex: 1; }
 .notif-content h4 { font-size: 13.5px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
 .notif-content p { font-size: 12.5px; color: var(--gray); line-height: 1.5; font-weight: 500; }
 .notif-content time { font-size: 11px; color: var(--gray-2); margin-top: 5px; display: block; font-weight: 600; }
-.progress-bar { height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+.progress-bar { height: 8px; background: var(--primary-soft); border-radius: 10px; overflow: hidden; margin-top: 8px; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-dark)); border-radius: 10px; transition: width 1s var(--ease); }
 .progress-fill.warning { background: linear-gradient(90deg, var(--warning), #d97706); }
 .progress-fill.danger { background: linear-gradient(90deg, var(--danger), #b91c1c); }
@@ -287,7 +290,7 @@ tbody tr:last-child td { border-bottom: none; }
 .empty-state h3 { font-size: 17px; color: var(--dark); margin-bottom: 6px; font-weight: 700; }
 .empty-state p { font-size: 14px; }
 .toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
-.toast { background: var(--white); padding: 16px 20px; border-radius: 14px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 12px; min-width: 300px; border-left: 4px solid var(--primary); animation: toastIn 0.45s var(--ease-bounce); }
+.toast { background: var(--white); padding: 16px 20px; border-radius: 16px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 12px; min-width: 300px; border-left: 4px solid var(--primary); animation: toastIn 0.45s var(--ease-bounce); }
 @keyframes toastIn { from { opacity: 0; transform: translateX(120%) scale(0.8); } }
 @keyframes toastOut { to { opacity: 0; transform: translateX(120%) scale(0.8); } }
 .toast.removing { animation: toastOut 0.3s var(--ease) forwards; }
@@ -299,36 +302,36 @@ tbody tr:last-child td { border-bottom: none; }
 .toast.warning .toast-icon { background: var(--warning-light); color: #b45309; }
 .toast.info { border-left-color: var(--info); }
 .toast.info .toast-icon { background: var(--info-light); color: #1e40af; }
-.toast-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.toast-icon svg { width: 18px; height: 18px; }
+.toast-icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.toast-icon svg { width: 19px; height: 19px; }
 .toast-content { flex: 1; }
 .toast-content h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; color: var(--dark); }
 .toast-content p { font-size: 12px; color: var(--gray); font-weight: 500; }
-.profile-header { display: flex; gap: 22px; align-items: center; padding: 24px; background: linear-gradient(135deg, var(--primary-50), var(--white)); border-radius: var(--radius); margin-bottom: 20px; border: 1px solid var(--primary-light); }
-.profile-avatar { width: 88px; height: 88px; border-radius: 22px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 34px; font-weight: 800; flex-shrink: 0; box-shadow: 0 12px 28px var(--primary-glow); overflow: hidden; }
+.profile-header { display: flex; gap: 22px; align-items: center; padding: 24px; background: linear-gradient(135deg, var(--primary-50), var(--white)); border-radius: var(--radius); margin-bottom: 20px; border: 1px solid var(--primary-soft); }
+.profile-avatar { width: 88px; height: 88px; border-radius: 24px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 34px; font-weight: 800; flex-shrink: 0; box-shadow: 0 16px 32px var(--primary-glow); overflow: hidden; }
 .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .profile-info h2 { font-size: 23px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
 .profile-info p { font-size: 13px; color: var(--gray); margin-bottom: 10px; font-weight: 500; }
 .profile-meta { display: flex; gap: 8px; flex-wrap: wrap; }
 .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 18px; }
-.info-item { padding: 14px 16px; background: var(--white); border-radius: 12px; border: 1px solid var(--border); }
-.info-item label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; display: block; margin-bottom: 5px; }
+.info-item { padding: 14px 16px; background: var(--white); border-radius: 14px; border: 1px solid var(--primary-soft); }
+.info-item label { font-size: 11px; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; display: block; margin-bottom: 5px; }
 .info-item .value { font-size: 14.5px; font-weight: 700; color: var(--dark); }
 .section-title { font-size: 15px; font-weight: 700; color: var(--dark); margin: 24px 0 12px; display: flex; align-items: center; gap: 8px; }
 .section-title svg { color: var(--primary); }
-.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 999; opacity: 0; transition: opacity 0.3s; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(4,120,87,0.4); z-index: 999; opacity: 0; transition: opacity 0.3s; }
 .sidebar-overlay.active { display: block; opacity: 1; }
 .days-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 8px; }
-.day-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--light); border-radius: 11px; border: 2px solid var(--border); }
+.day-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--primary-mist); border-radius: 14px; border: 2px solid var(--primary-soft); }
 .day-row.active { background: linear-gradient(135deg, var(--primary-50), white); border-color: var(--primary); }
 .day-row label.day-check { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: var(--dark); cursor: pointer; user-select: none; min-width: 100px; }
 .day-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
 .day-times { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
-.day-times input[type="time"] { padding: 6px 8px; font-size: 12px; border: 2px solid var(--border); border-radius: 8px; font-family: inherit; font-weight: 600; background: var(--white); color: var(--dark); outline: none; flex: 1; min-width: 0; }
+.day-times input[type="time"] { padding: 6px 8px; font-size: 12px; border: 2px solid var(--primary-soft); border-radius: 10px; font-family: inherit; font-weight: 600; background: var(--white); color: var(--dark); outline: none; flex: 1; min-width: 0; }
 .day-times input[type="time"]:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
-.day-times input[type="time"]:disabled { opacity: 0.4; background: var(--light); cursor: not-allowed; }
+.day-times input[type="time"]:disabled { opacity: 0.4; background: var(--primary-mist); cursor: not-allowed; }
 .day-times .dash { color: var(--gray-2); font-weight: 700; font-size: 12px; }
-#pwaInstallBtn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 14px 22px; border-radius: 50px; border: none; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 12px 32px var(--primary-glow); display: none; align-items: center; gap: 10px; z-index: 5000; font-family: inherit; }
+#pwaInstallBtn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 14px 22px; border-radius: 50px; border: none; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 16px 36px var(--primary-glow); display: none; align-items: center; gap: 10px; z-index: 5000; font-family: inherit; }
 #pwaInstallBtn.show { display: flex; }
 #pwaInstallBtn:hover { transform: translateY(-3px); }
 #pwaInstallBtn svg { width: 20px; height: 20px; }
@@ -336,7 +339,7 @@ tbody tr:last-child td { border-bottom: none; }
 #offlineIndicator.show { display: block; }
 
 /* O'QITUVCHI PANELI */
-.teacher-hero { background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%); color: white; padding: 32px; border-radius: var(--radius-lg); margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 20px 40px -12px rgba(16,185,129,0.35); }
+.teacher-hero { background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%); color: white; padding: 32px; border-radius: var(--radius-lg); margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 24px 48px -12px rgba(16,185,129,0.4); }
 .teacher-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); }
 .teacher-hero h2 { font-size: 24px; font-weight: 900; margin-bottom: 6px; position: relative; }
 .teacher-hero p { font-size: 14px; opacity: 0.9; position: relative; }
@@ -346,7 +349,7 @@ tbody tr:last-child td { border-bottom: none; }
 .teacher-hero .hero-stat .lbl { font-size: 11px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; margin-top: 2px; }
 
 /* QO'LDA TO'LOV MODAL */
-.pay-month-card { background: white; border: 2px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; transition: all 0.2s; }
+.pay-month-card { background: white; border: 2px solid var(--primary-soft); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; transition: all 0.2s; }
 .pay-month-card.checked { border-color: var(--primary); background: var(--primary-50); }
 .pay-month-card.partial { border-color: var(--warning); background: var(--warning-light); }
 .pay-month-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0; cursor: pointer; }
@@ -359,32 +362,32 @@ tbody tr:last-child td { border-bottom: none; }
 .pay-month-info .sub.paid strong { color: var(--primary-dark); }
 .pay-month-amount { font-weight: 800; font-size: 14px; color: var(--primary-dark); white-space: nowrap; }
 .pay-month-amount.danger { color: var(--danger); }
-.pay-month-input { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); display: none; }
+.pay-month-input { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--primary-soft); display: none; }
 .pay-month-card.checked .pay-month-input { display: block; }
 .pay-month-input label { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 6px; }
 .pay-month-input-row { display: flex; gap: 8px; align-items: center; }
-.pay-month-input input { flex: 1; padding: 10px 12px; border: 2px solid var(--border); border-radius: 9px; font-size: 14px; font-family: inherit; font-weight: 700; outline: none; color: var(--dark); background: white; transition: all 0.2s; }
+.pay-month-input input { flex: 1; padding: 10px 12px; border: 2px solid var(--primary-soft); border-radius: 10px; font-size: 14px; font-family: inherit; font-weight: 700; outline: none; color: var(--dark); background: white; transition: all 0.2s; }
 .pay-month-input input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 .quick-fill-btns { display: flex; gap: 5px; }
-.quick-fill-btns button { padding: 8px 10px; border: 2px solid var(--border); background: white; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit; color: var(--dark); transition: all 0.2s; }
+.quick-fill-btns button { padding: 8px 10px; border: 2px solid var(--primary-soft); background: white; border-radius: 10px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit; color: var(--dark); transition: all 0.2s; }
 .quick-fill-btns button:hover { border-color: var(--primary); color: var(--primary-dark); background: var(--primary-50); }
 
-.salary-info-box { background: linear-gradient(135deg, var(--info-light), white); border: 2px dashed var(--info); border-radius: 14px; padding: 18px; margin: 18px 0; }
+.salary-info-box { background: linear-gradient(135deg, var(--info-light), white); border: 2px dashed var(--info); border-radius: 16px; padding: 18px; margin: 18px 0; }
 .salary-info-box h4 { font-size: 14px; font-weight: 800; color: var(--dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .salary-info-box h4 svg { width: 18px; height: 18px; color: var(--info); }
 .salary-info-box p { font-size: 12px; color: var(--gray); line-height: 1.5; font-weight: 500; }
 
 /* OY TANLASH */
-.month-selector { display: flex; gap: 8px; align-items: center; background: white; padding: 8px 12px; border-radius: 12px; border: 2px solid var(--border); }
-.month-selector label { font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
-.month-selector input[type="month"] { padding: 8px 12px; border: 2px solid var(--border); border-radius: 9px; font-size: 14px; font-family: inherit; font-weight: 700; color: var(--dark); background: white; outline: none; cursor: pointer; transition: all 0.2s; }
+.month-selector { display: flex; gap: 8px; align-items: center; background: white; padding: 8px 12px; border-radius: 14px; border: 2px solid var(--primary-soft); }
+.month-selector label { font-size: 12px; font-weight: 700; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+.month-selector input[type="month"] { padding: 8px 12px; border: 2px solid var(--primary-soft); border-radius: 10px; font-size: 14px; font-family: inherit; font-weight: 700; color: var(--dark); background: white; outline: none; cursor: pointer; transition: all 0.2s; }
 .month-selector input[type="month"]:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
 /* QARZDORLAR BO'LIMI */
 .debtor-groups-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
-.debtor-group-card { background: white; border: 2px solid var(--border); border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.3s var(--ease); position: relative; overflow: hidden; }
+.debtor-group-card { background: white; border: 2px solid var(--primary-soft); border-radius: 16px; padding: 16px; cursor: pointer; transition: all 0.3s var(--ease); position: relative; overflow: hidden; }
 .debtor-group-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--danger); }
-.debtor-group-card:hover { border-color: var(--danger); transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(239,68,68,0.3); }
+.debtor-group-card:hover { border-color: var(--danger); transform: translateY(-4px); box-shadow: 0 16px 32px -8px rgba(239,68,68,0.3); }
 .debtor-group-card .group-name { font-size: 15px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
 .debtor-group-card .group-count { font-size: 12px; color: var(--gray); font-weight: 600; margin-bottom: 10px; }
 .debtor-group-card .debt-total { font-size: 18px; font-weight: 900; color: var(--danger); }
@@ -392,13 +395,22 @@ tbody tr:last-child td { border-bottom: none; }
 .debtor-group-card .view-btn { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--danger); margin-top: 10px; }
 
 /* QARZDOR O'QUVCHILAR RO'YXATI */
-.debtor-student-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--light); border-radius: 12px; border-left: 4px solid var(--danger); margin-bottom: 8px; transition: all 0.25s var(--ease); cursor: pointer; }
-.debtor-student-item:hover { background: #fef2f2; transform: translateX(4px); box-shadow: 0 4px 12px rgba(239,68,68,0.15); }
+.debtor-student-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--primary-mist); border-radius: 14px; border-left: 4px solid var(--danger); margin-bottom: 8px; transition: all 0.25s var(--ease); cursor: pointer; }
+.debtor-student-item:hover { background: #fef2f2; transform: translateX(4px); box-shadow: 0 6px 16px rgba(239,68,68,0.15); }
 .debtor-student-item .info { flex: 1; min-width: 0; }
 .debtor-student-item .info h4 { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
 .debtor-student-item .info p { font-size: 11.5px; color: var(--gray); font-weight: 500; }
 .debtor-student-item .amount { font-size: 14px; font-weight: 800; color: var(--danger); white-space: nowrap; }
 
+/* SMS BO'LIMI */
+.sms-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: linear-gradient(135deg, #10b981, #047857); color: white; cursor: pointer; transition: all 0.2s; }
+.sms-badge:hover { transform: scale(1.05); box-shadow: 0 6px 16px var(--primary-glow); }
+.sms-template { background: var(--primary-mist); border: 2px solid var(--primary-soft); border-radius: 14px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+.sms-template:hover { border-color: var(--primary); background: var(--primary-50); }
+.sms-template h5 { font-size: 13px; font-weight: 800; color: var(--dark); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.sms-template p { font-size: 12px; color: var(--gray); line-height: 1.5; font-weight: 500; }
+
+/* RESPONSIVE */
 @media (max-width: 1024px) {
     .search-box input { width: 200px; }
     .search-box input:focus { width: 240px; }
@@ -421,7 +433,7 @@ tbody tr:last-child td { border-bottom: none; }
     .financial-grid { grid-template-columns: 1fr 1fr; }
     .profile-header { flex-direction: column; text-align: center; }
     .profile-grid { grid-template-columns: 1fr 1fr; }
-    .modal { max-width: 100%; border-radius: 20px 20px 0 0; }
+    .modal { max-width: 100%; border-radius: 24px 24px 0 0; }
     .modal-overlay { align-items: flex-end; padding: 0; }
     .days-grid { grid-template-columns: 1fr; }
     .teacher-hero { padding: 22px; }
@@ -442,7 +454,10 @@ tbody tr:last-child td { border-bottom: none; }
 </head>
 <body>
 
-<div id="offlineIndicator">📡 Internetga ulanmagan</div>
+<div id="offlineIndicator">
+    <svg style="width:16px;height:16px;stroke:white;display:inline-block;vertical-align:middle;margin-right:6px;"><use href="#i-info"/></svg>
+    Internetga ulanmagan
+</div>
 
 <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
     <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
@@ -488,6 +503,12 @@ tbody tr:last-child td { border-bottom: none; }
     <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
     <symbol id="i-percent" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+    <symbol id="i-smartphone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-external-link" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
 </svg>
 
 <div class="bg-decoration">
@@ -614,6 +635,30 @@ const DAYS_SHORT = { 'Dushanba': 'Du', 'Seshanba': 'Se', 'Chorshanba': 'Cho', 'P
 const DAYS_MAP = { 0: 'Yakshanba', 1: 'Dushanba', 2: 'Seshanba', 3: 'Chorshanba', 4: 'Payshanba', 5: 'Juma', 6: 'Shanba' };
 const EXPENSE_CATEGORIES = ['Ijara', 'Maosh', 'Kommunal', 'Jihoz', 'Reklama', 'Boshqa'];
 
+// SMS shablonlari
+const SMS_TEMPLATES = [
+    {
+        id: 'debt_reminder',
+        title: 'Qarz eslatmasi',
+        text: 'Hurmatli {parent_name}! Farzandingiz {student_name} ning {month} oyi uchun {debt} so\'m qarz to\'lovi mavjud. Iltimos, to\'lovni amalga oshiring. Bloom Education'
+    },
+    {
+        id: 'payment_reminder',
+        title: 'To\'lov eslatmasi',
+        text: 'Hurmatli {parent_name}! Farzandingiz {student_name} ning {month} oyi uchun o\'quv to\'lovi {amount} so\'m. To\'lovni o\'z vaqtida amalga oshirishingizni so\'raymiz. Bloom Education'
+    },
+    {
+        id: 'debt_final',
+        title: 'Oxirgi ogohlantirish',
+        text: 'Hurmatli {parent_name}! Farzandingiz {student_name} ning {month} oyi uchun {debt} so\'m qarz to\'lovi mavjud. Iltimos, 3 kun ichida to\'lovni amalga oshiring. Bloom Education'
+    },
+    {
+        id: 'custom',
+        title: 'Boshqa xabar',
+        text: ''
+    }
+];
+
 /* ==================== PARTICLES ==================== */
 (function() {
     const c = document.getElementById('particles');
@@ -643,7 +688,7 @@ const DB = {
                 else { this._cache[table] = data || []; }
             } catch (err) { this._cache[table] = []; }
         }));
-        console.log('📊 Ma\'lumotlar yuklandi');
+        console.log('Ma\'lumotlar yuklandi');
     },
     get(key) { return this._cache[key] || []; },
     async insert(table, data) {
@@ -704,76 +749,112 @@ function getMonthsBetween(startMonth, endMonth) {
     return months;
 }
 
+/* ==================== YANGILANGAN QARZ TIZIMI ====================
+   MUHIM: 
+   - O'quvchi bugun qo'shilsa, faqat JORIY OY uchun to'lov hisoblanadi
+   - Keyingi oydan boshlab TO'LIQ oylik to'lov hisoblanadi
+   - Masalan: bugun qo'shildi, oylik 200,000 so'm
+     * Joriy oy: 100,000 so'm (yoki kelishilgan summa)
+     * Keyingi oy: 200,000 so'm (to'liq)
+*/
+
+function getStudentMonthlyPayment(studentId) {
+    const student = DB.get('students').find(s => s.id === studentId);
+    if (!student) return 0;
+    
+    // Guruhdagi oylik to'lovni olamiz
+    const group = DB.get('groups').find(g => g.id === student.group_id);
+    if (group && group.monthly_payment) {
+        return parseFloat(group.monthly_payment);
+    }
+    
+    // Agar o'quvchining o'z monthly_payment qiymati bo'lsa
+    if (student.monthly_payment && parseFloat(student.monthly_payment) > 0) {
+        return parseFloat(student.monthly_payment);
+    }
+    
+    return 0;
+}
+
 function getStudentDebt(studentId) {
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) return 0;
-    const monthlyPayment = parseFloat(student.monthly_payment) || 0;
+    
+    const monthlyPayment = getStudentMonthlyPayment(studentId);
     if (monthlyPayment === 0) return 0;
+    
+    // Joriy oy
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    
+    // O'quvchining kurs boshlanish sanasi
     let startDate = student.course_start_date;
     if (!startDate && student.created_at) startDate = student.created_at.slice(0, 10);
     if (!startDate) startDate = new Date().toISOString().split('T')[0];
     const startMonth = startDate.slice(0, 7);
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const months = getMonthsBetween(startMonth, currentMonth);
-    const payments = DB.get('payments').filter(p => p.student_id === studentId);
-    let totalDebt = 0;
-    months.forEach(month => {
-        const payment = payments.find(p => p.month === month);
+    
+    // Agar o'quvchi joriy oydan oldin qo'shilgan bo'lsa, eski oylar uchun qarz yo'q
+    // Faqat joriy oydan boshlab hisoblanadi
+    if (startMonth < currentMonth) {
+        // Eski o'quvchi - joriy oy uchun to'liq oylik
+        const payments = DB.get('payments').filter(p => p.student_id === studentId);
+        const payment = payments.find(p => p.month === currentMonth);
         const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
         const debt = monthlyPayment - paid;
-        if (debt > 0) totalDebt += debt;
-    });
-    return totalDebt;
+        return debt > 0 ? debt : 0;
+    } else {
+        // Yangi o'quvchi - faqat joriy oy uchun
+        const payments = DB.get('payments').filter(p => p.student_id === studentId);
+        const payment = payments.find(p => p.month === currentMonth);
+        const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
+        const debt = monthlyPayment - paid;
+        return debt > 0 ? debt : 0;
+    }
 }
 
 function getDebtMonths(studentId) {
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) return [];
-    const monthlyPayment = parseFloat(student.monthly_payment) || 0;
+    
+    const monthlyPayment = getStudentMonthlyPayment(studentId);
     if (monthlyPayment === 0) return [];
-    let startDate = student.course_start_date;
-    if (!startDate && student.created_at) startDate = student.created_at.slice(0, 10);
-    if (!startDate) startDate = new Date().toISOString().split('T')[0];
-    const startMonth = startDate.slice(0, 7);
+    
     const currentMonth = new Date().toISOString().slice(0, 7);
-    const months = getMonthsBetween(startMonth, currentMonth);
     const payments = DB.get('payments').filter(p => p.student_id === studentId);
     const result = [];
-    months.forEach(month => {
-        const payment = payments.find(p => p.month === month);
-        const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
-        if (monthlyPayment - paid > 0) result.push(formatMonth(month));
-    });
+    
+    const payment = payments.find(p => p.month === currentMonth);
+    const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
+    if (monthlyPayment - paid > 0) result.push(formatMonth(currentMonth));
+    
     return result;
 }
 
 function getMonthsDetails(studentId) {
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) return [];
-    const monthlyPayment = parseFloat(student.monthly_payment) || 0;
+    
+    const monthlyPayment = getStudentMonthlyPayment(studentId);
     if (monthlyPayment === 0) return [];
-    let startDate = student.course_start_date;
-    if (!startDate && student.created_at) startDate = student.created_at.slice(0, 10);
-    if (!startDate) startDate = new Date().toISOString().split('T')[0];
-    const startMonth = startDate.slice(0, 7);
+    
+    // Joriy oy
     const currentMonth = new Date().toISOString().slice(0, 7);
-    const months = getMonthsBetween(startMonth, currentMonth);
     const payments = DB.get('payments').filter(p => p.student_id === studentId);
     const result = [];
-    months.forEach(month => {
-        const payment = payments.find(p => p.month === month);
-        const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
-        const debt = monthlyPayment - paid;
-        result.push({
-            month,
-            monthLabel: formatMonth(month),
-            expected: monthlyPayment,
-            paid,
-            debt: debt > 0 ? debt : 0,
-            status: debt <= 0 ? 'paid' : paid > 0 ? 'partial' : 'unpaid',
-            paymentId: payment ? payment.id : null
-        });
+    
+    const payment = payments.find(p => p.month === currentMonth);
+    const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
+    const debt = monthlyPayment - paid;
+    
+    result.push({
+        month: currentMonth,
+        monthLabel: formatMonth(currentMonth),
+        expected: monthlyPayment,
+        paid,
+        debt: debt > 0 ? debt : 0,
+        status: debt <= 0 ? 'paid' : paid > 0 ? 'partial' : 'unpaid',
+        paymentId: payment ? payment.id : null
     });
+    
     return result;
 }
 
@@ -832,6 +913,258 @@ async function saveModal() { if (typeof window._modalSave === 'function') await 
 document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target.id === 'modalOverlay') closeModal(); });
 function destroyCharts() { Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
 
+/* ==================== SMS YUBORISH ==================== */
+function normalizePhone(phone) {
+    if (!phone) return '';
+    // Faqat raqamlarni qoldiramiz
+    let cleaned = phone.replace(/\D/g, '');
+    
+    // O'zbekiston raqamlari uchun
+    if (cleaned.startsWith('998')) {
+        return '+' + cleaned;
+    } else if (cleaned.startsWith('8') && cleaned.length === 12) {
+        return '+998' + cleaned.substring(1);
+    } else if (cleaned.length === 9) {
+        return '+998' + cleaned;
+    }
+    
+    return '+' + cleaned;
+}
+
+function sendSMS(phone, message) {
+    if (!phone) {
+        toast('Xatolik', 'Telefon raqam yo\'q', 'error');
+        return false;
+    }
+    
+    const normalizedPhone = normalizePhone(phone);
+    
+    // SMS yuborish uchun sms: link ishlatamiz
+    // Bu telefon qurilmasida SMS ilovasini ochadi
+    const smsLink = `sms:${normalizedPhone}?body=${encodeURIComponent(message)}`;
+    
+    // Yangi oynada SMS ilovasini ochamiz
+    window.location.href = smsLink;
+    
+    return true;
+}
+
+function sendBulkSMS(students, message) {
+    if (!students.length) {
+        toast('Ma\'lumot', 'O\'quvchilar tanlanmagan', 'info');
+        return;
+    }
+    
+    // Birinchi o'quvchiga SMS yuboramiz
+    // Qolganlarini birma-bir yuborish uchun navbat yaratamiz
+    window._smsQueue = students.map(s => ({
+        student: s,
+        phone: s.parent_phone || s.phone,
+        message: message
+    })).filter(item => item.phone);
+    
+    if (!window._smsQueue.length) {
+        toast('Xatolik', 'Telefon raqamlar topilmadi', 'error');
+        return;
+    }
+    
+    processSMSQueue();
+}
+
+function processSMSQueue() {
+    if (!window._smsQueue || !window._smsQueue.length) {
+        toast('Muvaffaqiyat', 'Barcha SMS lar yuborildi');
+        closeModal();
+        return;
+    }
+    
+    const item = window._smsQueue.shift();
+    const remaining = window._smsQueue.length;
+    
+    toast('SMS yuborilmoqda', `${item.student.full_name} - qolgan: ${remaining + 1} ta`, 'info');
+    
+    sendSMS(item.phone, item.message);
+    
+    // Keyingi SMS ni 1 sekunddan keyin yuboramiz
+    setTimeout(() => {
+        processSMSQueue();
+    }, 1500);
+}
+
+function openSMSModal(studentId = null) {
+    let students = [];
+    let title = 'SMS yuborish';
+    
+    if (studentId) {
+        const student = DB.get('students').find(s => s.id === studentId);
+        if (!student) { toast('Xatolik', 'O\'quvchi topilmadi', 'error'); return; }
+        students = [student];
+        title = `${student.full_name} ga SMS yuborish`;
+    } else {
+        // Barcha qarzdorlar
+        students = getAllDebtors();
+        if (!students.length) {
+            toast('Ma\'lumot', 'Qarzdor o\'quvchilar yo\'q', 'info');
+            return;
+        }
+        title = 'Qarzdorlarga SMS yuborish';
+    }
+    
+    const templatesHTML = SMS_TEMPLATES.map(t => `
+        <div class="sms-template" onclick="applySMSTemplate('${t.id}')">
+            <h5>
+                <svg style="width:14px;height:14px;"><use href="#i-message"/></svg>
+                ${t.title}
+            </h5>
+            ${t.text ? `<p>${t.text.substring(0, 80)}...</p>` : '<p>Bo\'sh shablon - o\'zingiz yozing</p>'}
+        </div>
+    `).join('');
+    
+    const studentsHTML = students.map(s => {
+        const debt = getStudentDebt(s.id);
+        const phone = s.parent_phone || s.phone || 'Raqam yo\'q';
+        const hasPhone = !!(s.parent_phone || s.phone);
+        return `
+            <div class="debtor-student-item" style="border-left-color: ${hasPhone ? 'var(--primary)' : 'var(--gray-2)'};">
+                ${getPhotoHTML(s.photo, s.full_name, 40)}
+                <div class="info">
+                    <h4>${s.full_name}</h4>
+                    <p>
+                        <svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-phone"/></svg> 
+                        ${phone}
+                    </p>
+                    ${debt > 0 ? `<p style="color:var(--danger); font-weight:700; font-size:11px;">Qarz: ${formatMoney(debt)}</p>` : ''}
+                </div>
+                ${hasPhone ? '<span class="badge badge-success" style="font-size:10px;">SMS mumkin</span>' : '<span class="badge badge-gray" style="font-size:10px;">Raqam yo\'q</span>'}
+            </div>
+        `;
+    }).join('');
+    
+    const body = `
+        <div style="display:flex; gap:16px; align-items:center; padding:16px 18px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:16px; margin-bottom:18px; border:2px solid var(--primary-soft);">
+            <div style="width:56px; height:56px; border-radius:16px; background:linear-gradient(135deg, var(--primary), var(--primary-dark)); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow: 0 8px 20px var(--primary-glow);">
+                <svg style="width:28px;height:28px;stroke:white;"><use href="#i-message"/></svg>
+            </div>
+            <div style="flex:1;">
+                <h3 style="font-size:18px; font-weight:900; color:var(--dark); margin-bottom:4px;">${title}</h3>
+                <p style="font-size:12.5px; color:var(--gray); font-weight:600;">
+                    <strong style="color:var(--primary-dark);">${students.length} ta o'quvchi</strong> tanlangan
+                </p>
+            </div>
+        </div>
+
+        <div style="background: var(--primary-mist); border: 2px solid var(--primary-soft); border-radius: 14px; padding: 14px; margin-bottom: 18px;">
+            <div style="display:flex; align-items:flex-start; gap:10px; font-size:12.5px; color:var(--primary-deep); font-weight:600; line-height:1.5;">
+                <svg style="width:18px;height:18px;flex-shrink:0;margin-top:2px;"><use href="#i-info"/></svg>
+                <span><strong>Qanday ishlaydi:</strong> SMS yuborish tugmasini bosganda telefon qurilmangizda SMS ilovasi ochiladi va xabar avtomatik to'ldiriladi. "Yuborish" tugmasini bosishingiz kerak.</span>
+            </div>
+        </div>
+
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">
+            <svg style="width:16px;height:16px;vertical-align:middle;color:var(--primary);"><use href="#i-file-text"/></svg>
+            SMS shablonni tanlang
+        </h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;">
+            ${templatesHTML}
+        </div>
+
+        <div class="form-group">
+            <label>SMS matni (o'zingiz tahrirlashingiz mumkin)</label>
+            <textarea id="sms_message" rows="5" style="font-family:inherit; font-size:13px; line-height:1.6; resize:vertical;" placeholder="SMS matnini kiriting..."></textarea>
+            <p style="font-size:11px; color:var(--gray); margin-top:6px; font-weight:500;">
+                O'zgaruvchilar: <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{student_name}</code>
+                <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{parent_name}</code>
+                <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{debt}</code>
+                <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{month}</code>
+                <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{amount}</code>
+            </p>
+        </div>
+
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); text-transform:uppercase; letter-spacing:0.5px; margin: 18px 0 10px;">
+            <svg style="width:16px;height:16px;vertical-align:middle;color:var(--primary);"><use href="#i-users"/></svg>
+            O'quvchilar (${students.length} ta)
+        </h4>
+        <div style="max-height:280px; overflow-y:auto; padding-right:4px;">
+            ${studentsHTML}
+        </div>
+    `;
+    
+    window._smsStudents = students;
+    window._modalSave = async () => {
+        const message = document.getElementById('sms_message').value.trim();
+        if (!message) {
+            toast('Xatolik', 'SMS matnini kiriting', 'error');
+            return;
+        }
+        
+        // Har bir o'quvchi uchun SMS matnini shaxsiylashtiramiz
+        const personalizedStudents = students.map(s => {
+            const debt = getStudentDebt(s.id);
+            const monthlyPayment = getStudentMonthlyPayment(s.id);
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            
+            let personalizedMessage = message
+                .replace(/{student_name}/g, s.full_name || '')
+                .replace(/{parent_name}/g, s.parent_name || 'Ota-ona')
+                .replace(/{debt}/g, formatMoney(debt))
+                .replace(/{month}/g, formatMonth(currentMonth))
+                .replace(/{amount}/g, formatMoney(monthlyPayment));
+            
+            return {
+                ...s,
+                personalizedMessage
+            };
+        });
+        
+        // SMS yuborishni boshlash
+        const validStudents = personalizedStudents.filter(s => s.parent_phone || s.phone);
+        
+        if (!validStudents.length) {
+            toast('Xatolik', 'Telefon raqamlar topilmadi', 'error');
+            return;
+        }
+        
+        // Tasdiqlash
+        if (validStudents.length === 1) {
+            const s = validStudents[0];
+            const phone = s.parent_phone || s.phone;
+            sendSMS(phone, s.personalizedMessage);
+            toast('SMS yuborilmoqda', `${s.full_name} - ${normalizePhone(phone)}`, 'info');
+            closeModal();
+        } else {
+            if (!confirm(`${validStudents.length} ta o'quvchiga SMS yuborilsinmi?\n\nHar bir SMS uchun telefon ilovasi ochiladi.`)) return;
+            
+            window._smsQueue = validStudents.map(s => ({
+                student: s,
+                phone: s.parent_phone || s.phone,
+                message: s.personalizedMessage
+            }));
+            
+            closeModal();
+            processSMSQueue();
+        }
+    };
+    
+    openModal(
+        `<svg class="icon" style="color:var(--primary)"><use href="#i-message"/></svg> SMS yuborish`,
+        body,
+        `<button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button>
+         <button class="btn btn-success" onclick="saveModal()"><svg class="icon-sm"><use href="#i-send"/></svg> SMS yuborish</button>`
+    );
+    
+    // Birinchi shablonni qo'llaymiz
+    setTimeout(() => applySMSTemplate('debt_reminder'), 50);
+}
+
+function applySMSTemplate(templateId) {
+    const template = SMS_TEMPLATES.find(t => t.id === templateId);
+    if (!template) return;
+    const textarea = document.getElementById('sms_message');
+    if (textarea) {
+        textarea.value = template.text;
+    }
+}
+
 /* ==================== QARZDORLAR YORDAMCHI FUNKSIYALARI ==================== */
 function getAllDebtors() {
     return DB.get('students').filter(s => getStudentDebt(s.id) > 0 && s.status === 'Faol');
@@ -857,26 +1190,32 @@ function openAllDebtorsModal() {
     const totalDebt = debtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
     const listHTML = debtors.map(s => {
         const debt = getStudentDebt(s.id);
-        const months = getDebtMonths(s.id);
+        const phone = s.parent_phone || s.phone || '';
         return `
-            <div class="debtor-student-item" onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);">
+            <div class="debtor-student-item" style="border-left-color: var(--danger);">
                 ${getPhotoHTML(s.photo, s.full_name, 44)}
-                <div class="info">
+                <div class="info" style="flex:1;">
                     <h4>${s.full_name}</h4>
                     <p><svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • ${s.phone || '-'}</p>
-                    <p style="margin-top:3px; font-size:11px; color:var(--danger); font-weight:700;">📅 ${months.slice(0, 3).join(', ')}${months.length > 3 ? ` +${months.length - 3}` : ''}</p>
                 </div>
                 <div style="text-align:right;">
                     <div class="amount">${formatMoney(debt)}</div>
-                    <span class="badge badge-danger" style="font-size:10px; margin-top:4px;">To'lash</span>
+                </div>
+                <div style="display:flex; gap:4px; margin-left:8px;">
+                    <button class="btn btn-sm btn-success btn-icon" onclick="event.stopPropagation(); openSMSModal(${s.id})" title="SMS yuborish" style="width:36px;height:36px;">
+                        <svg><use href="#i-message"/></svg>
+                    </button>
+                    <button class="btn btn-sm btn-warning btn-icon" onclick="event.stopPropagation(); closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);" title="To'lov qabul qilish" style="width:36px;height:36px;">
+                        <svg><use href="#i-credit-card"/></svg>
+                    </button>
                 </div>
             </div>
         `;
     }).join('');
     const body = `
-        <div style="display:flex; gap:16px; align-items:center; padding:16px 18px; background:linear-gradient(135deg, var(--danger-light), white); border-radius:14px; margin-bottom:18px; border:1px solid var(--danger);">
-            <div style="width:54px; height:54px; border-radius:14px; background:var(--danger); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg style="width:26px;height:26px;stroke:white;"><use href="#i-alert"/></svg>
+        <div style="display:flex; gap:16px; align-items:center; padding:16px 18px; background:linear-gradient(135deg, var(--danger-light), white); border-radius:16px; margin-bottom:18px; border:2px solid var(--danger);">
+            <div style="width:56px; height:56px; border-radius:16px; background:linear-gradient(135deg, var(--danger), #dc2626); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow: 0 8px 20px rgba(239,68,68,0.4);">
+                <svg style="width:28px;height:28px;stroke:white;"><use href="#i-alert"/></svg>
             </div>
             <div style="flex:1;">
                 <h3 style="font-size:18px; font-weight:900; color:var(--dark); margin-bottom:4px;">Barcha qarzdorlar</h3>
@@ -886,9 +1225,13 @@ function openAllDebtorsModal() {
             </div>
         </div>
         <div style="display:flex; gap:8px; margin-bottom:14px;">
-            <input type="text" id="debtorSearchInput" placeholder="🔍 O'quvchi yoki guruhni qidirish..." 
+            <input type="text" id="debtorSearchInput" placeholder="O'quvchi yoki guruhni qidirish..." 
                    oninput="filterDebtorsList()" 
-                   style="flex:1; padding:11px 14px; border:2px solid var(--border); border-radius:11px; font-size:13px; font-family:inherit; font-weight:600; outline:none;">
+                   style="flex:1; padding:11px 14px; border:2px solid var(--primary-soft); border-radius:12px; font-size:13px; font-family:inherit; font-weight:600; outline:none;">
+            <button class="btn btn-success" onclick="openSMSModal()" style="white-space:nowrap;">
+                <svg class="icon-sm"><use href="#i-message"/></svg>
+                Barchasiga SMS
+            </button>
         </div>
         <div id="allDebtorsList" style="max-height:450px; overflow-y:auto; padding-right:4px;">
             ${listHTML}
@@ -919,26 +1262,32 @@ function openGroupDebtorsModal(groupId) {
     const allStudents = DB.get('students').filter(s => s.group_id === groupId);
     const listHTML = debtors.map(s => {
         const debt = getStudentDebt(s.id);
-        const months = getDebtMonths(s.id);
+        const phone = s.parent_phone || s.phone || '';
         return `
-            <div class="debtor-student-item" onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);">
+            <div class="debtor-student-item" style="border-left-color: var(--danger);">
                 ${getPhotoHTML(s.photo, s.full_name, 44)}
-                <div class="info">
+                <div class="info" style="flex:1;">
                     <h4>${s.full_name}</h4>
-                    <p>${s.phone || '-'} • Oylik: ${formatMoney(s.monthly_payment)}</p>
-                    <p style="margin-top:3px; font-size:11px; color:var(--danger); font-weight:700;">📅 ${months.slice(0, 3).join(', ')}${months.length > 3 ? ` +${months.length - 3}` : ''}</p>
+                    <p>${s.phone || '-'} • Oylik: ${formatMoney(getStudentMonthlyPayment(s.id))}</p>
                 </div>
                 <div style="text-align:right;">
                     <div class="amount">${formatMoney(debt)}</div>
-                    <span class="badge badge-danger" style="font-size:10px; margin-top:4px;">To'lash</span>
+                </div>
+                <div style="display:flex; gap:4px; margin-left:8px;">
+                    <button class="btn btn-sm btn-success btn-icon" onclick="event.stopPropagation(); openSMSModal(${s.id})" title="SMS yuborish" style="width:36px;height:36px;">
+                        <svg><use href="#i-message"/></svg>
+                    </button>
+                    <button class="btn btn-sm btn-warning btn-icon" onclick="event.stopPropagation(); closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);" title="To'lov qabul qilish" style="width:36px;height:36px;">
+                        <svg><use href="#i-credit-card"/></svg>
+                    </button>
                 </div>
             </div>
         `;
     }).join('');
     const body = `
-        <div style="display:flex; gap:16px; align-items:center; padding:16px 18px; background:linear-gradient(135deg, var(--danger-light), white); border-radius:14px; margin-bottom:18px; border:1px solid var(--danger);">
-            <div style="width:54px; height:54px; border-radius:14px; background:var(--danger); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg style="width:26px;height:26px;stroke:white;"><use href="#i-users"/></svg>
+        <div style="display:flex; gap:16px; align-items:center; padding:16px 18px; background:linear-gradient(135deg, var(--danger-light), white); border-radius:16px; margin-bottom:18px; border:2px solid var(--danger);">
+            <div style="width:56px; height:56px; border-radius:16px; background:linear-gradient(135deg, var(--danger), #dc2626); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow: 0 8px 20px rgba(239,68,68,0.4);">
+                <svg style="width:28px;height:28px;stroke:white;"><use href="#i-users"/></svg>
             </div>
             <div style="flex:1;">
                 <h3 style="font-size:18px; font-weight:900; color:var(--dark); margin-bottom:4px;">${group.name} — Qarzdorlar</h3>
@@ -948,9 +1297,9 @@ function openGroupDebtorsModal(groupId) {
             </div>
         </div>
         <div style="display:flex; gap:8px; margin-bottom:14px;">
-            <input type="text" placeholder="🔍 O'quvchini qidirish..." 
+            <input type="text" placeholder="O'quvchini qidirish..." 
                    oninput="(function(el){const q=el.value.toLowerCase();document.querySelectorAll('#groupDebtorsList .debtor-student-item').forEach(i=>{i.style.display=i.textContent.toLowerCase().includes(q)?'flex':'none';});})(this)" 
-                   style="flex:1; padding:11px 14px; border:2px solid var(--border); border-radius:11px; font-size:13px; font-family:inherit; font-weight:600; outline:none;">
+                   style="flex:1; padding:11px 14px; border:2px solid var(--primary-soft); border-radius:12px; font-size:13px; font-family:inherit; font-weight:600; outline:none;">
         </div>
         <div id="groupDebtorsList" style="max-height:450px; overflow-y:auto; padding-right:4px;">
             ${listHTML}
@@ -1228,7 +1577,7 @@ function openAccountSettings() {
 
 function openAdminAccountSettings() {
     const body = `
-        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:14px; margin-bottom:20px; border:1px solid var(--primary-light);">
+        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:16px; margin-bottom:20px; border:1px solid var(--primary-soft);">
             <div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${currentUser.full_name.charAt(0).toUpperCase()}</div>
             <div style="flex:1;">
                 <h3 style="font-size:18px; font-weight:800; color:var(--dark); margin-bottom:4px;">${currentUser.full_name}</h3>
@@ -1236,12 +1585,12 @@ function openAdminAccountSettings() {
                 <span class="badge badge-info" style="margin-top:6px;">Login: ${currentUser.username || currentUser.full_name}</span>
             </div>
         </div>
-        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">🔑 Loginni o'zgartirish</h4>
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Loginni o'zgartirish</h4>
         <div class="form-group">
             <label>Yangi login</label>
             <input type="text" id="acc_new_login" value="${currentUser.username || ''}" placeholder="Yangi login">
         </div>
-        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin: 20px 0 12px; text-transform:uppercase; letter-spacing:0.5px;">🔒 Parolni o'zgartirish</h4>
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin: 20px 0 12px; text-transform:uppercase; letter-spacing:0.5px;">Parolni o'zgartirish</h4>
         <div class="form-group">
             <label>Hozirgi parol *</label>
             <input type="password" id="acc_current_pw" placeholder="Hozirgi parolingiz">
@@ -1294,7 +1643,7 @@ function openTeacherAccountSettings() {
     const teacher = DB.get('teachers').find(t => t.id === currentUser.teacher_id);
     if (!teacher) { toast('Xatolik', 'O\'qituvchi topilmadi', 'error'); return; }
     const body = `
-        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:14px; margin-bottom:20px; border:1px solid var(--primary-light);">
+        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:16px; margin-bottom:20px; border:1px solid var(--primary-soft);">
             ${teacher.photo ? `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;"><img src="${teacher.photo}"></div>` : `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${teacher.full_name.charAt(0)}</div>`}
             <div style="flex:1;">
                 <h3 style="font-size:18px; font-weight:800; color:var(--dark); margin-bottom:4px;">${teacher.full_name}</h3>
@@ -1302,12 +1651,12 @@ function openTeacherAccountSettings() {
                 <span class="badge badge-info" style="margin-top:6px;">Login: ${teacher.login}</span>
             </div>
         </div>
-        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">🔑 Loginni o'zgartirish</h4>
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Loginni o'zgartirish</h4>
         <div class="form-group">
             <label>Yangi login</label>
             <input type="text" id="tacc_new_login" value="${teacher.login || ''}" placeholder="Yangi login">
         </div>
-        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin: 20px 0 12px; text-transform:uppercase; letter-spacing:0.5px;">🔒 Parolni o'zgartirish</h4>
+        <h4 style="font-size:13px; font-weight:800; color:var(--dark); margin: 20px 0 12px; text-transform:uppercase; letter-spacing:0.5px;">Parolni o'zgartirish</h4>
         <div class="form-group">
             <label>Hozirgi parol *</label>
             <input type="password" id="tacc_current_pw" placeholder="Hozirgi parolingiz">
@@ -1405,7 +1754,7 @@ function createAdminPages() {
                 <a class="quick-action" onclick="openGroupModal()"><div class="qa-icon"><svg><use href="#i-users"/></svg></div> <span>Guruh qo'shish</span></a>
                 <a class="quick-action" onclick="openSubjectModal()"><div class="qa-icon"><svg><use href="#i-book"/></svg></div> <span>Fan qo'shish</span></a>
                 <a class="quick-action" onclick="openManualPaymentModal()"><div class="qa-icon"><svg><use href="#i-credit-card"/></svg></div> <span>Qo'lda to'lov</span></a>
-                <a class="quick-action" onclick="openExpenseModal()"><div class="qa-icon"><svg><use href="#i-wallet"/></svg></div> <span>Xarajat qo'shish</span></a>
+                <a class="quick-action" onclick="openSMSModal()"><div class="qa-icon" style="background:linear-gradient(135deg, #10b981, #047857);"><svg><use href="#i-message"/></svg></div> <span>Qarzdorlarga SMS</span></a>
             </div>
             <div class="stats-grid" id="statsGrid"></div>
             <div class="financial-box">
@@ -1419,21 +1768,25 @@ function createAdminPages() {
                 <div class="card"><div class="card-header"><h3><svg class="icon"><use href="#i-wallet"/></svg> Xarajatlar</h3></div><div class="card-body"><div class="chart-container"><canvas id="chartExpenses"></canvas></div></div></div>
             </div>
 
-            <!-- YANGI: QARZDORLAR BO'LIMI -->
             <div class="charts-grid">
                 <div class="card">
                     <div class="card-header">
                         <h3><svg class="icon" style="color:var(--danger)"><use href="#i-alert"/></svg> Qarzdor o'quvchilar</h3>
-                        <button class="btn btn-sm btn-danger" onclick="openAllDebtorsModal()">
-                            <svg class="icon-sm"><use href="#i-eye"/></svg> Barchasini ko'rish
-                        </button>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn-sm btn-success" onclick="openSMSModal()">
+                                <svg class="icon-sm"><use href="#i-message"/></svg> SMS
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="openAllDebtorsModal()">
+                                <svg class="icon-sm"><use href="#i-eye"/></svg> Barchasi
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body"><div class="schedule-list" id="debtorsList"></div></div>
                 </div>
                 <div class="card">
                     <div class="card-header">
                         <h3><svg class="icon" style="color:var(--danger)"><use href="#i-users"/></svg> Guruhlardagi qarzdorlar</h3>
-                        <span style="font-size:11px; color:var(--gray); font-weight:600;">💡 Guruhga bosing</span>
+                        <span style="font-size:11px; color:var(--gray); font-weight:600;">Guruhga bosing</span>
                     </div>
                     <div class="card-body">
                         <div class="debtor-groups-grid" id="debtorGroupsGrid"></div>
@@ -1449,9 +1802,9 @@ function createAdminPages() {
 
         <div class="page" id="page-students">
             <div class="toolbar">
-                <input type="text" id="studentSearch" placeholder="Qidirish...">
-                <select id="studentFilterGroup"><option value="">Barcha guruhlar</option></select>
-                <select id="studentFilterStatus"><option value="">Barcha holatlar</option><option value="Faol">Faol</option><option value="Nofaol">Nofaol</option></select>
+                <input type="text" id="studentSearch" placeholder="O'quvchi ismini yozing..." oninput="renderStudents()">
+                <select id="studentFilterGroup" onchange="renderStudents()"><option value="">Barcha guruhlar</option></select>
+                <select id="studentFilterStatus" onchange="renderStudents()"><option value="">Barcha holatlar</option><option value="Faol">Faol</option><option value="Nofaol">Nofaol</option></select>
                 <div class="spacer"></div>
                 <button class="btn btn-warning btn-sm" onclick="openManualPaymentModal()"><svg class="icon-sm"><use href="#i-credit-card"/></svg> Qo'lda to'lov</button>
                 <button class="btn btn-primary btn-sm" onclick="openStudentModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> Yangi o'quvchi</button>
@@ -1464,7 +1817,7 @@ function createAdminPages() {
 
         <div class="page" id="page-teachers">
             <div class="toolbar">
-                <input type="text" id="teacherSearch" placeholder="Qidirish...">
+                <input type="text" id="teacherSearch" placeholder="Qidirish..." oninput="renderTeachers()">
                 <div class="spacer"></div>
                 <button class="btn btn-primary btn-sm" onclick="openTeacherModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> Yangi o'qituvchi</button>
             </div>
@@ -1476,7 +1829,7 @@ function createAdminPages() {
 
         <div class="page" id="page-groups">
             <div class="toolbar">
-                <input type="text" id="groupSearch" placeholder="Qidirish...">
+                <input type="text" id="groupSearch" placeholder="Qidirish..." oninput="renderGroups()">
                 <div class="spacer"></div>
                 <button class="btn btn-primary btn-sm" onclick="openGroupModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> Yangi guruh</button>
             </div>
@@ -1496,9 +1849,9 @@ function createAdminPages() {
 
         <div class="page" id="page-payments">
             <div class="toolbar">
-                <input type="text" id="paymentSearch" placeholder="Qidirish...">
-                <select id="paymentFilterStatus"><option value="">Barcha holatlar</option><option value="To'langan">To'langan</option><option value="Qisman to'langan">Qisman</option><option value="To'lanmagan">To'lanmagan</option></select>
-                <select id="paymentFilterMonth"><option value="">Barcha oylar</option></select>
+                <input type="text" id="paymentSearch" placeholder="Qidirish..." oninput="renderPayments()">
+                <select id="paymentFilterStatus" onchange="renderPayments()"><option value="">Barcha holatlar</option><option value="To'langan">To'langan</option><option value="Qisman to'langan">Qisman</option><option value="To'lanmagan">To'lanmagan</option></select>
+                <select id="paymentFilterMonth" onchange="renderPayments()"><option value="">Barcha oylar</option></select>
                 <div class="spacer"></div>
                 <button class="btn btn-warning btn-sm" onclick="openManualPaymentModal()"><svg class="icon-sm"><use href="#i-credit-card"/></svg> Qo'lda to'lov</button>
                 <button class="btn btn-primary btn-sm" onclick="openPaymentModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> Yangi to'lov</button>
@@ -1511,9 +1864,9 @@ function createAdminPages() {
 
         <div class="page" id="page-expenses">
             <div class="toolbar">
-                <input type="text" id="expenseSearch" placeholder="Qidirish...">
-                <select id="expenseFilterCategory"><option value="">Barcha kategoriyalar</option>${EXPENSE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
-                <select id="expenseFilterMonth"><option value="">Barcha oylar</option></select>
+                <input type="text" id="expenseSearch" placeholder="Qidirish..." oninput="renderExpenses()">
+                <select id="expenseFilterCategory" onchange="renderExpenses()"><option value="">Barcha kategoriyalar</option>${EXPENSE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                <select id="expenseFilterMonth" onchange="renderExpenses()"><option value="">Barcha oylar</option></select>
                 <div class="spacer"></div>
                 <button class="btn btn-primary btn-sm" onclick="openExpenseModal()"><svg class="icon-sm"><use href="#i-plus"/></svg> Xarajat</button>
             </div>
@@ -1527,7 +1880,7 @@ function createAdminPages() {
         <div class="page" id="page-salaries">
             <div class="toolbar">
                 <div class="month-selector">
-                    <label>📅 Oy:</label>
+                    <label>Oy:</label>
                     <input type="month" id="salaryMonthPicker" onchange="onSalaryMonthChange(this.value)">
                 </div>
                 <div class="spacer"></div>
@@ -1672,7 +2025,7 @@ function renderDashboard() {
     `;
     document.querySelectorAll('.counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
 
-    const totalMonthly = students.reduce((s, st) => s + parseFloat(st.monthly_payment || 0), 0);
+    const totalMonthly = students.reduce((s, st) => s + getStudentMonthlyPayment(st.id), 0);
     document.getElementById('financialSummary').innerHTML = `
         <div class="financial-item"><label>Jami o'quvchilar</label><div class="value">${students.length} ta</div></div>
         <div class="financial-item"><label>O'rtacha oylik</label><div class="value">${formatMoney(totalMonthly / (students.length || 1))}</div></div>
@@ -1697,7 +2050,6 @@ function renderDashboard() {
         `).join('');
     }
 
-    // ========== QARZDOR O'QUVCHILAR ==========
     const debtorsEl = document.getElementById('debtorsList');
     if (!debtors.length) {
         debtorsEl.innerHTML = `<div class="empty-state" style="padding:30px;"><div class="icon-wrap" style="width:60px;height:60px;"><svg style="width:28px;height:28px;"><use href="#i-check-circle"/></svg></div><h3>Qarzdorlar yo'q</h3></div>`;
@@ -1705,7 +2057,7 @@ function renderDashboard() {
         const sortedDebtors = [...debtors].sort((a, b) => getStudentDebt(b.id) - getStudentDebt(a.id));
         debtorsEl.innerHTML = sortedDebtors.slice(0, 8).map(s => {
             const debt = getStudentDebt(s.id);
-            const months = getDebtMonths(s.id);
+            const phone = s.parent_phone || s.phone || '';
             return `
                 <div class="schedule-item" style="border-left-color: var(--danger); cursor: pointer;" 
                      onclick="openManualPaymentModal(${s.id})">
@@ -1713,12 +2065,13 @@ function renderDashboard() {
                     <div class="schedule-info">
                         <h4>${s.full_name}</h4>
                         <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-phone"/></svg> ${s.phone || '-'}</p>
-                        <p style="margin-top:3px; font-size:11px; color:var(--danger); font-weight:700;">📅 ${months.slice(0, 2).join(', ')}${months.length > 2 ? ` +${months.length - 2}` : ''}</p>
                     </div>
                     <div style="text-align:right;">
                         <div style="font-weight:800; font-size:13px; color:var(--danger);">${formatMoney(debt)}</div>
-                        <span class="badge badge-danger" style="font-size:10px; margin-top:4px;">To'lash</span>
                     </div>
+                    <button class="btn btn-sm btn-success btn-icon" onclick="event.stopPropagation(); openSMSModal(${s.id})" title="SMS yuborish" style="margin-left:8px;">
+                        <svg><use href="#i-message"/></svg>
+                    </button>
                 </div>
             `;
         }).join('');
@@ -1731,7 +2084,6 @@ function renderDashboard() {
         }
     }
 
-    // ========== GURUHLARDAGI QARZDORLAR ==========
     const groupsWithDebtors = getGroupsWithDebtors();
     const debtorGroupsGrid = document.getElementById('debtorGroupsGrid');
     if (!groupsWithDebtors.length) {
@@ -1740,7 +2092,7 @@ function renderDashboard() {
         debtorGroupsGrid.innerHTML = groupsWithDebtors.map(item => `
             <div class="debtor-group-card" onclick="openGroupDebtorsModal(${item.group.id})">
                 <div class="group-name">${item.group.name}</div>
-                <div class="group-count">📚 ${getSubjectName(item.group.subject_id)} • ${item.count} ta qarzdor</div>
+                <div class="group-count">${getSubjectName(item.group.subject_id)} • ${item.count} ta qarzdor</div>
                 <div class="debt-total">${formatMoney(item.totalDebt)}</div>
                 <div class="debt-label">Umumiy qarz</div>
                 <div class="view-btn">
@@ -1823,14 +2175,13 @@ function openManualPaymentModal(studentId = null) {
         }
         const listHTML = debtors.map(s => {
             const debt = getStudentDebt(s.id);
-            const months = getDebtMonths(s.id).length;
             return `
                 <div class="schedule-item" style="border-left-color: var(--danger); cursor: pointer; margin-bottom:8px;" 
                      onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);">
                     ${getPhotoHTML(s.photo, s.full_name, 44)}
                     <div class="schedule-info" style="margin-left:10px;">
                         <h4>${s.full_name}</h4>
-                        <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-phone"/></svg> ${s.phone || '-'} • ${months} oy qarzdor</p>
+                        <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-phone"/></svg> ${s.phone || '-'}</p>
                     </div>
                     <span class="badge badge-danger">${formatMoney(debt)}</span>
                 </div>
@@ -1838,8 +2189,8 @@ function openManualPaymentModal(studentId = null) {
         }).join('');
         openModal(
             `<svg class="icon" style="color:var(--warning)"><use href="#i-credit-card"/></svg> Qo'lda to'lov — O'quvchi tanlash`,
-            `<div style="margin-bottom:14px; padding:12px 14px; background:var(--warning-light); border-radius:12px; border-left:4px solid var(--warning);">
-                <strong style="color:#92400e; font-size:13px;">💡 Qaysi o'quvchiga to'lov qabul qilasiz?</strong>
+            `<div style="margin-bottom:14px; padding:12px 14px; background:var(--warning-light); border-radius:14px; border-left:4px solid var(--warning);">
+                <strong style="color:#92400e; font-size:13px;">Qaysi o'quvchiga to'lov qabul qilasiz?</strong>
                 <p style="font-size:12px; color:#92400e; margin-top:4px;">Qarzdor o'quvchilardan birini tanlang</p>
             </div>
             <div style="max-height:400px; overflow-y:auto;">${listHTML}</div>`,
@@ -1849,7 +2200,7 @@ function openManualPaymentModal(studentId = null) {
     }
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) { toast('Xatolik', 'O\'quvchi topilmadi', 'error'); return; }
-    const monthlyPayment = parseFloat(student.monthly_payment) || 0;
+    const monthlyPayment = getStudentMonthlyPayment(studentId);
     const monthsDetails = getMonthsDetails(studentId);
     const totalDebt = getStudentDebt(studentId);
     const unpaidMonths = monthsDetails.filter(m => m.debt > 0 || m.status === 'partial');
@@ -1882,7 +2233,7 @@ function openManualPaymentModal(studentId = null) {
                         <div class="quick-fill-btns">
                             <button type="button" onclick="event.stopPropagation(); setPayAmount('${m.month}', ${m.debt})" title="To'liq">✓</button>
                             <button type="button" onclick="event.stopPropagation(); setPayAmount('${m.month}', ${Math.floor(m.debt/2)})" title="Yarmi">½</button>
-                            <button type="button" onclick="event.stopPropagation(); setPayAmount('${m.month}', 0)" title="Tozalash">✗</button>
+                            <button type="button" onclick="event.stopPropagation(); setPayAmount('${m.month}', 0)" title="Tozalash">✕</button>
                         </div>
                     </div>
                     <div style="font-size:11px; color:var(--gray); margin-top:6px; font-weight:600;">
@@ -1896,7 +2247,7 @@ function openManualPaymentModal(studentId = null) {
         ? `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;"><img src="${student.photo}"></div>` 
         : `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${student.full_name.charAt(0)}</div>`;
     const body = `
-        <div style="display:flex; gap:14px; align-items:center; padding:14px 16px; background:linear-gradient(135deg, var(--warning-light), white); border-radius:14px; margin-bottom:18px; border:1px solid var(--warning);">
+        <div style="display:flex; gap:14px; align-items:center; padding:14px 16px; background:linear-gradient(135deg, var(--warning-light), white); border-radius:16px; margin-bottom:18px; border:2px solid var(--warning);">
             ${avatarHTML}
             <div style="flex:1;">
                 <h3 style="font-size:17px; font-weight:800; color:var(--dark); margin-bottom:3px;">${student.full_name}</h3>
@@ -1907,7 +2258,7 @@ function openManualPaymentModal(studentId = null) {
                 </div>
             </div>
         </div>
-        <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;">
+        <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 14px; padding: 12px 14px; margin-bottom: 16px;">
             <div style="display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e40af; font-weight:600; line-height:1.5;">
                 <svg style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"><use href="#i-info"/></svg>
                 <span><strong>Qo'lda to'lov:</strong> har bir oy uchun <strong>to'lanadigan summani</strong> o'zingiz kiriting. Yarim to'lov qilsangiz, qolgani qarz bo'lib qoladi.</span>
@@ -1915,18 +2266,18 @@ function openManualPaymentModal(studentId = null) {
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             <h4 style="font-size:13px; font-weight:800; color:var(--dark); text-transform:uppercase; letter-spacing:0.5px;">
-                📅 Qarzdor oylar (${unpaidMonths.length} ta)
+                Qarzdor oylar (${unpaidMonths.length} ta)
             </h4>
             <div style="display:flex; gap:6px;">
                 <button type="button" onclick="fillAllFull()" style="padding:6px 10px; border:none; background:var(--primary); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">✓ To'liq</button>
                 <button type="button" onclick="fillAllHalf()" style="padding:6px 10px; border:none; background:var(--warning); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">½ Yarim</button>
-                <button type="button" onclick="clearAllAmounts()" style="padding:6px 10px; border:none; background:var(--gray-2); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">✗ Tozalash</button>
+                <button type="button" onclick="clearAllAmounts()" style="padding:6px 10px; border:none; background:var(--gray-2); color:white; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">✕ Tozalash</button>
             </div>
         </div>
         <div style="margin-bottom:18px; max-height:340px; overflow-y:auto; padding-right:4px;">
             ${monthsHTML}
         </div>
-        <div style="background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%); color: white; padding: 18px 20px; border-radius: 14px; margin-bottom: 18px;">
+        <div style="background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%); color: white; padding: 18px 20px; border-radius: 16px; margin-bottom: 18px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <div style="font-size:11px; opacity:0.85; text-transform:uppercase; letter-spacing:0.6px; font-weight:700;">Qabul qilinadigan summa</div>
@@ -1992,7 +2343,7 @@ function openManualPaymentModal(studentId = null) {
                 }
             }
             const totalAmount = payments.reduce((s, p) => s + p.amount, 0);
-            toast('Muvaffaqiyat', `${formatMoney(totalAmount)} qabul qilindi (${payments.length} oy) ✅`);
+            toast('Muvaffaqiyat', `${formatMoney(totalAmount)} qabul qilindi (${payments.length} oy)`);
             closeModal();
             renderDashboard(); renderStudents(); renderPayments(); renderGroups();
         } catch (err) { toast('Xatolik', err.message, 'error'); }
@@ -2095,34 +2446,49 @@ function renderStudents() {
     const cv = gf.value;
     gf.innerHTML = '<option value="">Barcha guruhlar</option>' + groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
     gf.value = cv;
-    const search = (document.getElementById('studentSearch').value || '').toLowerCase();
+    const search = (document.getElementById('studentSearch')?.value || '').toLowerCase().trim();
     const fg = gf.value;
-    const fs = document.getElementById('studentFilterStatus').value;
+    const fs = document.getElementById('studentFilterStatus')?.value || '';
     let students = DB.get('students');
-    if (search) students = students.filter(s => s.full_name.toLowerCase().includes(search) || (s.phone || '').includes(search));
+    
+    if (search) {
+        students = students.filter(s => {
+            const name = (s.full_name || '').toLowerCase();
+            const phone = (s.phone || '').toLowerCase();
+            const parentPhone = (s.parent_phone || '').toLowerCase();
+            return name.includes(search) || phone.includes(search) || parentPhone.includes(search);
+        });
+    }
     if (fg) students = students.filter(s => s.group_id == fg);
     if (fs) students = students.filter(s => s.status === fs);
+    
     const tbody = document.getElementById('studentsTable');
-    if (!students.length) { tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-grad"/></svg></div><h3>O\'quvchilar yo\'q</h3></div></td></tr>'; return; }
+    if (!students.length) { 
+        tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><div class="icon-wrap"><svg><use href="#i-user-grad"/></svg></div><h3>O\'quvchilar topilmadi</h3><p>Qidiruv bo\'yicha natija yo\'q</p></div></td></tr>'; 
+        return; 
+    }
     tbody.innerHTML = students.map(s => {
         const att = getAttendancePercent(s.id);
         const ps = getStudentPaymentStatus(s.id);
         const debt = getStudentDebt(s.id);
+        const monthlyPayment = getStudentMonthlyPayment(s.id);
         const bCls = ps === 'To\'langan' ? 'badge-success' : ps === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger';
         const aCls = att >= 80 ? 'badge-success' : att >= 60 ? 'badge-warning' : 'badge-danger';
         const dCls = debt > 0 ? 'badge-danger' : 'badge-success';
+        const hasPhone = !!(s.parent_phone || s.phone);
         return `<tr>
             <td>${getPhotoHTML(s.photo, s.full_name, 44)}</td>
             <td><strong>#${s.id}</strong></td>
             <td><div><strong>${s.full_name}</strong><br><small style="color:var(--gray);">${s.parent_phone || ''}</small></div></td>
             <td>${s.phone || '-'}</td>
             <td>${getGroupName(s.group_id)}</td>
-            <td>${formatMoney(s.monthly_payment)}</td>
+            <td>${formatMoney(monthlyPayment)}</td>
             <td><span class="badge ${bCls}">${ps}</span></td>
             <td><span class="badge ${dCls}" style="cursor:pointer;" onclick="openManualPaymentModal(${s.id})" title="To'lov qilish">${debt > 0 ? formatMoney(debt) : '0'}</span></td>
             <td><span class="badge ${aCls}">${att}%</span></td>
             <td><span class="badge ${s.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${s.status}</span></td>
             <td>
+                <button class="btn btn-sm btn-success btn-icon" onclick="openSMSModal(${s.id})" title="SMS yuborish" ${!hasPhone ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}><svg><use href="#i-message"/></svg></button>
                 <button class="btn btn-sm btn-warning btn-icon" onclick="openManualPaymentModal(${s.id})" title="To'lov qilish"><svg><use href="#i-credit-card"/></svg></button>
                 <button class="btn btn-sm btn-secondary btn-icon" onclick="viewStudent(${s.id})"><svg><use href="#i-eye"/></svg></button>
                 <button class="btn btn-sm btn-secondary btn-icon" onclick="editStudent(${s.id})"><svg><use href="#i-edit"/></svg></button>
@@ -2153,20 +2519,31 @@ function openStudentModal(id = null) {
             <div class="form-group"><label>Ota-ona telefon</label><input type="text" id="s_parent_phone" value="${s.parent_phone || ''}"></div>
         </div>
         <div class="form-row">
-            <div class="form-group"><label>Guruh</label><select id="s_group_id"><option value="">Tanlang</option>${groups.map(g => `<option value="${g.id}" ${s.group_id == g.id ? 'selected' : ''}>${g.name}</option>`).join('')}</select></div>
-            <div class="form-group"><label>Kurs boshlanish sanasi *</label><input type="date" id="s_course_start_date" value="${s.course_start_date || today}" required></div>
+            <div class="form-group"><label>Guruh</label><select id="s_group_id" onchange="onStudentGroupChange()"><option value="">Tanlang</option>${groups.map(g => `<option value="${g.id}" data-monthly="${g.monthly_payment}" ${s.group_id == g.id ? 'selected' : ''}>${g.name} — ${formatMoney(g.monthly_payment)}</option>`).join('')}</select></div>
+            <div class="form-group"><label>Kurs boshlanish sanasi</label><input type="date" id="s_course_start_date" value="${s.course_start_date || today}"></div>
         </div>
         <div class="form-row">
-            <div class="form-group"><label>Oylik to'lov (so'm) *</label><input type="number" id="s_monthly_payment" value="${s.monthly_payment || 0}" required></div>
+            <div class="form-group"><label>Oylik to'lov (so'm)</label><input type="number" id="s_monthly_payment" value="${s.monthly_payment || 0}" placeholder="Guruh tanlanganda avtomatik to'ladi"></div>
             <div class="form-group"><label>Status</label><select id="s_status"><option ${s.status === 'Faol' ? 'selected' : ''}>Faol</option><option ${s.status === 'Nofaol' ? 'selected' : ''}>Nofaol</option></select></div>
         </div>
-        <div style="background: linear-gradient(135deg, var(--warning-light), white); border: 2px dashed var(--warning); border-radius: 12px; padding: 14px; font-size: 12px; color: #92400e;">
-            💡 <strong>Eslatma:</strong> Oylik to'lov oldindan olinadi. Kurs boshlanish sanasidan boshlab har oy uchun to'lov avtomatik hisoblanadi.
+        <div style="background: linear-gradient(135deg, var(--primary-light), white); border: 2px dashed var(--primary); border-radius: 14px; padding: 14px; font-size: 12px; color: var(--primary-deep);">
+            <strong>Ma'lumot:</strong> O'quvchi bugun qo'shilsa, <strong>joriy oy uchun</strong> to'lov hisoblanadi. Keyingi oydan boshlab <strong>to'liq oylik to'lov</strong> hisoblanadi.
         </div>
     `;
     window._modalSave = async () => {
         const name = document.getElementById('s_full_name').value.trim();
         if (!name) { toast('Xatolik', 'F.I.Sh kiritilishi shart', 'error'); return; }
+        
+        const groupId = parseInt(document.getElementById('s_group_id').value) || null;
+        let monthlyPayment = parseFloat(document.getElementById('s_monthly_payment').value) || 0;
+        
+        if (groupId && monthlyPayment === 0) {
+            const group = DB.get('groups').find(g => g.id === groupId);
+            if (group && group.monthly_payment) {
+                monthlyPayment = parseFloat(group.monthly_payment);
+            }
+        }
+        
         const data = {
             full_name: name,
             phone: document.getElementById('s_phone').value || null,
@@ -2175,27 +2552,40 @@ function openStudentModal(id = null) {
             address: document.getElementById('s_address').value || null,
             parent_name: document.getElementById('s_parent_name').value || null,
             parent_phone: document.getElementById('s_parent_phone').value || null,
-            group_id: parseInt(document.getElementById('s_group_id').value) || null,
+            group_id: groupId,
             course_start_date: document.getElementById('s_course_start_date').value || today,
-            monthly_payment: parseFloat(document.getElementById('s_monthly_payment').value) || 0,
+            monthly_payment: monthlyPayment,
             status: document.getElementById('s_status').value,
             photo: _pendingPhoto
         };
         try {
             if (isEdit) { await DB.update('students', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
             else { await DB.insert('students', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
-            closeModal(); renderStudents(); renderDashboard();
+            closeModal(); renderStudents(); renderDashboard(); renderGroups();
         } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-user-grad"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi o\'quvchi'}`, body);
     setTimeout(attachPhotoListener, 30);
 }
+
+function onStudentGroupChange() {
+    const select = document.getElementById('s_group_id');
+    const selectedOption = select.options[select.selectedIndex];
+    const monthlyPayment = selectedOption.dataset.monthly;
+    const monthlyInput = document.getElementById('s_monthly_payment');
+    if (monthlyPayment && monthlyInput) {
+        monthlyInput.value = monthlyPayment;
+    }
+}
+
 function editStudent(id) { openStudentModal(id); }
 function viewStudent(id) {
     const s = DB.get('students').find(x => x.id === id); if (!s) return;
     const payments = DB.get('payments').filter(p => p.student_id === id).slice(-8).reverse();
     const att = getAttendancePercent(id), debt = getStudentDebt(id);
     const monthsDetails = getMonthsDetails(id);
+    const monthlyPayment = getStudentMonthlyPayment(id);
+    const hasPhone = !!(s.parent_phone || s.phone);
     const avatarHTML = s.photo ? `<div class="profile-avatar"><img src="${s.photo}"></div>` : `<div class="profile-avatar">${s.full_name.charAt(0)}</div>`;
     const body = `
         <div class="profile-header">
@@ -2210,14 +2600,19 @@ function viewStudent(id) {
             <div class="info-item"><label>Ota-ona</label><div class="value">${s.parent_name || '-'}</div></div>
             <div class="info-item"><label>Ota-ona tel</label><div class="value">${s.parent_phone || '-'}</div></div>
             <div class="info-item"><label>Manzil</label><div class="value">${s.address || '-'}</div></div>
-            <div class="info-item"><label>Oylik to'lov</label><div class="value">${formatMoney(s.monthly_payment)}</div></div>
-            <div class="info-item"><label>Qarz</label><div class="value" style="color:${debt > 0 ? 'var(--danger)' : 'var(--primary)'};">${formatMoney(debt)}</div></div>
+            <div class="info-item"><label>Oylik to'lov</label><div class="value">${formatMoney(monthlyPayment)}</div></div>
+            <div class="info-item"><label>Qarz (joriy oy)</label><div class="value" style="color:${debt > 0 ? 'var(--danger)' : 'var(--primary)'};">${formatMoney(debt)}</div></div>
             <div class="info-item"><label>Davomat</label><div class="value">${att}%</div></div>
         </div>
-        ${debt > 0 ? `<button class="btn btn-warning" style="margin-top:14px; width:100%;" onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);"><svg class="icon-sm"><use href="#i-credit-card"/></svg> To'lov qabul qilish (${formatMoney(debt)})</button>` : ''}
-        <h3 class="section-title">Oylar bo'yicha holat</h3>
+        ${debt > 0 ? `
+            <div style="display:flex; gap:8px; margin-top:14px;">
+                <button class="btn btn-warning" style="flex:1;" onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);"><svg class="icon-sm"><use href="#i-credit-card"/></svg> To'lov (${formatMoney(debt)})</button>
+                <button class="btn btn-success" style="flex:1;" onclick="closeModal(); setTimeout(() => openSMSModal(${s.id}), 100);" ${!hasPhone ? 'disabled style="opacity:0.5;cursor:not-allowed;flex:1;"' : ''}><svg class="icon-sm"><use href="#i-message"/></svg> SMS yuborish</button>
+            </div>
+        ` : ''}
+        <h3 class="section-title">Joriy oy holati</h3>
         <div class="table-responsive"><table><thead><tr><th>Oy</th><th>Kutilgan</th><th>To'langan</th><th>Qarz</th><th>Holat</th></tr></thead>
-        <tbody>${monthsDetails.length ? [...monthsDetails].reverse().map(m => {
+        <tbody>${monthsDetails.length ? monthsDetails.map(m => {
             const cls = m.status === 'paid' ? 'badge-success' : m.status === 'partial' ? 'badge-warning' : 'badge-danger';
             const label = m.status === 'paid' ? 'To\'langan' : m.status === 'partial' ? 'Qisman' : 'To\'lanmagan';
             return `<tr><td>${m.monthLabel}</td><td>${formatMoney(m.expected)}</td><td>${formatMoney(m.paid)}</td><td style="color:${m.debt > 0 ? 'var(--danger)' : 'var(--primary)'}; font-weight:700;">${formatMoney(m.debt)}</td><td><span class="badge ${cls}">${label}</span></td></tr>`;
@@ -2232,7 +2627,7 @@ async function deleteStudent(id) { if (!confirm('O\'chirishni xohlaysizmi?')) re
 
 /* ==================== TEACHERS ==================== */
 function renderTeachers() {
-    const search = (document.getElementById('teacherSearch').value || '').toLowerCase();
+    const search = (document.getElementById('teacherSearch')?.value || '').toLowerCase();
     let teachers = DB.get('teachers');
     if (search) teachers = teachers.filter(t => t.full_name.toLowerCase().includes(search));
     const tbody = document.getElementById('teachersTable');
@@ -2290,11 +2685,11 @@ function openTeacherModal(id = null) {
             <input type="number" id="t_salary_percentage" value="${t.salary_percentage || 30}" min="0" max="100" step="1">
             <div class="salary-info-box" style="margin-top:10px;">
                 <h4><svg><use href="#i-percent"/></svg> Foizli maosh qanday ishlaydi</h4>
-                <p>💡 O'qituvchi guruhlaridagi o'quvchilar to'lov qilganda, to'langan summaning <strong id="percentPreview">30%</strong> i o'qituvchi maoshiga qo'shiladi.</p>
-                <p style="margin-top:6px;">📊 Misol: o'quvchi <strong>500,000 so'm</strong> to'lasa, o'qituvchi <strong id="examplePreview">150,000 so'm</strong> oladi.</p>
+                <p>O'qituvchi guruhlaridagi o'quvchilar to'lov qilganda, to'langan summaning <strong id="percentPreview">30%</strong> i o'qituvchi maoshiga qo'shiladi.</p>
+                <p style="margin-top:6px;">Misol: o'quvchi <strong>500,000 so'm</strong> to'lasa, o'qituvchi <strong id="examplePreview">150,000 so'm</strong> oladi.</p>
             </div>
         </div>
-        <div style="background: linear-gradient(135deg, var(--info-light), white); border: 2px dashed var(--info); border-radius: 14px; padding: 18px; margin: 18px 0;">
+        <div style="background: linear-gradient(135deg, var(--info-light), white); border: 2px dashed var(--info); border-radius: 16px; padding: 18px; margin: 18px 0;">
             <h4 style="font-size:14px; font-weight:800; color:var(--dark); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
                 <svg style="width:18px;height:18px;color:var(--info);"><use href="#i-lock"/></svg>
                 Tizimga kirish uchun login va parol *
@@ -2371,7 +2766,7 @@ function viewTeacherSalary(teacherId, initialMonth = null) {
     const selectedMonth = initialMonth || _selectedSalaryMonth || new Date().toISOString().slice(0, 7);
     const monthOptions = months.map(m => `<option value="${m}" ${m === selectedMonth ? 'selected' : ''}>${formatMonth(m)}</option>`).join('');
     const body = `
-        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--info-light), white); border-radius:14px; margin-bottom:20px; border:1px solid var(--info);">
+        <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--info-light), white); border-radius:16px; margin-bottom:20px; border:1px solid var(--info);">
             ${teacher.photo ? `<div class="profile-avatar" style="width:70px;height:70px;border-radius:18px;"><img src="${teacher.photo}"></div>` : `<div class="profile-avatar" style="width:70px;height:70px;border-radius:18px;font-size:28px;">${teacher.full_name.charAt(0)}</div>`}
             <div style="flex:1;">
                 <h3 style="font-size:18px; font-weight:800; color:var(--dark); margin-bottom:4px;">${teacher.full_name}</h3>
@@ -2381,10 +2776,10 @@ function viewTeacherSalary(teacherId, initialMonth = null) {
                 </span>
             </div>
         </div>
-        <div style="background: var(--light); border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
-            <label style="display:block; font-size: 12px; font-weight: 800; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">📅 Oyni tanlang</label>
+        <div style="background: var(--primary-mist); border: 2px solid var(--primary-soft); border-radius: 14px; padding: 14px 16px; margin-bottom: 18px;">
+            <label style="display:block; font-size: 12px; font-weight: 800; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Oyni tanlang</label>
             <select id="tsm_month_select" onchange="onTeacherSalaryMonthChange(${teacherId}, this.value)" 
-                    style="width:100%; padding: 12px 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; color: var(--dark); background: white; outline: none; cursor: pointer;">
+                    style="width:100%; padding: 12px 14px; border: 2px solid var(--primary-soft); border-radius: 12px; font-size: 15px; font-weight: 700; font-family: inherit; color: var(--dark); background: white; outline: none; cursor: pointer;">
                 ${monthOptions}
             </select>
         </div>
@@ -2412,7 +2807,7 @@ function renderTeacherSalaryContent(teacherId, month) {
         if (salary.details.length > 0) {
             detailsHTML = `
                 <h4 style="font-size:13px; font-weight:800; color:var(--dark); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">
-                    📋 ${formatMonth(month)} uchun to'lovlardan ulush
+                    ${formatMonth(month)} uchun to'lovlardan ulush
                 </h4>
                 <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
                     <table>
@@ -2430,8 +2825,10 @@ function renderTeacherSalaryContent(teacherId, month) {
             `;
         } else {
             detailsHTML = `
-                <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 16px; text-align:center;">
-                    <div style="font-size: 40px; margin-bottom: 8px;">📭</div>
+                <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 14px; padding: 16px; text-align:center;">
+                    <div style="font-size: 40px; margin-bottom: 8px;">
+                        <svg style="width:40px;height:40px;stroke:var(--warning);"><use href="#i-info"/></svg>
+                    </div>
                     <strong style="color: #92400e; font-size: 14px; display:block; margin-bottom: 4px;">${formatMonth(month)} uchun to'lovlar yo'q</strong>
                     <p style="font-size: 12px; color: #92400e; margin: 0;">Bu oyda hech qanday o'quvchi to'lov qilmagan</p>
                 </div>
@@ -2439,8 +2836,8 @@ function renderTeacherSalaryContent(teacherId, month) {
         }
     } else if (teacher.salary_type === 'fixed') {
         detailsHTML = `
-            <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 12px; padding: 14px; text-align:center;">
-                <strong style="color: #1e40af; font-size: 13px;">ℹ️ Belgilangan maosh</strong>
+            <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 14px; padding: 14px; text-align:center;">
+                <strong style="color: #1e40af; font-size: 13px;">Belgilangan maosh</strong>
                 <p style="font-size: 12px; color: #1e40af; margin: 6px 0 0;">Bu o'qituvchiga har oy qat'iy belgilangan summa to'lanadi</p>
             </div>
         `;
@@ -2448,8 +2845,8 @@ function renderTeacherSalaryContent(teacherId, month) {
         const schedules = DB.get('schedules').filter(s => s.teacher_id === teacherId);
         const totalLessons = schedules.length;
         detailsHTML = `
-            <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 12px; padding: 14px;">
-                <div style="font-size: 12px; color: #1e40af; font-weight: 700; margin-bottom: 8px;">📚 Dars uchun maosh</div>
+            <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 14px; padding: 14px;">
+                <div style="font-size: 12px; color: #1e40af; font-weight: 700; margin-bottom: 8px;">Dars uchun maosh</div>
                 <div style="display:flex; justify-content:space-between; font-size: 13px; color: #1e40af; margin-bottom: 4px;">
                     <span>Haftalik darslar:</span>
                     <strong>${totalLessons} ta</strong>
@@ -2464,7 +2861,7 @@ function renderTeacherSalaryContent(teacherId, month) {
     const isCurrentMonth = month === new Date().toISOString().slice(0, 7);
     const monthBadge = isCurrentMonth ? '<span class="badge badge-success" style="font-size:10px;">Joriy oy</span>' : '<span class="badge badge-gray" style="font-size:10px;">O\'tgan oy</span>';
     el.innerHTML = `
-        <div style="background: linear-gradient(135deg, ${isCurrentMonth ? '#064e3b 0%, #047857 50%, #10b981 100%' : '#1e40af 0%, #3b82f6 50%, #60a5fa 100%'}); color: white; padding: 22px 24px; border-radius: 14px; margin-bottom: 20px; position:relative; overflow:hidden;">
+        <div style="background: linear-gradient(135deg, ${isCurrentMonth ? '#047857 0%, #059669 50%, #10b981 100%' : '#1e40af 0%, #3b82f6 50%, #60a5fa 100%'}); color: white; padding: 22px 24px; border-radius: 16px; margin-bottom: 20px; position:relative; overflow:hidden;">
             <div style="position: absolute; top: 14px; right: 16px;">${monthBadge}</div>
             <div style="font-size:11px; opacity:0.85; text-transform:uppercase; letter-spacing:0.6px; font-weight:700;">${formatMonth(month)} — Maosh</div>
             <div style="font-size:36px; font-weight:900; margin-top:8px; color:#fef3c7; letter-spacing:-0.5px;">${formatMoney(salary.total)}</div>
@@ -2473,11 +2870,11 @@ function renderTeacherSalaryContent(teacherId, month) {
             ` : ''}
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
-            <div style="padding: 14px; background: var(--light); border-radius: 12px; text-align: center;">
+            <div style="padding: 14px; background: var(--primary-mist); border-radius: 14px; text-align: center;">
                 <div style="font-size: 22px; font-weight: 900; color: var(--primary-dark);">${groups.length}</div>
                 <div style="font-size: 11px; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px;">Guruhlar</div>
             </div>
-            <div style="padding: 14px; background: var(--light); border-radius: 12px; text-align: center;">
+            <div style="padding: 14px; background: var(--primary-mist); border-radius: 14px; text-align: center;">
                 <div style="font-size: 22px; font-weight: 900; color: var(--primary-dark);">${students.length}</div>
                 <div style="font-size: 11px; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px;">O'quvchilar</div>
             </div>
@@ -2488,7 +2885,7 @@ function renderTeacherSalaryContent(teacherId, month) {
 
 /* ==================== GROUPS ==================== */
 function renderGroups() {
-    const search = (document.getElementById('groupSearch').value || '').toLowerCase();
+    const search = (document.getElementById('groupSearch')?.value || '').toLowerCase();
     let groups = DB.get('groups');
     if (search) groups = groups.filter(g => g.name.toLowerCase().includes(search));
     const students = DB.get('students');
@@ -2515,7 +2912,7 @@ function renderGroups() {
                         ${debtors.length} ta
                        </button>
                        <div style="font-size:10px; color:var(--danger); font-weight:700; margin-top:3px;">${formatMoney(totalGroupDebt)}</div>`
-                    : `<span class="badge badge-success" style="font-size:10px;">✓ Qarzdor yo'q</span>`}
+                    : `<span class="badge badge-success" style="font-size:10px;">Qarzdor yo'q</span>`}
             </td>
             <td><span class="badge ${g.status === 'Faol' ? 'badge-success' : 'badge-gray'}">${g.status}</span></td>
             <td>
@@ -2567,9 +2964,18 @@ function openGroupModal(id = null) {
             status: document.getElementById('g_status').value
         };
         try {
-            if (isEdit) { await DB.update('groups', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
+            if (isEdit) { 
+                await DB.update('groups', id, data); 
+                const students = DB.get('students').filter(s => s.group_id === id);
+                for (const s of students) {
+                    if (s.monthly_payment != data.monthly_payment) {
+                        await DB.update('students', s.id, { monthly_payment: data.monthly_payment });
+                    }
+                }
+                toast('Muvaffaqiyat', 'Yangilandi'); 
+            }
             else { await DB.insert('groups', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
-            closeModal(); renderGroups();
+            closeModal(); renderGroups(); renderDashboard(); renderStudents();
         } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-users"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi guruh'}`, body);
@@ -2630,8 +3036,8 @@ function renderPayments() {
     const cv = mf.value;
     mf.innerHTML = '<option value="">Barcha oylar</option>' + months.map(m => `<option value="${m}">${formatMonth(m)}</option>`).join('');
     mf.value = cv;
-    const search = (document.getElementById('paymentSearch').value || '').toLowerCase();
-    const fs = document.getElementById('paymentFilterStatus').value;
+    const search = (document.getElementById('paymentSearch')?.value || '').toLowerCase();
+    const fs = document.getElementById('paymentFilterStatus')?.value || '';
     const fm = mf.value;
     let payments = DB.get('payments');
     if (search) payments = payments.filter(p => getStudentName(p.student_id).toLowerCase().includes(search));
@@ -2658,6 +3064,7 @@ function renderPayments() {
             <td>${p.payment_method || '-'}</td>
             <td><span class="badge ${cls}">${p.status}</span></td>
             <td>
+                <button class="btn btn-sm btn-success btn-icon" onclick="openSMSModal(${p.student_id})" title="SMS yuborish"><svg><use href="#i-message"/></svg></button>
                 <button class="btn btn-sm btn-warning btn-icon" onclick="openManualPaymentModal(${p.student_id})" title="Qo'lda to'lov"><svg><use href="#i-credit-card"/></svg></button>
                 <button class="btn btn-sm btn-secondary btn-icon" onclick="editPayment(${p.id})"><svg><use href="#i-edit"/></svg></button>
                 <button class="btn btn-sm btn-danger btn-icon" onclick="deletePayment(${p.id})"><svg><use href="#i-trash"/></svg></button>
@@ -2717,8 +3124,8 @@ function renderExpenses() {
     const cv = mf.value;
     mf.innerHTML = '<option value="">Barcha oylar</option>' + months.map(m => `<option value="${m}">${formatMonth(m)}</option>`).join('');
     mf.value = cv;
-    const search = (document.getElementById('expenseSearch').value || '').toLowerCase();
-    const fc = document.getElementById('expenseFilterCategory').value;
+    const search = (document.getElementById('expenseSearch')?.value || '').toLowerCase();
+    const fc = document.getElementById('expenseFilterCategory')?.value || '';
     const fm = mf.value;
     let filtered = expenses;
     if (search) filtered = filtered.filter(e => (e.description || '').toLowerCase().includes(search));
@@ -2954,8 +3361,8 @@ function loadAttendanceStudents() {
         return `<tr>
             <td><strong>${s.full_name}</strong></td>
             <td>${s.phone || '-'}</td>
-            <td><select data-student="${s.id}" class="att-status" style="padding:8px 12px;border:2px solid var(--border);border-radius:8px;font-weight:600;">${['Keldi','Kelmagan','Kechikdi','Sababli'].map(x => `<option ${st === x ? 'selected' : ''}>${x}</option>`).join('')}</select></td>
-            <td><input type="text" class="att-note" data-student="${s.id}" value="${ex ? ex.notes || '' : ''}" placeholder="Izoh..." style="padding:8px 12px;border:2px solid var(--border);border-radius:8px;width:100%;"></td>
+            <td><select data-student="${s.id}" class="att-status" style="padding:8px 12px;border:2px solid var(--primary-soft);border-radius:10px;font-weight:600;">${['Keldi','Kelmagan','Kechikdi','Sababli'].map(x => `<option ${st === x ? 'selected' : ''}>${x}</option>`).join('')}</select></td>
+            <td><input type="text" class="att-note" data-student="${s.id}" value="${ex ? ex.notes || '' : ''}" placeholder="Izoh..." style="padding:8px 12px;border:2px solid var(--primary-soft);border-radius:10px;width:100%;"></td>
         </tr>`;
     }).join('');
 }
@@ -3095,7 +3502,7 @@ function createTeacherPages() {
     content.innerHTML = `
         <div class="page active" id="page-my-schedule">
             <div class="teacher-hero">
-                <h2>Salom, ${currentUser.full_name}! 👋</h2>
+                <h2>Salom, ${currentUser.full_name}!</h2>
                 <p id="teacherHeroDate"></p>
                 <div class="hero-stats" id="teacherHeroStats"></div>
             </div>
@@ -3125,7 +3532,7 @@ function createTeacherPages() {
         </div>
         <div class="page" id="page-my-debtors">
             <div class="teacher-hero" style="background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 50%, #ef4444 100%);">
-                <h2>⚠️ Qarzdor o'quvchilar</h2>
+                <h2>Qarzdor o'quvchilar</h2>
                 <p>Sizning guruhlaringizdagi oylik to'lov qilmagan o'quvchilar</p>
                 <div class="hero-stats" id="teacherDebtorsStats"></div>
             </div>
@@ -3182,7 +3589,6 @@ function getTeacherDebtors() {
     return DB.get('students').filter(s => groupIds.includes(s.group_id) && getStudentDebt(s.id) > 0 && s.status === 'Faol');
 }
 
-/* O'qituvchi o'z qarzdorlarini ko'radi */
 function renderTeacherDebtors() {
     const debtors = getTeacherDebtors().sort((a, b) => getStudentDebt(b.id) - getStudentDebt(a.id));
     const totalDebt = debtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
@@ -3206,11 +3612,10 @@ function renderTeacherDebtors() {
     if (!listEl) return;
     
     if (!debtors.length) {
-        listEl.innerHTML = `<div class="empty-state" style="padding:60px 20px;"><div class="icon-wrap" style="width:80px;height:80px;"><svg style="width:38px;height:38px;"><use href="#i-check-circle"/></svg></div><h3>Qarzdor o'quvchilar yo'q</h3><p>Sizning guruhlaringizda hamma to'lov qilgan ✅</p></div>`;
+        listEl.innerHTML = `<div class="empty-state" style="padding:60px 20px;"><div class="icon-wrap" style="width:80px;height:80px;"><svg style="width:38px;height:38px;"><use href="#i-check-circle"/></svg></div><h3>Qarzdor o'quvchilar yo'q</h3><p>Sizning guruhlaringizda hamma to'lov qilgan</p></div>`;
         return;
     }
     
-    // Guruh bo'yicha guruhlash
     let html = '';
     groups.forEach(group => {
         const groupDebtors = debtors.filter(s => s.group_id === group.id);
@@ -3218,7 +3623,7 @@ function renderTeacherDebtors() {
         const groupTotalDebt = groupDebtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
         html += `
             <div style="margin-bottom:20px;">
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:linear-gradient(135deg, #fef2f2, white); border-radius:12px; border-left:4px solid var(--danger); margin-bottom:10px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:linear-gradient(135deg, #fef2f2, white); border-radius:14px; border-left:4px solid var(--danger); margin-bottom:10px;">
                     <div>
                         <strong style="font-size:15px; color:var(--dark);">${group.name}</strong>
                         <span style="font-size:12px; color:var(--gray); margin-left:8px;">${getSubjectName(group.subject_id)}</span>
@@ -3230,18 +3635,20 @@ function renderTeacherDebtors() {
                 </div>
                 ${groupDebtors.map(s => {
                     const debt = getStudentDebt(s.id);
-                    const months = getDebtMonths(s.id);
+                    const hasPhone = !!(s.parent_phone || s.phone);
                     return `
-                        <div class="debtor-student-item">
+                        <div class="debtor-student-item" style="border-left-color: var(--danger);">
                             ${getPhotoHTML(s.photo, s.full_name, 44)}
-                            <div class="info">
+                            <div class="info" style="flex:1;">
                                 <h4>${s.full_name}</h4>
-                                <p><svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-phone"/></svg> ${s.phone || '-'} • Oylik: ${formatMoney(s.monthly_payment)}</p>
-                                <p style="margin-top:3px; font-size:11px; color:var(--danger); font-weight:700;">📅 ${months.slice(0, 3).join(', ')}${months.length > 3 ? ` +${months.length - 3}` : ''}</p>
+                                <p><svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-phone"/></svg> ${s.phone || '-'} • Oylik: ${formatMoney(getStudentMonthlyPayment(s.id))}</p>
                             </div>
                             <div style="text-align:right;">
                                 <div class="amount">${formatMoney(debt)}</div>
                             </div>
+                            <button class="btn btn-sm btn-success btn-icon" onclick="event.stopPropagation(); openSMSModal(${s.id})" title="SMS yuborish" style="margin-left:8px;" ${!hasPhone ? 'disabled style="opacity:0.5;cursor:not-allowed;margin-left:8px;"' : ''}>
+                                <svg><use href="#i-message"/></svg>
+                            </button>
                         </div>
                     `;
                 }).join('')}
@@ -3284,8 +3691,10 @@ function renderTeacherSalary() {
                 </div>
             `;
         } else {
-            detailsHTML = `<div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 12px; padding: 20px; margin-top: 20px; text-align: center;">
-                <div style="font-size: 40px; margin-bottom: 8px;">📭</div>
+            detailsHTML = `<div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 14px; padding: 20px; margin-top: 20px; text-align: center;">
+                <div style="font-size: 40px; margin-bottom: 8px;">
+                    <svg style="width:40px;height:40px;stroke:var(--warning);"><use href="#i-info"/></svg>
+                </div>
                 <strong style="color: #92400e; font-size: 14px; display:block; margin-bottom: 4px;">${formatMonth(selectedMonth)} uchun to'lovlar yo'q</strong>
                 <p style="margin: 0; font-size: 12px; color: #92400e;">Bu oyda hech qanday o'quvchi to'lov qilmagan</p>
             </div>`;
@@ -3293,13 +3702,13 @@ function renderTeacherSalary() {
     }
     const isCurrentMonth = selectedMonth === new Date().toISOString().slice(0, 7);
     document.getElementById('teacherSalaryContent').innerHTML = `
-        <div class="teacher-hero" style="background: linear-gradient(135deg, ${isCurrentMonth ? '#064e3b 0%, #047857 50%, #10b981 100%' : '#1e40af 0%, #3b82f6 50%, #60a5fa 100%'});">
-            <h2>💰 Mening maoshim</h2>
+        <div class="teacher-hero" style="background: linear-gradient(135deg, ${isCurrentMonth ? '#047857 0%, #059669 50%, #10b981 100%' : '#1e40af 0%, #3b82f6 50%, #60a5fa 100%'});">
+            <h2>Mening maoshim</h2>
             <p>${salaryTypeText}</p>
             <div style="margin-top: 20px; position: relative;">
-                <label style="display:block; font-size: 11px; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; margin-bottom: 8px;">📅 Oyni tanlang</label>
+                <label style="display:block; font-size: 11px; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; margin-bottom: 8px;">Oyni tanlang</label>
                 <select id="teacherMonthPicker" onchange="onTeacherSalaryMonthChange()" 
-                        style="width:100%; max-width: 320px; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.4); border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; background: rgba(255,255,255,0.95); color: #0f172a; outline: none; cursor: pointer;">
+                        style="width:100%; max-width: 320px; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.4); border-radius: 12px; font-size: 15px; font-weight: 700; font-family: inherit; background: rgba(255,255,255,0.95); color: #0f172a; outline: none; cursor: pointer;">
                     ${monthOptions}
                 </select>
             </div>
@@ -3341,7 +3750,7 @@ function renderTeacherSchedule() {
     if (todayBadge) todayBadge.textContent = `${todaySchedules.length} ta dars`;
     const todayList = document.getElementById('teacherTodayList');
     if (!todaySchedules.length) {
-        todayList.innerHTML = `<div class="empty-state" style="padding:30px;"><div class="icon-wrap" style="width:60px;height:60px;"><svg style="width:28px;height:28px;"><use href="#i-check-circle"/></svg></div><h3>Bugun darsingiz yo'q</h3><p>${today} kuni dam oling! 😊</p></div>`;
+        todayList.innerHTML = `<div class="empty-state" style="padding:30px;"><div class="icon-wrap" style="width:60px;height:60px;"><svg style="width:28px;height:28px;"><use href="#i-check-circle"/></svg></div><h3>Bugun darsingiz yo'q</h3><p>${today} kuni dam oling!</p></div>`;
     } else {
         const now = new Date();
         const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -3351,9 +3760,9 @@ function renderTeacherSchedule() {
             const nextIdx = todaySchedules.findIndex(x => x.start_time > currentTime);
             const isNext = !isNow && !isPast && idx === nextIdx;
             let statusBadge = '', borderColor = 'var(--primary)';
-            if (isNow) { statusBadge = '<span class="badge badge-success">🟢 Hozir</span>'; borderColor = 'var(--primary)'; }
-            else if (isPast) { statusBadge = '<span class="badge badge-gray">✓ Tugagan</span>'; borderColor = 'var(--gray-2)'; }
-            else if (isNext) { statusBadge = '<span class="badge badge-warning">⏰ Keyingi</span>'; borderColor = 'var(--warning)'; }
+            if (isNow) { statusBadge = '<span class="badge badge-success">Hozir</span>'; borderColor = 'var(--primary)'; }
+            else if (isPast) { statusBadge = '<span class="badge badge-gray">Tugagan</span>'; borderColor = 'var(--gray-2)'; }
+            else if (isNext) { statusBadge = '<span class="badge badge-warning">Keyingi</span>'; borderColor = 'var(--warning)'; }
             else { statusBadge = '<span class="badge badge-info">Rejalashtirilgan</span>'; }
             return `<div class="schedule-item" style="border-left-color: ${borderColor}; ${isNow ? 'background: var(--primary-50); box-shadow: 0 0 0 2px var(--primary);' : ''}">
                 <div class="schedule-time">${s.start_time}<small>${s.end_time}</small></div>
@@ -3374,13 +3783,13 @@ function renderTeacherSchedule() {
     DAYS.forEach(day => {
         const daySchedules = schedules.filter(s => s.day === day).sort((a, b) => (a.start_time || '').localeCompare(b.start_time || ''));
         const isToday = day === today;
-        html += `<div style="border:2px solid ${isToday ? 'var(--primary)' : 'var(--border)'}; border-radius:14px; padding:14px 16px; ${isToday ? 'background: linear-gradient(135deg, var(--primary-50), white);' : 'background: white;'}">
+        html += `<div style="border:2px solid ${isToday ? 'var(--primary)' : 'var(--primary-soft)'}; border-radius:16px; padding:14px 16px; ${isToday ? 'background: linear-gradient(135deg, var(--primary-50), white);' : 'background: white;'}">
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:${daySchedules.length ? '12px' : '0'};">
                 <strong style="font-size:14px; ${isToday ? 'color: var(--primary-dark);' : 'color: var(--dark);'}">${day}</strong>
                 ${isToday ? '<span class="badge badge-success" style="font-size:10px;">Bugun</span>' : ''}
                 ${daySchedules.length ? `<span class="badge badge-info" style="font-size:10px;">${daySchedules.length} ta</span>` : '<span class="badge badge-gray" style="font-size:10px;">Dars yo\'q</span>'}
             </div>
-            ${daySchedules.map(s => `<div style="display:flex; align-items:center; gap:12px; padding:10px 12px; background: var(--light); border-radius:10px; margin-bottom:6px; border-left:3px solid var(--primary);">
+            ${daySchedules.map(s => `<div style="display:flex; align-items:center; gap:12px; padding:10px 12px; background: var(--primary-mist); border-radius:12px; margin-bottom:6px; border-left:3px solid var(--primary);">
                 <div style="min-width:100px; font-weight:800; font-size:13px; color:var(--primary-dark);">${s.start_time} - ${s.end_time}</div>
                 <div style="flex:1; min-width:0;">
                     <div style="font-weight:700; font-size:13px; color:var(--dark);">${getSubjectName(s.subject_id)}</div>
@@ -3406,8 +3815,8 @@ function renderTeacherTodayFull() {
     el.innerHTML = schedules.map(s => {
         const isNow = currentTime >= s.start_time && currentTime <= s.end_time;
         const isPast = currentTime > s.end_time;
-        return `<div style="display:flex; gap:16px; padding:16px; background: ${isNow ? 'var(--primary-50)' : isPast ? 'var(--light)' : 'white'}; border:2px solid ${isNow ? 'var(--primary)' : 'var(--border)'}; border-radius:14px; margin-bottom:12px;">
-            <div style="min-width:110px; text-align:center; padding:12px; background: ${isNow ? 'var(--primary)' : isPast ? 'var(--gray-2)' : 'var(--primary-light)'}; color: ${isNow || isPast ? 'white' : 'var(--primary-dark)'}; border-radius:10px;">
+        return `<div style="display:flex; gap:16px; padding:16px; background: ${isNow ? 'var(--primary-50)' : isPast ? 'var(--primary-mist)' : 'white'}; border:2px solid ${isNow ? 'var(--primary)' : 'var(--primary-soft)'}; border-radius:16px; margin-bottom:12px;">
+            <div style="min-width:110px; text-align:center; padding:12px; background: ${isNow ? 'var(--primary)' : isPast ? 'var(--gray-2)' : 'var(--primary-light)'}; color: ${isNow || isPast ? 'white' : 'var(--primary-dark)'}; border-radius:12px;">
                 <div style="font-size:18px; font-weight:900;">${s.start_time}</div>
                 <div style="font-size:11px; opacity:0.9;">${s.end_time} gacha</div>
             </div>
@@ -3415,8 +3824,8 @@ function renderTeacherTodayFull() {
                 <h4 style="font-size:16px; font-weight:800; color:var(--dark); margin-bottom:6px;">${getSubjectName(s.subject_id)}</h4>
                 <p style="font-size:13px; color:var(--gray); margin-bottom:4px;"><svg style="width:14px;height:14px;vertical-align:middle;"><use href="#i-users"/></svg> <strong>${getGroupName(s.group_id)}</strong></p>
                 <p style="font-size:13px; color:var(--gray);"><svg style="width:14px;height:14px;vertical-align:middle;"><use href="#i-home"/></svg> ${s.room || '-'} xona</p>
-                ${isNow ? '<span class="badge badge-success" style="margin-top:10px;">🟢 Hozir davom etmoqda</span>' : ''}
-                ${isPast ? '<span class="badge badge-gray" style="margin-top:10px;">✓ Tugagan</span>' : ''}
+                ${isNow ? '<span class="badge badge-success" style="margin-top:10px;">Hozir davom etmoqda</span>' : ''}
+                ${isPast ? '<span class="badge badge-gray" style="margin-top:10px;">Tugagan</span>' : ''}
             </div>
         </div>`;
     }).join('');
@@ -3447,7 +3856,7 @@ function renderTeacherGroups() {
                         ${debtors.length} ta
                        </button>
                        <div style="font-size:10px; color:var(--danger); font-weight:700; margin-top:3px;">${formatMoney(totalDebt)}</div>`
-                    : `<span class="badge badge-success" style="font-size:10px;">✓ Qarzdor yo'q</span>`}
+                    : `<span class="badge badge-success" style="font-size:10px;">Qarzdor yo\'q</span>`}
             </td>
         </tr>`;
     }).join('');
@@ -3492,19 +3901,19 @@ async function installPWA() {
     if (!deferredPrompt) { toast('Ma\'lumot', 'Brauzer menyusidan "Install" ni tanlang', 'info'); return; }
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') { toast('Muvaffaqiyat', 'Bloom Education o\'rnatildi! 🎉'); document.getElementById('pwaInstallBtn').classList.remove('show'); }
+    if (outcome === 'accepted') { toast('Muvaffaqiyat', 'Bloom Education o\'rnatildi!'); document.getElementById('pwaInstallBtn').classList.remove('show'); }
     deferredPrompt = null;
 }
 window.addEventListener('appinstalled', () => {
-    toast('Muvaffaqiyat', 'Dastur o\'rnatildi! 🚀');
+    toast('Muvaffaqiyat', 'Dastur o\'rnatildi!');
     document.getElementById('pwaInstallBtn').classList.remove('show');
 });
 
 window.addEventListener('online', () => document.getElementById('offlineIndicator').classList.remove('show'));
 window.addEventListener('offline', () => document.getElementById('offlineIndicator').classList.add('show'));
 
-console.log('%c🌿 Bloom Education', 'color: #10b981; font-size: 20px; font-weight: bold;');
-console.log('%c✅ Qarzdorlar bo\'limi qo\'shildi', 'color: #059669; font-size: 13px;');
+console.log('%cBloom Education', 'color: #10b981; font-size: 20px; font-weight: bold;');
+console.log('%cSMS yuborish, yangilangan dizayn va qarz tizimi qo\'shildi', 'color: #059669; font-size: 13px;');
 </script>
 
 </body>
