@@ -410,6 +410,107 @@ tbody tr:last-child td { border-bottom: none; }
 .sms-template h5 { font-size: 13px; font-weight: 800; color: var(--dark); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 .sms-template p { font-size: 12px; color: var(--gray); line-height: 1.5; font-weight: 500; }
 
+/* CHEGIRMA */
+.discount-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    box-shadow: 0 4px 12px rgba(245,158,11,0.35);
+    white-space: nowrap;
+    animation: discountPulse 2s ease-in-out infinite;
+}
+@keyframes discountPulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(245,158,11,0.35); }
+    50% { box-shadow: 0 4px 20px rgba(245,158,11,0.6); }
+}
+.discount-info-box {
+    background: linear-gradient(135deg, #fef3c7, white);
+    border: 2px dashed #f59e0b;
+    border-radius: 16px;
+    padding: 16px;
+    margin: 14px 0;
+}
+.discount-info-box h4 {
+    font-size: 13px;
+    font-weight: 800;
+    color: #92400e;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.discount-info-box .calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(245,158,11,0.3);
+    font-size: 12.5px;
+}
+.discount-info-box .calc-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 2px solid #f59e0b;
+}
+.discount-info-box .calc-row span:first-child {
+    color: #92400e;
+    font-weight: 600;
+}
+.discount-info-box .calc-row span:last-child {
+    font-weight: 800;
+    color: var(--dark);
+}
+.discount-info-box .calc-row.highlight span:last-child {
+    color: var(--primary-dark);
+    font-size: 15px;
+}
+.discount-info-box .calc-row.strike span:last-child {
+    text-decoration: line-through;
+    color: var(--gray-2);
+}
+.discount-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.discount-quick-btns {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+.discount-quick-btns button {
+    padding: 6px 12px;
+    border: 2px solid var(--primary-soft);
+    background: white;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--dark);
+    transition: all 0.2s;
+}
+.discount-quick-btns button:hover {
+    border-color: #f59e0b;
+    background: #fef3c7;
+    color: #92400e;
+    transform: translateY(-1px);
+}
+.discount-quick-btns button.active {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border-color: #f59e0b;
+}
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
     .search-box input { width: 200px; }
@@ -509,6 +610,7 @@ tbody tr:last-child td { border-bottom: none; }
     <symbol id="i-smartphone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
     <symbol id="i-external-link" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></symbol>
 </svg>
 
 <div class="bg-decoration">
@@ -653,6 +755,11 @@ const SMS_TEMPLATES = [
         text: 'Hurmatli {parent_name}! Farzandingiz {student_name} ning {month} oyi uchun {debt} so\'m qarz to\'lovi mavjud. Iltimos, 3 kun ichida to\'lovni amalga oshiring. Bloom Education'
     },
     {
+        id: 'discount_info',
+        title: 'Chegirma ma\'lumoti',
+        text: 'Hurmatli {parent_name}! Farzandingiz {student_name} uchun {discount}% chegirma qo\'llanildi. Yangi oylik to\'lov: {amount} so\'m. Bloom Education'
+    },
+    {
         id: 'custom',
         title: 'Boshqa xabar',
         text: ''
@@ -749,16 +856,15 @@ function getMonthsBetween(startMonth, endMonth) {
     return months;
 }
 
-/* ==================== YANGILANGAN QARZ TIZIMI ====================
-   MUHIM: 
-   - O'quvchi bugun qo'shilsa, faqat JORIY OY uchun to'lov hisoblanadi
-   - Keyingi oydan boshlab TO'LIQ oylik to'lov hisoblanadi
-   - Masalan: bugun qo'shildi, oylik 200,000 so'm
-     * Joriy oy: 100,000 so'm (yoki kelishilgan summa)
-     * Keyingi oy: 200,000 so'm (to'liq)
+/* ==================== CHEGIRMA (DISCOUNT) TIZIMI ====================
+   MUHIM:
+   - Har bir o'quvchiga chegirma foizi (discount_percent) belgilash mumkin
+   - Oylik to'lovdan chegirma avtomatik ayriladi
+   - Barcha hisobotlar, qarz va to'lovlar chegirmani hisobga oladi
 */
 
-function getStudentMonthlyPayment(studentId) {
+// Asosiy oylik to'lov (chegirmasiz)
+function getStudentBaseMonthlyPayment(studentId) {
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) return 0;
     
@@ -776,6 +882,28 @@ function getStudentMonthlyPayment(studentId) {
     return 0;
 }
 
+// Chegirma foizini olish
+function getStudentDiscountPercent(studentId) {
+    const student = DB.get('students').find(s => s.id === studentId);
+    if (!student) return 0;
+    const discount = parseFloat(student.discount_percent) || 0;
+    return Math.max(0, Math.min(100, discount));
+}
+
+// Chegirma summasi
+function getStudentDiscountAmount(studentId) {
+    const base = getStudentBaseMonthlyPayment(studentId);
+    const percent = getStudentDiscountPercent(studentId);
+    return base * (percent / 100);
+}
+
+// YAKUNIY oylik to'lov (chegirma bilan)
+function getStudentMonthlyPayment(studentId) {
+    const base = getStudentBaseMonthlyPayment(studentId);
+    const discountAmount = getStudentDiscountAmount(studentId);
+    return Math.max(0, base - discountAmount);
+}
+
 function getStudentDebt(studentId) {
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) return 0;
@@ -786,29 +914,11 @@ function getStudentDebt(studentId) {
     // Joriy oy
     const currentMonth = new Date().toISOString().slice(0, 7);
     
-    // O'quvchining kurs boshlanish sanasi
-    let startDate = student.course_start_date;
-    if (!startDate && student.created_at) startDate = student.created_at.slice(0, 10);
-    if (!startDate) startDate = new Date().toISOString().split('T')[0];
-    const startMonth = startDate.slice(0, 7);
-    
-    // Agar o'quvchi joriy oydan oldin qo'shilgan bo'lsa, eski oylar uchun qarz yo'q
-    // Faqat joriy oydan boshlab hisoblanadi
-    if (startMonth < currentMonth) {
-        // Eski o'quvchi - joriy oy uchun to'liq oylik
-        const payments = DB.get('payments').filter(p => p.student_id === studentId);
-        const payment = payments.find(p => p.month === currentMonth);
-        const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
-        const debt = monthlyPayment - paid;
-        return debt > 0 ? debt : 0;
-    } else {
-        // Yangi o'quvchi - faqat joriy oy uchun
-        const payments = DB.get('payments').filter(p => p.student_id === studentId);
-        const payment = payments.find(p => p.month === currentMonth);
-        const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
-        const debt = monthlyPayment - paid;
-        return debt > 0 ? debt : 0;
-    }
+    const payments = DB.get('payments').filter(p => p.student_id === studentId);
+    const payment = payments.find(p => p.month === currentMonth);
+    const paid = payment ? parseFloat(payment.paid_amount) || 0 : 0;
+    const debt = monthlyPayment - paid;
+    return debt > 0 ? debt : 0;
 }
 
 function getDebtMonths(studentId) {
@@ -916,10 +1026,8 @@ function destroyCharts() { Object.values(charts).forEach(c => c && c.destroy());
 /* ==================== SMS YUBORISH ==================== */
 function normalizePhone(phone) {
     if (!phone) return '';
-    // Faqat raqamlarni qoldiramiz
     let cleaned = phone.replace(/\D/g, '');
     
-    // O'zbekiston raqamlari uchun
     if (cleaned.startsWith('998')) {
         return '+' + cleaned;
     } else if (cleaned.startsWith('8') && cleaned.length === 12) {
@@ -938,37 +1046,10 @@ function sendSMS(phone, message) {
     }
     
     const normalizedPhone = normalizePhone(phone);
-    
-    // SMS yuborish uchun sms: link ishlatamiz
-    // Bu telefon qurilmasida SMS ilovasini ochadi
     const smsLink = `sms:${normalizedPhone}?body=${encodeURIComponent(message)}`;
-    
-    // Yangi oynada SMS ilovasini ochamiz
     window.location.href = smsLink;
     
     return true;
-}
-
-function sendBulkSMS(students, message) {
-    if (!students.length) {
-        toast('Ma\'lumot', 'O\'quvchilar tanlanmagan', 'info');
-        return;
-    }
-    
-    // Birinchi o'quvchiga SMS yuboramiz
-    // Qolganlarini birma-bir yuborish uchun navbat yaratamiz
-    window._smsQueue = students.map(s => ({
-        student: s,
-        phone: s.parent_phone || s.phone,
-        message: message
-    })).filter(item => item.phone);
-    
-    if (!window._smsQueue.length) {
-        toast('Xatolik', 'Telefon raqamlar topilmadi', 'error');
-        return;
-    }
-    
-    processSMSQueue();
 }
 
 function processSMSQueue() {
@@ -985,7 +1066,6 @@ function processSMSQueue() {
     
     sendSMS(item.phone, item.message);
     
-    // Keyingi SMS ni 1 sekunddan keyin yuboramiz
     setTimeout(() => {
         processSMSQueue();
     }, 1500);
@@ -1001,7 +1081,6 @@ function openSMSModal(studentId = null) {
         students = [student];
         title = `${student.full_name} ga SMS yuborish`;
     } else {
-        // Barcha qarzdorlar
         students = getAllDebtors();
         if (!students.length) {
             toast('Ma\'lumot', 'Qarzdor o\'quvchilar yo\'q', 'info');
@@ -1022,13 +1101,16 @@ function openSMSModal(studentId = null) {
     
     const studentsHTML = students.map(s => {
         const debt = getStudentDebt(s.id);
+        const discountPercent = getStudentDiscountPercent(s.id);
+        const basePayment = getStudentBaseMonthlyPayment(s.id);
+        const finalPayment = getStudentMonthlyPayment(s.id);
         const phone = s.parent_phone || s.phone || 'Raqam yo\'q';
         const hasPhone = !!(s.parent_phone || s.phone);
         return `
             <div class="debtor-student-item" style="border-left-color: ${hasPhone ? 'var(--primary)' : 'var(--gray-2)'};">
                 ${getPhotoHTML(s.photo, s.full_name, 40)}
                 <div class="info">
-                    <h4>${s.full_name}</h4>
+                    <h4>${s.full_name} ${discountPercent > 0 ? `<span class="discount-badge" style="font-size:9px;padding:2px 6px;">-${discountPercent}%</span>` : ''}</h4>
                     <p>
                         <svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-phone"/></svg> 
                         ${phone}
@@ -1077,6 +1159,7 @@ function openSMSModal(studentId = null) {
                 <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{debt}</code>
                 <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{month}</code>
                 <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{amount}</code>
+                <code style="background:var(--primary-light); padding:2px 6px; border-radius:6px; font-size:10px;">{discount}</code>
             </p>
         </div>
 
@@ -1097,10 +1180,10 @@ function openSMSModal(studentId = null) {
             return;
         }
         
-        // Har bir o'quvchi uchun SMS matnini shaxsiylashtiramiz
         const personalizedStudents = students.map(s => {
             const debt = getStudentDebt(s.id);
             const monthlyPayment = getStudentMonthlyPayment(s.id);
+            const discountPercent = getStudentDiscountPercent(s.id);
             const currentMonth = new Date().toISOString().slice(0, 7);
             
             let personalizedMessage = message
@@ -1108,7 +1191,8 @@ function openSMSModal(studentId = null) {
                 .replace(/{parent_name}/g, s.parent_name || 'Ota-ona')
                 .replace(/{debt}/g, formatMoney(debt))
                 .replace(/{month}/g, formatMonth(currentMonth))
-                .replace(/{amount}/g, formatMoney(monthlyPayment));
+                .replace(/{amount}/g, formatMoney(monthlyPayment))
+                .replace(/{discount}/g, discountPercent);
             
             return {
                 ...s,
@@ -1116,7 +1200,6 @@ function openSMSModal(studentId = null) {
             };
         });
         
-        // SMS yuborishni boshlash
         const validStudents = personalizedStudents.filter(s => s.parent_phone || s.phone);
         
         if (!validStudents.length) {
@@ -1124,7 +1207,6 @@ function openSMSModal(studentId = null) {
             return;
         }
         
-        // Tasdiqlash
         if (validStudents.length === 1) {
             const s = validStudents[0];
             const phone = s.parent_phone || s.phone;
@@ -1152,7 +1234,6 @@ function openSMSModal(studentId = null) {
          <button class="btn btn-success" onclick="saveModal()"><svg class="icon-sm"><use href="#i-send"/></svg> SMS yuborish</button>`
     );
     
-    // Birinchi shablonni qo'llaymiz
     setTimeout(() => applySMSTemplate('debt_reminder'), 50);
 }
 
@@ -1190,12 +1271,12 @@ function openAllDebtorsModal() {
     const totalDebt = debtors.reduce((s, d) => s + getStudentDebt(d.id), 0);
     const listHTML = debtors.map(s => {
         const debt = getStudentDebt(s.id);
-        const phone = s.parent_phone || s.phone || '';
+        const discountPercent = getStudentDiscountPercent(s.id);
         return `
             <div class="debtor-student-item" style="border-left-color: var(--danger);">
                 ${getPhotoHTML(s.photo, s.full_name, 44)}
                 <div class="info" style="flex:1;">
-                    <h4>${s.full_name}</h4>
+                    <h4>${s.full_name} ${discountPercent > 0 ? `<span class="discount-badge" style="font-size:9px;padding:2px 6px;">-${discountPercent}%</span>` : ''}</h4>
                     <p><svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • ${s.phone || '-'}</p>
                 </div>
                 <div style="text-align:right;">
@@ -1262,12 +1343,12 @@ function openGroupDebtorsModal(groupId) {
     const allStudents = DB.get('students').filter(s => s.group_id === groupId);
     const listHTML = debtors.map(s => {
         const debt = getStudentDebt(s.id);
-        const phone = s.parent_phone || s.phone || '';
+        const discountPercent = getStudentDiscountPercent(s.id);
         return `
             <div class="debtor-student-item" style="border-left-color: var(--danger);">
                 ${getPhotoHTML(s.photo, s.full_name, 44)}
                 <div class="info" style="flex:1;">
-                    <h4>${s.full_name}</h4>
+                    <h4>${s.full_name} ${discountPercent > 0 ? `<span class="discount-badge" style="font-size:9px;padding:2px 6px;">-${discountPercent}%</span>` : ''}</h4>
                     <p>${s.phone || '-'} • Oylik: ${formatMoney(getStudentMonthlyPayment(s.id))}</p>
                 </div>
                 <div style="text-align:right;">
@@ -2000,6 +2081,11 @@ function renderDashboard() {
     const monthExpenses = expenses.filter(e => (e.date || '').slice(0, 7) === thisMonth).reduce((s, e) => s + parseFloat(e.amount || 0), 0);
     const debtors = getAllDebtors();
     
+    // CHEGIRMA statistikasi
+    const discountedStudents = students.filter(s => getStudentDiscountPercent(s.id) > 0);
+    const totalDiscountAmount = students.reduce((sum, s) => sum + getStudentDiscountAmount(s.id), 0);
+    const totalBaseMonthly = students.reduce((sum, s) => sum + getStudentBaseMonthlyPayment(s.id), 0);
+    
     let totalTeacherSalaries = 0;
     teachers.forEach(t => {
         if (t.status === 'Faol') {
@@ -2035,6 +2121,41 @@ function renderDashboard() {
         <div class="financial-item total"><label>Umumiy qarz</label><div class="value" style="color: #fca5a5;">${formatMoney(totalDebt)}</div></div>
     `;
 
+    // Chegirmali o'quvchilar bo'limi (agar mavjud bo'lsa)
+    const discountsSection = discountedStudents.length > 0 ? `
+        <div class="card" style="margin-top:24px;">
+            <div class="card-header">
+                <h3><svg class="icon" style="color:#f59e0b"><use href="#i-tag"/></svg> Chegirmali o'quvchilar (${discountedStudents.length} ta)</h3>
+                <span style="font-size:11px; color:var(--gray); font-weight:600;">Jami chegirma: ${formatMoney(totalDiscountAmount)}</span>
+            </div>
+            <div class="card-body">
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:10px;">
+                    ${discountedStudents.slice(0, 6).map(s => {
+                        const percent = getStudentDiscountPercent(s.id);
+                        const base = getStudentBaseMonthlyPayment(s.id);
+                        const final = getStudentMonthlyPayment(s.id);
+                        const saved = base - final;
+                        return `
+                            <div style="display:flex; align-items:center; gap:10px; padding:12px; background:linear-gradient(135deg, #fef3c7, white); border-radius:12px; border:2px solid #f59e0b; cursor:pointer;" onclick="viewStudent(${s.id})">
+                                ${getPhotoHTML(s.photo, s.full_name, 40)}
+                                <div style="flex:1; min-width:0;">
+                                    <div style="font-weight:800; font-size:13px; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.full_name}</div>
+                                    <div style="font-size:11px; color:var(--gray); font-weight:600;">${getGroupName(s.group_id)}</div>
+                                    <div style="display:flex; align-items:center; gap:6px; margin-top:3px;">
+                                        <span style="font-size:11px; text-decoration:line-through; color:var(--gray-2); font-weight:600;">${formatMoney(base)}</span>
+                                        <span style="font-size:12px; color:var(--primary-dark); font-weight:800;">${formatMoney(final)}</span>
+                                    </div>
+                                </div>
+                                <span class="discount-badge">-${percent}%</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                ${discountedStudents.length > 6 ? `<button class="btn btn-sm btn-secondary" style="width:100%; margin-top:12px;" onclick="navigate('students')">Barchasini ko'rish (${discountedStudents.length})</button>` : ''}
+            </div>
+        </div>
+    ` : '';
+
     const todayEl = document.getElementById('todaySchedule');
     if (!todaySchedules.length) {
         todayEl.innerHTML = `<div class="empty-state" style="padding:30px;"><div class="icon-wrap" style="width:60px;height:60px;"><svg style="width:28px;height:28px;"><use href="#i-calendar"/></svg></div><h3>Bugun (${today}) dars yo'q</h3></div>`;
@@ -2057,13 +2178,13 @@ function renderDashboard() {
         const sortedDebtors = [...debtors].sort((a, b) => getStudentDebt(b.id) - getStudentDebt(a.id));
         debtorsEl.innerHTML = sortedDebtors.slice(0, 8).map(s => {
             const debt = getStudentDebt(s.id);
-            const phone = s.parent_phone || s.phone || '';
+            const discountPercent = getStudentDiscountPercent(s.id);
             return `
                 <div class="schedule-item" style="border-left-color: var(--danger); cursor: pointer;" 
                      onclick="openManualPaymentModal(${s.id})">
                     ${getPhotoHTML(s.photo, s.full_name, 40)}
                     <div class="schedule-info">
-                        <h4>${s.full_name}</h4>
+                        <h4>${s.full_name} ${discountPercent > 0 ? `<span class="discount-badge" style="font-size:9px;padding:2px 6px;">-${discountPercent}%</span>` : ''}</h4>
                         <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-phone"/></svg> ${s.phone || '-'}</p>
                     </div>
                     <div style="text-align:right;">
@@ -2100,6 +2221,17 @@ function renderDashboard() {
                 </div>
             </div>
         `).join('');
+    }
+
+    // Chegirma bo'limini qo'shish
+    const content = document.getElementById('page-dashboard');
+    const oldDiscountSection = document.getElementById('discountSection');
+    if (oldDiscountSection) oldDiscountSection.remove();
+    if (discountsSection) {
+        const tempDiv = document.createElement('div');
+        tempDiv.id = 'discountSection';
+        tempDiv.innerHTML = discountsSection;
+        content.appendChild(tempDiv);
     }
 
     renderCharts(students, payments, groups, expenses);
@@ -2175,12 +2307,13 @@ function openManualPaymentModal(studentId = null) {
         }
         const listHTML = debtors.map(s => {
             const debt = getStudentDebt(s.id);
+            const discountPercent = getStudentDiscountPercent(s.id);
             return `
                 <div class="schedule-item" style="border-left-color: var(--danger); cursor: pointer; margin-bottom:8px;" 
                      onclick="closeModal(); setTimeout(() => openManualPaymentModal(${s.id}), 100);">
                     ${getPhotoHTML(s.photo, s.full_name, 44)}
                     <div class="schedule-info" style="margin-left:10px;">
-                        <h4>${s.full_name}</h4>
+                        <h4>${s.full_name} ${discountPercent > 0 ? `<span class="discount-badge" style="font-size:9px;padding:2px 6px;">-${discountPercent}%</span>` : ''}</h4>
                         <p><svg><use href="#i-users"/></svg> ${getGroupName(s.group_id)} • <svg><use href="#i-phone"/></svg> ${s.phone || '-'}</p>
                     </div>
                     <span class="badge badge-danger">${formatMoney(debt)}</span>
@@ -2201,6 +2334,9 @@ function openManualPaymentModal(studentId = null) {
     const student = DB.get('students').find(s => s.id === studentId);
     if (!student) { toast('Xatolik', 'O\'quvchi topilmadi', 'error'); return; }
     const monthlyPayment = getStudentMonthlyPayment(studentId);
+    const basePayment = getStudentBaseMonthlyPayment(studentId);
+    const discountPercent = getStudentDiscountPercent(studentId);
+    const discountAmount = getStudentDiscountAmount(studentId);
     const monthsDetails = getMonthsDetails(studentId);
     const totalDebt = getStudentDebt(studentId);
     const unpaidMonths = monthsDetails.filter(m => m.debt > 0 || m.status === 'partial');
@@ -2246,11 +2382,34 @@ function openManualPaymentModal(studentId = null) {
     const avatarHTML = student.photo 
         ? `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;"><img src="${student.photo}"></div>` 
         : `<div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${student.full_name.charAt(0)}</div>`;
+    
+    // Chegirma ma'lumot bloki
+    const discountInfoHTML = discountPercent > 0 ? `
+        <div class="discount-info-box">
+            <h4><svg style="width:16px;height:16px;"><use href="#i-tag"/></svg> Chegirma qo'llanilgan</h4>
+            <div class="calc-row strike">
+                <span>Asosiy oylik to'lov:</span>
+                <span>${formatMoney(basePayment)}</span>
+            </div>
+            <div class="calc-row">
+                <span>Chegirma (${discountPercent}%):</span>
+                <span style="color:#dc2626;">− ${formatMoney(discountAmount)}</span>
+            </div>
+            <div class="calc-row highlight">
+                <span>Yakuniy oylik to'lov:</span>
+                <span>${formatMoney(monthlyPayment)}</span>
+            </div>
+        </div>
+    ` : '';
+    
     const body = `
         <div style="display:flex; gap:14px; align-items:center; padding:14px 16px; background:linear-gradient(135deg, var(--warning-light), white); border-radius:16px; margin-bottom:18px; border:2px solid var(--warning);">
             ${avatarHTML}
             <div style="flex:1;">
-                <h3 style="font-size:17px; font-weight:800; color:var(--dark); margin-bottom:3px;">${student.full_name}</h3>
+                <h3 style="font-size:17px; font-weight:800; color:var(--dark); margin-bottom:3px;">
+                    ${student.full_name}
+                    ${discountPercent > 0 ? `<span class="discount-badge" style="margin-left:6px;">-${discountPercent}%</span>` : ''}
+                </h3>
                 <p style="font-size:12px; color:var(--gray); margin-bottom:6px;">${student.phone || '-'} • ${getGroupName(student.group_id)}</p>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
                     <span class="badge badge-danger">Jami qarz: ${formatMoney(totalDebt)}</span>
@@ -2258,6 +2417,9 @@ function openManualPaymentModal(studentId = null) {
                 </div>
             </div>
         </div>
+        
+        ${discountInfoHTML}
+        
         <div style="background: var(--info-light); border: 1px solid var(--info); border-radius: 14px; padding: 12px 14px; margin-bottom: 16px;">
             <div style="display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e40af; font-weight:600; line-height:1.5;">
                 <svg style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"><use href="#i-info"/></svg>
@@ -2472,17 +2634,29 @@ function renderStudents() {
         const ps = getStudentPaymentStatus(s.id);
         const debt = getStudentDebt(s.id);
         const monthlyPayment = getStudentMonthlyPayment(s.id);
+        const basePayment = getStudentBaseMonthlyPayment(s.id);
+        const discountPercent = getStudentDiscountPercent(s.id);
         const bCls = ps === 'To\'langan' ? 'badge-success' : ps === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger';
         const aCls = att >= 80 ? 'badge-success' : att >= 60 ? 'badge-warning' : 'badge-danger';
         const dCls = debt > 0 ? 'badge-danger' : 'badge-success';
         const hasPhone = !!(s.parent_phone || s.phone);
+        
+        // Oylik to'lovni ko'rsatish (chegirma bilan)
+        const monthlyHTML = discountPercent > 0 
+            ? `<div style="display:flex; flex-direction:column; gap:2px;">
+                <span style="text-decoration:line-through; color:var(--gray-2); font-size:11px; font-weight:600;">${formatMoney(basePayment)}</span>
+                <strong style="color:var(--primary-dark);">${formatMoney(monthlyPayment)}</strong>
+                <span class="discount-badge" style="font-size:9px;padding:1px 6px;align-self:flex-start;">-${discountPercent}%</span>
+               </div>`
+            : formatMoney(monthlyPayment);
+        
         return `<tr>
             <td>${getPhotoHTML(s.photo, s.full_name, 44)}</td>
             <td><strong>#${s.id}</strong></td>
             <td><div><strong>${s.full_name}</strong><br><small style="color:var(--gray);">${s.parent_phone || ''}</small></div></td>
             <td>${s.phone || '-'}</td>
             <td>${getGroupName(s.group_id)}</td>
-            <td>${formatMoney(monthlyPayment)}</td>
+            <td>${monthlyHTML}</td>
             <td><span class="badge ${bCls}">${ps}</span></td>
             <td><span class="badge ${dCls}" style="cursor:pointer;" onclick="openManualPaymentModal(${s.id})" title="To'lov qilish">${debt > 0 ? formatMoney(debt) : '0'}</span></td>
             <td><span class="badge ${aCls}">${att}%</span></td>
@@ -2503,6 +2677,8 @@ function openStudentModal(id = null) {
     const s = id ? DB.get('students').find(x => x.id === id) : {};
     const isEdit = !!id;
     const today = new Date().toISOString().split('T')[0];
+    const currentDiscount = parseFloat(s.discount_percent) || 0;
+    
     const body = `
         ${buildPhotoUploadHTML(s.photo, 'O\'quvchi')}
         <div class="form-row">
@@ -2526,8 +2702,49 @@ function openStudentModal(id = null) {
             <div class="form-group"><label>Oylik to'lov (so'm)</label><input type="number" id="s_monthly_payment" value="${s.monthly_payment || 0}" placeholder="Guruh tanlanganda avtomatik to'ladi"></div>
             <div class="form-group"><label>Status</label><select id="s_status"><option ${s.status === 'Faol' ? 'selected' : ''}>Faol</option><option ${s.status === 'Nofaol' ? 'selected' : ''}>Nofaol</option></select></div>
         </div>
+        
+        <!-- CHEGIRMA BO'LIMI -->
+        <div style="background: linear-gradient(135deg, #fef3c7, white); border: 2px solid #f59e0b; border-radius: 16px; padding: 18px; margin: 18px 0;">
+            <h4 style="font-size:14px; font-weight:800; color:#92400e; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                <svg style="width:18px;height:18px;color:#f59e0b;"><use href="#i-tag"/></svg>
+                Chegirma (diskont) foizi
+            </h4>
+            <p style="font-size:12px; color:#92400e; margin-bottom:14px; font-weight:500;">
+                O'quvchiga chegirma foizini belgilang. Oylik to'lovdan avtomatik ayriladi.
+            </p>
+            <div class="discount-input-row">
+                <div style="flex:1; min-width:150px;">
+                    <input type="number" id="s_discount_percent" value="${currentDiscount}" min="0" max="100" step="1" 
+                           placeholder="0" 
+                           style="width:100%; padding:13px 16px; border:2px solid #f59e0b; border-radius:12px; font-size:18px; font-family:inherit; font-weight:800; outline:none; background:white; color:#92400e; text-align:center;"
+                           oninput="updateDiscountPreview()">
+                </div>
+                <div class="discount-quick-btns" id="discountQuickBtns">
+                    ${[0, 5, 10, 15, 20, 25, 30, 50].map(p => 
+                        `<button type="button" data-discount="${p}" onclick="setDiscount(${p})" class="${p === currentDiscount ? 'active' : ''}">${p === 0 ? 'Yo\'q' : p + '%'}</button>`
+                    ).join('')}
+                </div>
+            </div>
+            
+            <div class="discount-info-box" id="discountPreview" style="margin-top:16px; display:none;">
+                <h4><svg style="width:16px;height:16px;"><use href="#i-info"/></svg> Hisoblash</h4>
+                <div class="calc-row strike">
+                    <span>Asosiy oylik to'lov:</span>
+                    <span id="dpreview_base">0 so'm</span>
+                </div>
+                <div class="calc-row">
+                    <span>Chegirma (<span id="dpreview_percent">0</span>%):</span>
+                    <span id="dpreview_discount" style="color:#dc2626;">− 0 so'm</span>
+                </div>
+                <div class="calc-row highlight">
+                    <span>Yakuniy oylik to'lov:</span>
+                    <span id="dpreview_final">0 so'm</span>
+                </div>
+            </div>
+        </div>
+        
         <div style="background: linear-gradient(135deg, var(--primary-light), white); border: 2px dashed var(--primary); border-radius: 14px; padding: 14px; font-size: 12px; color: var(--primary-deep);">
-            <strong>Ma'lumot:</strong> O'quvchi bugun qo'shilsa, <strong>joriy oy uchun</strong> to'lov hisoblanadi. Keyingi oydan boshlab <strong>to'liq oylik to'lov</strong> hisoblanadi.
+            <strong>Ma'lumot:</strong> O'quvchi bugun qo'shilsa, <strong>joriy oy uchun</strong> to'lov hisoblanadi. Keyingi oydan boshlab <strong>to'liq oylik to'lov</strong> hisoblanadi. Chegirma barcha hisobotlarda hisobga olinadi.
         </div>
     `;
     window._modalSave = async () => {
@@ -2544,6 +2761,8 @@ function openStudentModal(id = null) {
             }
         }
         
+        const discountPercent = Math.max(0, Math.min(100, parseFloat(document.getElementById('s_discount_percent').value) || 0));
+        
         const data = {
             full_name: name,
             phone: document.getElementById('s_phone').value || null,
@@ -2555,17 +2774,27 @@ function openStudentModal(id = null) {
             group_id: groupId,
             course_start_date: document.getElementById('s_course_start_date').value || today,
             monthly_payment: monthlyPayment,
+            discount_percent: discountPercent,
             status: document.getElementById('s_status').value,
             photo: _pendingPhoto
         };
         try {
-            if (isEdit) { await DB.update('students', id, data); toast('Muvaffaqiyat', 'Yangilandi'); }
-            else { await DB.insert('students', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
+            if (isEdit) { 
+                await DB.update('students', id, data); 
+                toast('Muvaffaqiyat', `Yangilandi ${discountPercent > 0 ? `(-${discountPercent}% chegirma)` : ''}`); 
+            }
+            else { 
+                await DB.insert('students', data); 
+                toast('Muvaffaqiyat', `Qo'shildi ${discountPercent > 0 ? `(-${discountPercent}% chegirma)` : ''}`); 
+            }
             closeModal(); renderStudents(); renderDashboard(); renderGroups();
         } catch (err) { toast('Xatolik', err.message, 'error'); }
     };
     openModal(`<svg class="icon"><use href="#i-user-grad"/></svg> ${isEdit ? 'Tahrirlash' : 'Yangi o\'quvchi'}`, body);
-    setTimeout(attachPhotoListener, 30);
+    setTimeout(() => {
+        attachPhotoListener();
+        updateDiscountPreview();
+    }, 30);
 }
 
 function onStudentGroupChange() {
@@ -2576,6 +2805,45 @@ function onStudentGroupChange() {
     if (monthlyPayment && monthlyInput) {
         monthlyInput.value = monthlyPayment;
     }
+    updateDiscountPreview();
+}
+
+function setDiscount(percent) {
+    const input = document.getElementById('s_discount_percent');
+    if (input) {
+        input.value = percent;
+        document.querySelectorAll('#discountQuickBtns button').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.discount) === percent);
+        });
+        updateDiscountPreview();
+    }
+}
+
+function updateDiscountPreview() {
+    const discountInput = document.getElementById('s_discount_percent');
+    const baseInput = document.getElementById('s_monthly_payment');
+    const preview = document.getElementById('discountPreview');
+    if (!discountInput || !baseInput || !preview) return;
+    
+    const percent = Math.max(0, Math.min(100, parseFloat(discountInput.value) || 0));
+    const base = parseFloat(baseInput.value) || 0;
+    const discountAmount = base * (percent / 100);
+    const final = base - discountAmount;
+    
+    // Quick tugmalar active holatini yangilash
+    document.querySelectorAll('#discountQuickBtns button').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.discount) === percent);
+    });
+    
+    if (percent > 0 && base > 0) {
+        preview.style.display = 'block';
+        document.getElementById('dpreview_base').textContent = formatMoney(base);
+        document.getElementById('dpreview_percent').textContent = percent;
+        document.getElementById('dpreview_discount').textContent = '− ' + formatMoney(discountAmount);
+        document.getElementById('dpreview_final').textContent = formatMoney(final);
+    } else {
+        preview.style.display = 'none';
+    }
 }
 
 function editStudent(id) { openStudentModal(id); }
@@ -2585,17 +2853,39 @@ function viewStudent(id) {
     const att = getAttendancePercent(id), debt = getStudentDebt(id);
     const monthsDetails = getMonthsDetails(id);
     const monthlyPayment = getStudentMonthlyPayment(id);
+    const basePayment = getStudentBaseMonthlyPayment(id);
+    const discountPercent = getStudentDiscountPercent(id);
+    const discountAmount = getStudentDiscountAmount(id);
     const hasPhone = !!(s.parent_phone || s.phone);
     const avatarHTML = s.photo ? `<div class="profile-avatar"><img src="${s.photo}"></div>` : `<div class="profile-avatar">${s.full_name.charAt(0)}</div>`;
     const body = `
         <div class="profile-header">
             ${avatarHTML}
             <div class="profile-info">
-                <h2>${s.full_name}</h2>
+                <h2>${s.full_name} ${discountPercent > 0 ? `<span class="discount-badge" style="font-size:12px;">-${discountPercent}%</span>` : ''}</h2>
                 <p>${s.phone || '-'} • ${formatDate(s.birth_date)}</p>
                 <div class="profile-meta"><span class="badge badge-info">${getGroupName(s.group_id)}</span><span class="badge badge-success">${s.status}</span></div>
             </div>
         </div>
+        
+        ${discountPercent > 0 ? `
+            <div class="discount-info-box">
+                <h4><svg style="width:16px;height:16px;"><use href="#i-tag"/></svg> Chegirma ma'lumoti</h4>
+                <div class="calc-row strike">
+                    <span>Asosiy oylik to'lov:</span>
+                    <span>${formatMoney(basePayment)}</span>
+                </div>
+                <div class="calc-row">
+                    <span>Chegirma (${discountPercent}%):</span>
+                    <span style="color:#dc2626;">− ${formatMoney(discountAmount)}</span>
+                </div>
+                <div class="calc-row highlight">
+                    <span>Yakuniy oylik to'lov:</span>
+                    <span>${formatMoney(monthlyPayment)}</span>
+                </div>
+            </div>
+        ` : ''}
+        
         <div class="profile-grid">
             <div class="info-item"><label>Ota-ona</label><div class="value">${s.parent_name || '-'}</div></div>
             <div class="info-item"><label>Ota-ona tel</label><div class="value">${s.parent_phone || '-'}</div></div>
@@ -2897,13 +3187,14 @@ function renderGroups() {
         const cls = pct >= 90 ? 'danger' : pct >= 70 ? 'warning' : '';
         const debtors = getGroupDebtors(g.id);
         const totalGroupDebt = debtors.reduce((sum, s) => sum + getStudentDebt(s.id), 0);
+        const discountedCount = students.filter(s => s.group_id === g.id && getStudentDiscountPercent(s.id) > 0).length;
         return `<tr>
             <td><strong>${g.name}</strong></td>
             <td><span class="badge badge-info">${getSubjectName(g.subject_id)}</span></td>
             <td>${getTeacherName(g.teacher_id)}</td>
             <td>${g.room || '-'}</td>
             <td><div style="max-width:340px;white-space:normal;font-size:12px;font-weight:600;">${getGroupDaysText(g)}</div></td>
-            <td><div style="min-width:130px;"><strong>${count} / ${g.max_students}</strong><div class="progress-bar"><div class="progress-fill ${cls}" style="width:${Math.min(pct,100)}%"></div></div></div></td>
+            <td><div style="min-width:130px;"><strong>${count} / ${g.max_students}</strong>${discountedCount > 0 ? `<div style="font-size:10px; color:#92400e; font-weight:700; margin-top:2px;">${discountedCount} chegirmali</div>` : ''}<div class="progress-bar"><div class="progress-fill ${cls}" style="width:${Math.min(pct,100)}%"></div></div></div></td>
             <td>${formatMoney(g.monthly_payment)}</td>
             <td>
                 ${debtors.length > 0 
@@ -2972,7 +3263,7 @@ function openGroupModal(id = null) {
                         await DB.update('students', s.id, { monthly_payment: data.monthly_payment });
                     }
                 }
-                toast('Muvaffaqiyat', 'Yangilandi'); 
+                toast('Muvaffaqiyat', 'Yangilandi (chegirmalar saqlanib qoldi)'); 
             }
             else { await DB.insert('groups', data); toast('Muvaffaqiyat', 'Qo\'shildi'); }
             closeModal(); renderGroups(); renderDashboard(); renderStudents();
@@ -3053,8 +3344,9 @@ function renderPayments() {
         const pct = expected > 0 ? Math.round((paid / expected) * 100) : 100;
         const cls = p.status === 'To\'langan' ? 'badge-success' : p.status === 'Qisman to\'langan' ? 'badge-warning' : 'badge-danger';
         const fillCls = pct >= 100 ? '' : pct >= 50 ? 'warning' : 'danger';
+        const discountPercent = getStudentDiscountPercent(p.student_id);
         return `<tr>
-            <td><strong>${getStudentName(p.student_id)}</strong></td>
+            <td><strong>${getStudentName(p.student_id)}</strong> ${discountPercent > 0 ? `<span class="discount-badge" style="font-size:9px;padding:2px 6px;">-${discountPercent}%</span>` : ''}</td>
             <td>${formatMonth(p.month)}</td>
             <td>${formatMoney(expected)}</td>
             <td><strong style="color:var(--primary-dark);">${formatMoney(paid)}</strong></td>
@@ -3078,7 +3370,7 @@ function openPaymentModal(id = null) {
     const isEdit = !!id;
     const cm = new Date().toISOString().slice(0, 7);
     const body = `
-        <div class="form-group"><label>O'quvchi *</label><select id="p_student_id"><option value="">Tanlang</option>${students.map(s => `<option value="${s.id}" ${p.student_id == s.id ? 'selected' : ''}>${s.full_name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>O'quvchi *</label><select id="p_student_id"><option value="">Tanlang</option>${students.map(s => `<option value="${s.id}" ${p.student_id == s.id ? 'selected' : ''}>${s.full_name}${getStudentDiscountPercent(s.id) > 0 ? ` (-${getStudentDiscountPercent(s.id)}%)` : ''}</option>`).join('')}</select></div>
         <div class="form-row">
             <div class="form-group"><label>Oy *</label><input type="month" id="p_month" value="${p.month || cm}"></div>
             <div class="form-group"><label>Kutilgan summa *</label><input type="number" id="p_expected" value="${p.expected_amount || ''}"></div>
@@ -3399,12 +3691,19 @@ function renderReports() {
         totalTeacherSalaries += sal.total;
     });
     const netProfit = totalRec - totalExpenses - totalTeacherSalaries;
+    
+    // Chegirma statistikasi
+    const students = DB.get('students');
+    const totalDiscountGiven = students.reduce((sum, s) => sum + getStudentDiscountAmount(s.id), 0);
+    const discountedStudents = students.filter(s => getStudentDiscountPercent(s.id) > 0).length;
+    
     document.getElementById('reportStats').innerHTML = `
         <div class="stat-card"><div class="stat-icon"><svg><use href="#i-target"/></svg></div><div class="stat-label">Kutilgan</div><div class="stat-value counter" data-target="${totalExp}">0</div></div>
         <div class="stat-card blue"><div class="stat-icon"><svg><use href="#i-dollar"/></svg></div><div class="stat-label">Tushgan</div><div class="stat-value counter" data-target="${totalRec}">0</div></div>
         <div class="stat-card red"><div class="stat-icon"><svg><use href="#i-alert"/></svg></div><div class="stat-label">Qarz</div><div class="stat-value counter" data-target="${Math.max(0, totalDebt)}">0</div></div>
         <div class="stat-card purple"><div class="stat-icon"><svg><use href="#i-wallet"/></svg></div><div class="stat-label">Xarajat</div><div class="stat-value counter" data-target="${totalExpenses}">0</div></div>
         <div class="stat-card orange"><div class="stat-icon"><svg><use href="#i-percent"/></svg></div><div class="stat-label">Maoshlar (bu oy)</div><div class="stat-value counter" data-target="${totalTeacherSalaries}">0</div></div>
+        <div class="stat-card" style="border-color:#f59e0b;"><div class="stat-icon" style="background:#fef3c7;color:#92400e;"><svg><use href="#i-tag"/></svg></div><div class="stat-label">Jami chegirmalar</div><div class="stat-value counter" data-target="${totalDiscountGiven}">0</div><div class="stat-change down">${discountedStudents} chegirmali o'quvchi</div></div>
         <div class="stat-card ${netProfit >= 0 ? '' : 'red'}"><div class="stat-icon"><svg><use href="#i-award"/></svg></div><div class="stat-label">Sof foyda</div><div class="stat-value counter" data-target="${netProfit}">0</div></div>
     `;
     document.querySelectorAll('#reportStats .counter').forEach(el => animateCounter(el, parseInt(el.dataset.target) || 0));
@@ -3435,8 +3734,11 @@ function renderReports() {
 }
 function exportReport(type) {
     const payments = DB.get('payments');
-    let csv = 'O\'quvchi,Oy,Kutilgan,To\'langan,Qarz,Holati\n';
-    payments.forEach(p => { csv += `"${getStudentName(p.student_id)}",${p.month},${p.expected_amount},${p.paid_amount},${p.expected_amount - p.paid_amount},"${p.status}"\n`; });
+    let csv = 'O\'quvchi,Oy,Kutilgan,To\'langan,Qarz,Holati,Chegirma %\n';
+    payments.forEach(p => { 
+        const discount = getStudentDiscountPercent(p.student_id);
+        csv += `"${getStudentName(p.student_id)}",${p.month},${p.expected_amount},${p.paid_amount},${p.expected_amount - p.paid_amount},"${p.status}",${discount}\n`; 
+    });
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -3635,12 +3937,13 @@ function renderTeacherDebtors() {
                 </div>
                 ${groupDebtors.map(s => {
                     const debt = getStudentDebt(s.id);
+                    const discountPercent = getStudentDiscountPercent(s.id);
                     const hasPhone = !!(s.parent_phone || s.phone);
                     return `
                         <div class="debtor-student-item" style="border-left-color: var(--danger);">
                             ${getPhotoHTML(s.photo, s.full_name, 44)}
                             <div class="info" style="flex:1;">
-                                <h4>${s.full_name}</h4>
+                                <h4>${s.full_name} ${discountPercent > 0 ? `<span class="discount-badge" style="font-size:9px;padding:2px 6px;">-${discountPercent}%</span>` : ''}</h4>
                                 <p><svg style="width:12px;height:12px;vertical-align:middle;"><use href="#i-phone"/></svg> ${s.phone || '-'} • Oylik: ${formatMoney(getStudentMonthlyPayment(s.id))}</p>
                             </div>
                             <div style="text-align:right;">
@@ -3913,7 +4216,7 @@ window.addEventListener('online', () => document.getElementById('offlineIndicato
 window.addEventListener('offline', () => document.getElementById('offlineIndicator').classList.add('show'));
 
 console.log('%cBloom Education', 'color: #10b981; font-size: 20px; font-weight: bold;');
-console.log('%cSMS yuborish, yangilangan dizayn va qarz tizimi qo\'shildi', 'color: #059669; font-size: 13px;');
+console.log('%cChegirma (diskont) tizimi qo\'shildi!', 'color: #f59e0b; font-size: 13px;');
 </script>
 
 </body>
