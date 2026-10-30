@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -551,6 +551,587 @@ tbody tr:last-child td { border-bottom: none; }
     .toolbar input { min-width: 100%; }
     .debtor-groups-grid { grid-template-columns: 1fr; }
 }
+
+/* =========================================================
+   BLOOM EDUCATION — PREMIUM SAAS DESIGN SYSTEM
+   Presentation-only overrides. Existing app logic is untouched.
+   ========================================================= */
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-deep: #1e40af;
+  --primary-light: #dbeafe;
+  --primary-50: #eff6ff;
+  --primary-glow: rgba(37,99,235,.20);
+  --primary-soft: #dbe7f7;
+  --primary-mist: #f5f9ff;
+  --secondary: #12356b;
+  --info: #3b82f6;
+  --info-light: #dbeafe;
+  --purple: #8b5cf6;
+  --purple-light: #ede9fe;
+  --dark: #172b4d;
+  --dark-2: #243b5a;
+  --gray: #64748b;
+  --gray-2: #94a3b8;
+  --light: #f4f8ff;
+  --border: #e4ecf7;
+  --white: #fff;
+  --shadow-sm: 0 2px 10px rgba(30,64,175,.045);
+  --shadow: 0 8px 24px rgba(30,64,175,.075);
+  --shadow-md: 0 16px 36px rgba(30,64,175,.12);
+  --shadow-lg: 0 24px 55px rgba(30,64,175,.16);
+  --shadow-glow: 0 10px 28px rgba(37,99,235,.20);
+  --radius: 20px;
+  --radius-lg: 24px;
+}
+html { background:#f3f7ff; }
+body {
+  font-family:'Plus Jakarta Sans','Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(219,234,254,.72),transparent 34%),
+    radial-gradient(ellipse at 96% 18%,rgba(224,231,255,.55),transparent 30%),
+    linear-gradient(180deg,#f4f8ff 0%,#f8faff 55%,#f2f6fd 100%);
+  color:#172b4d;
+}
+.bg-blob.b1 { background:#bfdbfe; opacity:.38; }
+.bg-blob.b2 { background:#ddd6fe; opacity:.30; }
+.bg-blob.b3 { background:#dbeafe; opacity:.28; }
+
+/* Sidebar */
+.sidebar {
+  background:linear-gradient(180deg,#102f60 0%,#0b2852 52%,#0a2349 100%);
+  border-right:1px solid rgba(255,255,255,.08);
+  box-shadow:8px 0 30px rgba(15,39,79,.12);
+  color:#eaf2ff;
+}
+.sidebar-header { border-bottom-color:rgba(255,255,255,.10); }
+.sidebar-header::after { background:linear-gradient(90deg,transparent,#60a5fa,transparent); opacity:.7; }
+.sidebar-title h2 { color:#fff; }
+.sidebar-title p,.sidebar-title small { color:#b8cbea; }
+.sidebar-logo {
+  background:linear-gradient(145deg,#60a5fa,#2563eb 58%,#1d4ed8);
+  box-shadow:0 10px 24px rgba(37,99,235,.32),inset 0 1px 0 rgba(255,255,255,.3);
+}
+.nav-section-title { color:#91a9cb; letter-spacing:1.15px; }
+.nav-item { color:#d3e1f5; border:1px solid transparent; border-radius:13px; margin:3px 10px; }
+.nav-item:hover { background:rgba(255,255,255,.09); color:#fff; }
+.nav-item.active {
+  color:#fff;
+  background:linear-gradient(100deg,#2563eb,#347fe8);
+  box-shadow:0 8px 20px rgba(37,99,235,.27),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.sidebar-footer,.user-profile { border-color:rgba(255,255,255,.10)!important; }
+.sidebar .user-name,.sidebar .profile-name { color:#fff; }
+.sidebar .user-role,.sidebar .profile-role { color:#a9bfdf; }
+
+/* Header and search */
+.topbar {
+  background:rgba(255,255,255,.84);
+  border-bottom:1px solid rgba(211,225,244,.85);
+  box-shadow:0 4px 18px rgba(31,64,112,.035);
+  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(18px);
+}
+.topbar-title h1 { color:#152b4d; font-weight:800; letter-spacing:-.7px; }
+.topbar-title p { color:#7185a3; font-weight:500; }
+.search-box input {
+  background:#f5f8fd;
+  border:1px solid #e2eaf5;
+  border-radius:14px;
+  color:#203957;
+}
+.search-box input:focus {
+  border-color:#75a7f7;
+  box-shadow:0 0 0 4px rgba(59,130,246,.11);
+  background:#fff;
+}
+.menu-toggle:hover { background:#eaf2ff; }
+
+/* Main cards and dashboard */
+.card,.stat-card,.quick-action {
+  background:rgba(255,255,255,.94);
+  border:1px solid #e5edf8;
+  border-radius:20px;
+  box-shadow:0 5px 18px rgba(34,72,125,.055);
+}
+.card { overflow:hidden; }
+.card:hover { border-color:#d2e2f8; box-shadow:0 12px 28px rgba(34,72,125,.09); }
+.card-header {
+  background:linear-gradient(180deg,#fff,#fbfdff);
+  border-bottom:1px solid #edf2f9;
+}
+.card-header h3 { color:#1d3557; font-weight:750; }
+.card-header h3 .icon { color:#3478dc; }
+.card-body { background:transparent; }
+.stats-grid { gap:16px; }
+.stat-card { padding:21px; }
+.stat-card::before { height:3px; }
+.stat-card:hover { transform:translateY(-5px); border-color:#c8dcf8; box-shadow:0 16px 30px rgba(37,99,235,.10); }
+.stat-card .stat-title,.stat-card label { color:#7487a2; }
+.stat-card .stat-value,.stat-card .value { color:#18345b; letter-spacing:-.8px; }
+.stat-icon { border-radius:15px; }
+.quick-actions { grid-template-columns:repeat(5,minmax(0,1fr)); gap:13px; }
+.quick-action {
+  min-height:82px;
+  padding:14px 15px;
+  border-radius:18px;
+  gap:12px;
+  font-weight:700;
+  font-size:12.5px;
+  box-shadow:0 4px 14px rgba(31,64,112,.045);
+}
+.quick-action:hover {
+  background:#fff;
+  border-color:#9fc3f6;
+  transform:translateY(-4px);
+  box-shadow:0 13px 25px rgba(37,99,235,.12);
+}
+.qa-icon {
+  width:44px;height:44px;border-radius:14px;
+  background:linear-gradient(145deg,#60a5fa,#2563eb);
+  box-shadow:0 7px 15px rgba(37,99,235,.20);
+}
+.qa-icon.qa-indigo { background:linear-gradient(145deg,#a78bfa,#7c3aed); box-shadow:0 7px 15px rgba(124,58,237,.18); }
+.quick-action:nth-child(2) .qa-icon { background:linear-gradient(145deg,#a78bfa,#7c3aed); }
+.quick-action:nth-child(3) .qa-icon { background:linear-gradient(145deg,#5eead4,#0d9488); }
+.quick-action:nth-child(4) .qa-icon { background:linear-gradient(145deg,#fbbf24,#f59e0b); }
+.quick-action:nth-child(5) .qa-icon { background:linear-gradient(145deg,#a78bfa,#7c3aed); }
+.charts-grid { gap:18px; }
+.chart-container { min-height:260px; }
+.financial-box {
+  background:linear-gradient(110deg,#123c79 0%,#1d5db2 55%,#3b82e8 100%);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:22px;
+  box-shadow:0 16px 32px rgba(30,83,157,.18);
+}
+.financial-box::after {
+  content:"";
+  position:absolute;right:-70px;top:-130px;width:320px;height:320px;
+  border:1px solid rgba(255,255,255,.10);border-radius:50%;
+  box-shadow:0 0 0 35px rgba(255,255,255,.035),0 0 0 75px rgba(255,255,255,.025);
+  pointer-events:none;
+}
+.financial-item { border-right:1px solid rgba(255,255,255,.16); padding-right:14px; }
+.financial-item:last-child { border:0; }
+.financial-item label { color:#d6e7ff; }
+.financial-item .value { color:#fff; }
+.financial-item.total .value { color:#bbf7d0; text-shadow:none; }
+
+/* Inputs, buttons, tables */
+input,select,textarea {
+  font-family:inherit;
+  transition:border-color .2s ease,box-shadow .2s ease,background .2s ease,transform .2s ease;
+}
+input:focus,select:focus,textarea:focus {
+  outline:none;
+  border-color:#70a5f5!important;
+  box-shadow:0 0 0 4px rgba(59,130,246,.11)!important;
+  background:#fff;
+}
+.btn {
+  border-radius:12px;
+  font-family:inherit;
+  font-weight:700;
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+}
+.btn:hover { transform:translateY(-2px); filter:saturate(1.08); }
+.btn:active { transform:translateY(0) scale(.97); }
+.btn-primary {
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  box-shadow:0 6px 14px rgba(37,99,235,.18);
+}
+table thead th { background:#f3f7fd; color:#5e7392; }
+table tbody tr:hover { background:#f6f9ff; }
+
+/* Modal glass surfaces */
+.modal-overlay { background:rgba(13,31,58,.48); -webkit-backdrop-filter:blur(7px); backdrop-filter:blur(7px); }
+.modal,.modal-content {
+  border:1px solid rgba(255,255,255,.72);
+  border-radius:22px;
+  box-shadow:0 28px 75px rgba(13,39,79,.22);
+}
+
+/* Login screen matches the product identity */
+.login-screen { background:linear-gradient(135deg,#102f60 0%,#1d4ed8 55%,#60a5fa 100%); }
+.login-logo-icon { background:linear-gradient(135deg,#60a5fa,#1d4ed8); box-shadow:0 14px 34px rgba(37,99,235,.30); }
+
+/* Gentle entrance and accessible motion */
+.page.active { animation: bloomPageIn .35s ease both; }
+@keyframes bloomPageIn { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+.stat-card,.card,.quick-action { animation:bloomCardIn .45s ease both; }
+@keyframes bloomCardIn { from { opacity:.72; transform:translateY(8px); } to { opacity:1; } }
+@media (max-width:1200px) {
+  .quick-actions { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .charts-grid { grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+}
+@media (max-width:760px) {
+  .quick-actions { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .quick-action { min-height:72px; padding:11px; font-size:11.5px; }
+  .qa-icon { width:38px;height:38px; }
+  .financial-box { padding:20px; }
+  .financial-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+  .financial-item { border:0; }
+  .charts-grid { grid-template-columns:1fr; }
+  .topbar { padding:12px 15px; gap:10px; }
+  .search-box input { width:min(42vw,220px); }
+}
+@media (max-width:420px) {
+  .quick-actions { grid-template-columns:1fr 1fr; }
+  .stats-grid { grid-template-columns:1fr 1fr; gap:10px; }
+  .stat-card { padding:14px; }
+  .stat-card .stat-value,.stat-card .value { font-size:21px; }
+  .financial-grid { grid-template-columns:1fr 1fr; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important; }
+}
+
+
+/* =========================================================
+   STUDENTS PAGE — FULL WIDTH / RESPONSIVE TABLE FIX
+   CSS-only: keeps all existing student actions and data logic.
+   ========================================================= */
+#page-students {
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  overflow:visible;
+}
+#page-students .students-page-heading {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+  margin:0 0 18px;
+}
+#page-students .students-page-heading h2 {
+  margin:0;
+  color:#17345c;
+  font-size:23px;
+  line-height:1.25;
+  font-weight:800;
+  letter-spacing:-.65px;
+}
+#page-students .students-page-heading p {
+  margin:6px 0 0;
+  color:#7b8da8;
+  font-size:12.5px;
+  font-weight:500;
+}
+#page-students .toolbar {
+  width:100%;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:16px;
+  margin:0 0 17px;
+  background:rgba(255,255,255,.96);
+  border:1px solid #e2ebf7;
+  border-radius:20px;
+  box-shadow:0 7px 22px rgba(31,64,112,.055);
+}
+#page-students .toolbar input#studentSearch {
+  flex:1 1 260px;
+  min-width:190px;
+  max-width:420px;
+  height:44px;
+  padding:0 15px;
+  border:1px solid #e0e9f5;
+  border-radius:13px;
+  background:#f6f9fe;
+  color:#1e3555;
+}
+#page-students .toolbar select {
+  flex:0 1 190px;
+  min-width:145px;
+  height:44px;
+  padding:0 34px 0 13px;
+  border:1px solid #e0e9f5;
+  border-radius:13px;
+  background:#f6f9fe;
+  color:#344b6b;
+}
+#page-students .toolbar .spacer { flex:1 1 10px; }
+#page-students .toolbar .btn {
+  min-height:43px;
+  padding:0 16px;
+  white-space:nowrap;
+}
+#page-students > .card {
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow:hidden;
+  border:1px solid #e1eaf6;
+  border-radius:20px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 8px 26px rgba(31,64,112,.06);
+}
+#page-students .table-responsive {
+  display:block;
+  width:100%;
+  max-width:100%;
+  overflow-x:auto!important;
+  overflow-y:visible;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:#a9c6ee #f0f5fc;
+  border-radius:20px;
+}
+#page-students .table-responsive::-webkit-scrollbar { height:9px; }
+#page-students .table-responsive::-webkit-scrollbar-track { background:#f0f5fc; border-radius:20px; }
+#page-students .table-responsive::-webkit-scrollbar-thumb { background:#a9c6ee; border-radius:20px; }
+#page-students table {
+  width:100%;
+  min-width:1180px;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:auto;
+  font-size:13px;
+}
+#page-students table thead {
+  position:sticky;
+  top:0;
+  z-index:2;
+  background:#f3f7fd;
+}
+#page-students table th {
+  padding:15px 14px;
+  color:#637b9d;
+  background:#f3f7fd;
+  border-bottom:1px solid #e4edf8;
+  font-size:10.5px;
+  font-weight:800;
+  letter-spacing:.55px;
+  white-space:nowrap;
+}
+#page-students table td {
+  padding:13px 14px;
+  color:#344b69;
+  border-bottom:1px solid #edf2f8;
+  white-space:nowrap;
+  vertical-align:middle;
+  font-size:12.5px;
+}
+#page-students table tbody tr { transition:background .18s ease; }
+#page-students table tbody tr:hover { background:#f5f9ff; }
+#page-students table tbody tr:last-child td { border-bottom:0; }
+#page-students table th:first-child,
+#page-students table td:first-child {
+  position:sticky;
+  left:0;
+  z-index:1;
+  background:#fff;
+}
+#page-students table thead th:first-child {
+  z-index:3;
+  background:#f3f7fd;
+}
+#page-students table tbody tr:hover td:first-child { background:#f5f9ff; }
+#page-students .empty-state { padding:48px 20px; }
+
+/* Keep the full app canvas from squeezing the student workspace */
+.content,.main-content,.app-content,.main { min-width:0; }
+@media (max-width:1100px) {
+  #page-students .toolbar input#studentSearch { flex:1 1 100%; max-width:none; }
+  #page-students .toolbar select { flex:1 1 180px; }
+  #page-students .toolbar .spacer { display:none; }
+}
+@media (max-width:680px) {
+  #page-students .students-page-heading { align-items:flex-start; flex-direction:column; }
+  #page-students .students-page-heading h2 { font-size:20px; }
+  #page-students .toolbar { padding:12px; gap:9px; }
+  #page-students .toolbar input#studentSearch,
+  #page-students .toolbar select { flex:1 1 100%; max-width:none; width:100%; min-width:0; }
+  #page-students .toolbar .btn { flex:1 1 calc(50% - 6px); justify-content:center; padding:0 9px; font-size:11px; }
+  #page-students table { min-width:1120px; }
+}
+
+
+/* =========================================================
+   BLOOM EDUCATION — DESKTOP + TABLET + MOBILE RESPONSIVE FIX
+   Student controls stay visible; data actions and JS untouched.
+   ========================================================= */
+html, body { width:100%; max-width:100%; overflow-x:hidden; }
+*, *::before, *::after { box-sizing:border-box; }
+.main, .main-content, .app-content, .content, .page {
+  min-width:0;
+  max-width:100%;
+}
+.main { width:calc(100% - 272px); }
+.content { width:100%; overflow-x:hidden; }
+
+/* Student toolbar: controls wrap cleanly instead of overflowing */
+#page-students .toolbar {
+  display:grid;
+  grid-template-columns:minmax(220px,2fr) minmax(150px,1fr) minmax(145px,1fr) auto auto;
+  align-items:center;
+  gap:10px;
+  width:100%;
+}
+#page-students .toolbar input#studentSearch,
+#page-students .toolbar select {
+  width:100%;
+  max-width:none;
+  min-width:0;
+  height:44px;
+}
+#page-students .toolbar .spacer { display:none; }
+#page-students .toolbar .btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-width:0;
+  min-height:44px;
+  padding:0 14px;
+  white-space:normal;
+  text-align:center;
+}
+#page-students .card,
+#page-students .table-responsive { min-width:0; max-width:100%; }
+#page-students .table-responsive {
+  overflow-x:auto!important;
+  overflow-y:hidden;
+  overscroll-behavior-x:contain;
+}
+#page-students table { min-width:1120px; }
+
+/* Other pages and dashboard grids should shrink with the viewport */
+.stats-grid,.charts-grid,.quick-actions,.financial-grid,
+.profile-grid,.dashboard-grid { min-width:0; }
+.card,.stat-card,.chart-card { min-width:0; }
+img,canvas,svg { max-width:100%; }
+
+/* Compact laptop and tablet */
+@media (max-width:1200px) {
+  .content { padding:22px; }
+  #page-students .toolbar {
+    grid-template-columns:minmax(200px,2fr) repeat(2,minmax(140px,1fr));
+  }
+  #page-students .toolbar .btn { flex:1 1 auto; }
+}
+@media (max-width:900px) {
+  .main { width:100%; margin-left:0; }
+  .content { padding:18px; }
+  #page-students .toolbar {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  #page-students .toolbar input#studentSearch { grid-column:1 / -1; }
+  #page-students .toolbar select { width:100%; }
+  #page-students .toolbar .btn { width:100%; }
+}
+
+/* Phones */
+@media (max-width:768px) {
+  html,body { width:100%; overflow-x:hidden; }
+  .sidebar {
+    width:min(290px,86vw);
+    max-width:86vw;
+    height:100dvh;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .main { width:100%; min-width:0; margin-left:0; }
+  .content { width:100%; padding:12px; }
+  .topbar {
+    width:100%;
+    min-width:0;
+    padding:11px 12px;
+    gap:8px;
+  }
+  .topbar-title { min-width:0; }
+  .topbar-title h1 {
+    font-size:16px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .topbar-title p {
+    max-width:54vw;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .topbar-actions { gap:6px; }
+  .search-box { display:none!important; }
+  #page-students { width:100%; min-width:0; }
+  #page-students .students-page-heading { margin-bottom:13px; }
+  #page-students .students-page-heading h2 { font-size:20px; }
+  #page-students .students-page-heading p { line-height:1.5; }
+  #page-students .toolbar {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    width:100%;
+    padding:11px;
+    gap:9px;
+    border-radius:16px;
+  }
+  #page-students .toolbar input#studentSearch {
+    grid-column:1 / -1;
+    width:100%;
+    min-width:0;
+    height:43px;
+  }
+  #page-students .toolbar select {
+    width:100%;
+    min-width:0;
+    height:42px;
+    padding-left:10px;
+    padding-right:25px;
+    font-size:12px;
+  }
+  #page-students .toolbar .btn {
+    width:100%;
+    min-width:0;
+    min-height:43px;
+    padding:7px 6px;
+    font-size:11px;
+    line-height:1.25;
+    white-space:normal;
+  }
+  #page-students .toolbar .btn svg { flex:0 0 auto; }
+  #page-students > .card { width:100%; border-radius:16px; }
+  #page-students .table-responsive {
+    width:100%;
+    max-width:100%;
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-x pan-y;
+  }
+  #page-students table { min-width:1080px; }
+  #page-students table th,
+  #page-students table td { padding:11px 10px; }
+  .stats-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .charts-grid { grid-template-columns:minmax(0,1fr); }
+  .quick-actions { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .financial-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+/* Narrow phones: buttons become full-width rows for reliable tapping */
+@media (max-width:390px) {
+  .content { padding:9px; }
+  .topbar { padding:9px; }
+  #page-students .toolbar { grid-template-columns:minmax(0,1fr); }
+  #page-students .toolbar input#studentSearch { grid-column:auto; }
+  #page-students .toolbar .btn { min-height:42px; }
+  .stats-grid { gap:8px; }
+  .stat-card { padding:11px; }
+}
+
+/* Respect reduced-motion accessibility preference */
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1834,8 +2415,7 @@ function createAdminPages() {
                 <a class="quick-action" onclick="openTeacherModal()"><div class="qa-icon"><svg><use href="#i-user-teacher"/></svg></div> <span>O'qituvchi qo'shish</span></a>
                 <a class="quick-action" onclick="openGroupModal()"><div class="qa-icon"><svg><use href="#i-users"/></svg></div> <span>Guruh qo'shish</span></a>
                 <a class="quick-action" onclick="openSubjectModal()"><div class="qa-icon"><svg><use href="#i-book"/></svg></div> <span>Fan qo'shish</span></a>
-                <a class="quick-action" onclick="openManualPaymentModal()"><div class="qa-icon"><svg><use href="#i-credit-card"/></svg></div> <span>Qo'lda to'lov</span></a>
-                <a class="quick-action" onclick="openSMSModal()"><div class="qa-icon" style="background:linear-gradient(135deg, #10b981, #047857);"><svg><use href="#i-message"/></svg></div> <span>Qarzdorlarga SMS</span></a>
+                <a class="quick-action" onclick="navigate('schedule')"><div class="qa-icon qa-indigo"><svg><use href="#i-calendar"/></svg></div> <span>Dars jadvali ko'rish</span></a>
             </div>
             <div class="stats-grid" id="statsGrid"></div>
             <div class="financial-box">
@@ -1882,6 +2462,9 @@ function createAdminPages() {
         </div>
 
         <div class="page" id="page-students">
+            <div class="students-page-heading">
+                <div><h2>O'quvchilar</h2><p>O'quvchilar ro'yxati, guruhlari va to'lov holatini boshqaring</p></div>
+            </div>
             <div class="toolbar">
                 <input type="text" id="studentSearch" placeholder="O'quvchi ismini yozing..." oninput="renderStudents()">
                 <select id="studentFilterGroup" onchange="renderStudents()"><option value="">Barcha guruhlar</option></select>
