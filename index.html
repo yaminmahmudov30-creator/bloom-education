@@ -1132,6 +1132,59 @@ img,canvas,svg { max-width:100%; }
   }
 }
 
+
+/* ICON QUALITY PASS — icon-only polish; preserves existing layout and theme */
+.icon, .icon-sm, .icon-lg,
+.nav-item > svg,
+.stat-icon svg,
+.qa-icon svg,
+.card-header h3 > svg,
+.btn svg,
+.account-btn svg,
+.logout-btn svg,
+.icon-btn svg {
+    shape-rendering: geometricPrecision;
+    vector-effect: non-scaling-stroke;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.nav-item > .icon {
+    filter: drop-shadow(0 1px 1px rgba(5, 20, 45, .18));
+    stroke-width: 2.15;
+}
+.nav-item.active > .icon {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .18));
+}
+.stat-icon svg {
+    stroke-width: 2.15;
+    filter: drop-shadow(0 1px 1px rgba(15, 35, 70, .16));
+}
+.qa-icon svg {
+    stroke-width: 2.1;
+    filter: drop-shadow(0 1px 1px rgba(10, 30, 65, .20));
+}
+.card-header h3 > .icon,
+.btn > .icon,
+.btn > .icon-sm,
+.icon-btn > .icon {
+    filter: drop-shadow(0 1px 1px rgba(20, 45, 85, .12));
+}
+.sidebar .nav-item > .icon {
+    opacity: .98;
+}
+.profile-avatar img,
+#userAvatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+@media (max-width: 768px) {
+    .nav-item > .icon { flex-shrink: 0; }
+    .stat-icon svg, .qa-icon svg { max-width: 100%; max-height: 100%; }
+}
+
 </style>
 </head>
 <body>
@@ -2240,10 +2293,14 @@ function openAccountSettings() {
 function openAdminAccountSettings() {
     const body = `
         <div style="display:flex; gap:16px; align-items:center; padding:16px; background:linear-gradient(135deg, var(--primary-50), white); border-radius:16px; margin-bottom:20px; border:1px solid var(--primary-soft);">
-            <div class="profile-avatar" style="width:60px;height:60px;border-radius:16px;font-size:24px;">${currentUser.full_name.charAt(0).toUpperCase()}</div>
-            <div style="flex:1;">
+            <div class="profile-avatar" id="adminPhotoPreview" style="width:60px;height:60px;border-radius:16px;font-size:24px;overflow:hidden;flex-shrink:0;">${currentUser.photo ? `<img src="${currentUser.photo}" alt="Administrator rasmi" style="width:100%;height:100%;object-fit:cover;">` : currentUser.full_name.charAt(0).toUpperCase()}</div>
+            <div style="flex:1;min-width:0;">
                 <h3 style="font-size:18px; font-weight:800; color:var(--dark); margin-bottom:4px;">${currentUser.full_name}</h3>
                 <p style="font-size:13px; color:var(--gray);">Administrator</p>
+                <label for="adminPhotoFile" class="btn btn-secondary" style="display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:7px 11px;cursor:pointer;font-size:12px;">
+                    <svg class="icon-sm"><use href="#i-upload"/></svg> Kompyuterdan rasm tanlash
+                </label>
+                <input type="file" id="adminPhotoFile" accept="image/jpeg,image/png,image/webp" style="display:none;">
                 <span class="badge badge-info" style="margin-top:6px;">Login: ${currentUser.username || currentUser.full_name}</span>
             </div>
         </div>
@@ -2299,6 +2356,57 @@ function openAdminAccountSettings() {
     openModal(`<svg class="icon"><use href="#i-settings"/></svg> Profilni boshqarish`, body,
         `<button class="btn btn-secondary" onclick="closeModal()">Bekor qilish</button>
          <button class="btn btn-primary" onclick="saveModal()"><svg class="icon-sm"><use href="#i-save"/></svg> Saqlash</button>`);
+
+    const adminPhotoFile = document.getElementById('adminPhotoFile');
+    if (adminPhotoFile) adminPhotoFile.addEventListener('change', async (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+            toast('Xatolik', 'JPG, PNG yoki WEBP formatidagi rasm tanlang', 'error');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            toast('Xatolik', 'Rasm hajmi 5 MB dan oshmasin', 'error');
+            return;
+        }
+
+        try {
+            const photoBlob = await cropTo3x4(file);
+            if (!photoBlob) {
+                toast('Xatolik', 'Rasmni tayyorlab bo‘lmadi', 'error');
+                return;
+            }
+
+            const photoUrl = await uploadPhotoToStorage(photoBlob);
+            if (!photoUrl) {
+                toast('Xatolik', 'Rasm yuklanmadi. Supabase Storage ichidagi photos bucketni tekshiring.', 'error');
+                return;
+            }
+
+            const { error } = await window.supabaseClient
+                .from('profiles')
+                .update({ photo: photoUrl })
+                .eq('id', currentUser.id);
+
+            if (error) {
+                toast('Xatolik', 'Rasm bazaga saqlanmadi: ' + error.message, 'error');
+                return;
+            }
+
+            currentUser.photo = photoUrl;
+            updateUserUI();
+
+            const preview = document.getElementById('adminPhotoPreview');
+            if (preview) {
+                preview.innerHTML = `<img src="${photoUrl}" alt="Administrator rasmi" style="width:100%;height:100%;object-fit:cover;">`;
+            }
+            toast('Muvaffaqiyat', 'Administrator rasmi saqlandi');
+        } catch (error) {
+            console.error('Administrator photo upload:', error);
+            toast('Xatolik', 'Rasm yuklashda xatolik yuz berdi', 'error');
+        }
+    });
 }
 
 function openTeacherAccountSettings() {
